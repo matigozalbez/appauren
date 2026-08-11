@@ -53,28 +53,32 @@ const handleSubmit = async (e: FormEvent) => {
   }
 };
 const loginWithGoogle = async () => {
+  setLoading(true);
   try {
-    setLoading(true);
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    // 1. Forzamos el uso de un popup. 
+    // En iOS, el truco es que el popup sea invocado DIRECTAMENTE 
+    // sin procesos asíncronos previos.
+    const result = await signInWithPopup(auth, googleProvider);
+    
+    // 2. Aquí ya tenemos el usuario, el popup ya se abrió y se cerró solo al loguear.
+    const idToken = await result.user.getIdToken();
 
-    if (isMobile) {
-      // En celulares usamos redirect estricto para evitar el bloqueo y el invalid_request del popup
-      await signInWithRedirect(auth, googleProvider);
-    } else {
-      // En PC dejamos el popup que es más cómodo
-      const result = await signInWithPopup(auth, googleProvider);
-      const idToken = await result.user.getIdToken();
-
-      const res = await fetch("https://backendauren.onrender.com/api/verificar-vinculacion", {
-        headers: { Authorization: `Bearer ${idToken}` },
-      });
-      const data = await res.json();
-
-      navigate(data.vinculado ? "/home" : "/vincular-dni");
-    }
+    const res = await fetch("https://backendauren.onrender.com/api/verificar-vinculacion", {
+      headers: { Authorization: `Bearer ${idToken}` },
+    });
+    
+    const data = await res.json();
+    navigate(data.vinculado ? "/home" : "/vincular-dni");
+    
   } catch (err: any) {
-    console.error('Error al loguear con Google:', err);
-    setError(`Error: ${err.message}`);
+    console.error('Error:', err);
+    // Solo si el error es porque el popup fue bloqueado, informamos
+    if (err.code === 'auth/popup-blocked') {
+      setError("El navegador bloqueó la ventana emergente. Por favor, habilita las ventanas emergentes.");
+    } else {
+      setError("No se pudo iniciar sesión con Google.");
+    }
+  } finally {
     setLoading(false);
   }
 };
