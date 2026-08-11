@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { LogOut } from "lucide-react";
 
+
 export default function Home() {
   const [user] = useAuthState(auth);
   const firstName = user?.displayName?.split(" ")[0] || "Alan";
@@ -44,6 +45,7 @@ export default function Home() {
           <h1 className="text-2xl font-bold text-white">¡Hola, {firstName}!</h1>
           <p className="text-sm text-[#C9974A] mt-0.5">Bienvenido a Mi Auren</p>
         </div>
+
       </div>
 
       {/* Card de afiliación, flotando sobre el header */}

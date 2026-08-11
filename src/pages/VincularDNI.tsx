@@ -15,7 +15,7 @@ export default function VincularDNI() {
 
     try {
       const idToken = await auth.currentUser?.getIdToken();
-      const res = await fetch("http://localhost:8080/api/vincular-socio", {
+      const res = await fetch("https://backendauren.onrender.com/api/vincular-socio", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

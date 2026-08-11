@@ -8,6 +8,7 @@ import {
 } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 
+
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -41,7 +42,7 @@ const loginWithGoogle = async () => {
       const result = await signInWithPopup(auth, googleProvider);
       const idToken = await result.user.getIdToken();
 
-      const res = await fetch("http://localhost:8080/api/verificar-vinculacion", {
+      const res = await fetch("https://backendauren.onrender.com/api/verificar-vinculacion", {
         headers: { Authorization: `Bearer ${idToken}` },
       });
       const data = await res.json();
@@ -54,7 +55,9 @@ const loginWithGoogle = async () => {
 };
   return (
     <div className="relative flex  min-h-screen-safe w-full items-center justify-center bg-[#071328] overflow-hidden font-sans antialiased px-6">
+<div className="mt-4 flex justify-center">
 
+</div>
       <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[450px] h-[450px] bg-sky-500/15 rounded-full blur-[130px]" />
 
       <div className="pointer-events-none absolute bottom-0 left-0 w-full h-36 z-0 overflow-hidden">
@@ -77,6 +80,7 @@ const loginWithGoogle = async () => {
 />
             <span className="text-4xl font-serif text-white tracking-tight">Auren</span>
           </div>
+          
           <h1 className="text-xs font-semibold tracking-widest text-[#C9974A] uppercase mt-1">Mi Auren</h1>
           <div className="my-2.5 h-[1px] w-20 bg-[#C9974A]/50 mx-auto" />
           <p className="text-xs text-slate-300 font-light">Todo resuelto, en un solo lugar.</p>
