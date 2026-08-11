@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { ChevronLeft, Share2, Shield, Calendar, MessageCircle, Phone, Globe, ShieldCheck, Wallet, IdCard } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";

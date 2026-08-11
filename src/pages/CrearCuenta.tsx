@@ -1,6 +1,7 @@
-import { useState, FormEvent } from "react";
+import { useState, type FormEvent } from "react";
 import { Mail, Lock, IdCard } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+
 
 
 export default function CrearCuenta() {
@@ -143,12 +144,9 @@ const handleSubmit = async (e: FormEvent) => {
 
           {error && <p className="text-sm text-red-400">{error}</p>}
 
-          <button
-            type="submit"
-            className="w-full rounded-full bg-[#0F1E3D] border border-white/20 py-3 font-semibold text-white transition hover:bg-white/5"
-          >
-            CONTINUAR
-          </button>
+        <button type="submit" disabled={loading}>
+  {loading ? "Creando..." : "CONTINUAR"}
+</button>
         </form>
 
         <p className="mt-6 text-center text-xs text-white/40">🔒 Tus datos están protegidos.</p>
