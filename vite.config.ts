@@ -9,12 +9,18 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      injectRegister: 'auto',
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+      },
       manifest: {
         name: 'Mi Auren',
         short_name: 'Auren',
-        theme_color: '#0F1E3D',
-        background_color: '#0F1E3D',
+        description: 'Todo resuelto, en un solo lugar.',
+        theme_color: '#071328', // Coincide con el fondo de tu app (#071328)
+        background_color: '#071328',
         display: 'standalone',
+        start_url: '/',
         icons: [
           { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
