@@ -6,7 +6,7 @@ import {
     getRedirectResult,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signInWithRedirect,
+
 } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import InstallButton from '../components/InstallButton';
