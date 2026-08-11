@@ -1,8 +1,9 @@
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, useEffect } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import {
+    getRedirectResult,
   signInWithEmailAndPassword,
   signInWithPopup,
   signInWithRedirect,
@@ -18,6 +19,23 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+  getRedirectResult(auth)
+    .then(async (result) => {
+      if (result) {
+        const idToken = await result.user.getIdToken();
+        const res = await fetch("https://backendauren.onrender.com/api/verificar-vinculacion", {
+          headers: { Authorization: `Bearer ${idToken}` },
+        });
+        const data = await res.json();
+        navigate(data.vinculado ? "/home" : "/vincular-dni");
+      }
+    })
+    .catch((err) => {
+      console.error('Error en redirect de Google:', err);
+    });
+}, [navigate]);
 
 const handleSubmit = async (e: FormEvent) => {
   e.preventDefault();
@@ -35,26 +53,29 @@ const handleSubmit = async (e: FormEvent) => {
   }
 };
 const loginWithGoogle = async () => {
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   try {
-    if (isMobile) {
-      await signInWithRedirect(auth, googleProvider);
-      // en mobile el chequeo hay que hacerlo en el useEffect que maneja la vuelta del redirect
-    } else {
-      const result = await signInWithPopup(auth, googleProvider);
-      const idToken = await result.user.getIdToken();
+    // Intentamos usar popup directamente; en iOS dentro de PWA o Safari actual suele abrir un sheet de Apple/Google nativo sin bloquearse
+    const result = await signInWithPopup(auth, googleProvider);
+    const idToken = await result.user.getIdToken();
 
-      const res = await fetch("https://backendauren.onrender.com/api/verificar-vinculacion", {
-        headers: { Authorization: `Bearer ${idToken}` },
-      });
-      const data = await res.json();
+    const res = await fetch("https://backendauren.onrender.com/api/verificar-vinculacion", {
+      headers: { Authorization: `Bearer ${idToken}` },
+    });
+    const data = await res.json();
 
-      navigate(data.vinculado ? "/home" : "/vincular-dni");
+    navigate(data.vinculado ? "/home" : "/vincular-dni");
+  } catch (err: any) {
+    console.error('Error al loguear con Google:', err);
+    // Si el popup falla específicamente en algún navegador restrictivo de iOS, caemos en redirect
+    if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
+      try {
+        await signInWithRedirect(auth, googleProvider);
+      } catch (redirectErr) {
+        console.error('Error en redirect:', redirectErr);
+      }
     }
-  } catch (err) {
-    console.error('Error al loguear:', err);
   }
-};
+}
   return (
     <div className="relative flex  min-h-screen-safe w-full items-center justify-center bg-[#071328] overflow-hidden font-sans antialiased px-6">
 <div className="mt-4 flex justify-center">
