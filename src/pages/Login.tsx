@@ -54,7 +54,9 @@ const handleSubmit = async (e: FormEvent) => {
 };
 const loginWithGoogle = async () => {
   try {
-    // Intentamos usar popup directamente; en iOS dentro de PWA o Safari actual suele abrir un sheet de Apple/Google nativo sin bloquearse
+    setLoading(true);
+    // Forzamos el popup. En iOS moderno, si se ejecuta inmediatamente 
+    // al toque del usuario, Safari suele abrir la hoja de inicio de sesión de Google.
     const result = await signInWithPopup(auth, googleProvider);
     const idToken = await result.user.getIdToken();
 
@@ -65,17 +67,12 @@ const loginWithGoogle = async () => {
 
     navigate(data.vinculado ? "/home" : "/vincular-dni");
   } catch (err: any) {
-    console.error('Error al loguear con Google:', err);
-    // Si el popup falla específicamente en algún navegador restrictivo de iOS, caemos en redirect
-    if (err.code === 'auth/popup-blocked' || err.code === 'auth/popup-closed-by-user') {
-      try {
-        await signInWithRedirect(auth, googleProvider);
-      } catch (redirectErr) {
-        console.error('Error en redirect:', redirectErr);
-      }
-    }
+    console.error('Error detallado de Google:', err);
+    setError(`Error al iniciar sesión: ${err.message || 'Desconocido'}`);
+  } finally {
+    setLoading(false);
   }
-}
+};
   return (
     <div className="relative flex  min-h-screen-safe w-full items-center justify-center bg-[#071328] overflow-hidden font-sans antialiased px-6">
 <div className="mt-4 flex justify-center">
