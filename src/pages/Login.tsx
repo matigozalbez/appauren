@@ -55,21 +55,26 @@ const handleSubmit = async (e: FormEvent) => {
 const loginWithGoogle = async () => {
   try {
     setLoading(true);
-    // Forzamos el popup. En iOS moderno, si se ejecuta inmediatamente 
-    // al toque del usuario, Safari suele abrir la hoja de inicio de sesión de Google.
-    const result = await signInWithPopup(auth, googleProvider);
-    const idToken = await result.user.getIdToken();
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    const res = await fetch("https://backendauren.onrender.com/api/verificar-vinculacion", {
-      headers: { Authorization: `Bearer ${idToken}` },
-    });
-    const data = await res.json();
+    if (isMobile) {
+      // En celulares usamos redirect estricto para evitar el bloqueo y el invalid_request del popup
+      await signInWithRedirect(auth, googleProvider);
+    } else {
+      // En PC dejamos el popup que es más cómodo
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
 
-    navigate(data.vinculado ? "/home" : "/vincular-dni");
+      const res = await fetch("https://backendauren.onrender.com/api/verificar-vinculacion", {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+      const data = await res.json();
+
+      navigate(data.vinculado ? "/home" : "/vincular-dni");
+    }
   } catch (err: any) {
-    console.error('Error detallado de Google:', err);
-    setError(`Error al iniciar sesión: ${err.message || 'Desconocido'}`);
-  } finally {
+    console.error('Error al loguear con Google:', err);
+    setError(`Error: ${err.message}`);
     setLoading(false);
   }
 };
