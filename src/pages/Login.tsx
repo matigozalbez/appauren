@@ -1,12 +1,14 @@
 import { useState, type FormEvent } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
   signInWithRedirect,
 } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
+import InstallButton from '../components/InstallButton';
 
 
 export default function Login() {
@@ -56,6 +58,9 @@ const loginWithGoogle = async () => {
   return (
     <div className="relative flex  min-h-screen-safe w-full items-center justify-center bg-[#071328] overflow-hidden font-sans antialiased px-6">
 <div className="mt-4 flex justify-center">
+         <div className="absolute top-4 right-4 z-50">
+        <InstallButton/>
+      </div>
 
 </div>
       <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[450px] h-[450px] bg-sky-500/15 rounded-full blur-[130px]" />

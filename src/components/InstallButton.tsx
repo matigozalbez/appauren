@@ -2,50 +2,29 @@ import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 
 export default function InstallButton() {
-  const [isIOS, setIsIOS] = useState(false);
-  const [showIOSHint, setShowIOSHint] = useState(false);
+  const [isAndroid, setIsAndroid] = useState(false);
 
   useEffect(() => {
-    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-    setIsIOS(iOS);
+    // Detecta estrictamente si el dispositivo es Android
+    const android = /Android/i.test(navigator.userAgent);
+    setIsAndroid(android);
   }, []);
 
   const handleInstall = () => {
-    setShowIOSHint(true);
+    // Aquí puedes meter la lógica de tu prompt de instalación si la tienes
+    alert("Iniciando la instalación de la app...");
   };
 
-  return (
-    <>
-      <button
-        onClick={handleInstall}
-        className="flex items-center gap-2 rounded-full bg-[#C9974A] px-4 py-2 text-xs font-semibold text-[#0F1E3D] transition hover:bg-[#d9a75a]"
-      >
-        <Download size={14} />
-        Instalar app
-      </button>
+  // Si no es Android, el componente no renderiza absolutamente nada
+  if (!isAndroid) return null;
 
-      {showIOSHint && (
-        <div
-          className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 p-4"
-          onClick={() => setShowIOSHint(false)}
-        >
-          <div
-            className="w-full max-w-sm rounded-2xl bg-[#0F1E3D] p-5 text-white"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p className="text-sm font-semibold">📲 Instalar app</p>
-            <p className="mt-2 text-xs text-white/70 leading-relaxed">
-              Tocá el botón <strong className="text-[#C9974A]">•••</strong> abajo y elegí <strong className="text-[#C9974A]">"Agregar a inicio"</strong>.
-            </p>
-            <button
-              onClick={() => setShowIOSHint(false)}
-              className="mt-4 w-full rounded-full bg-[#C9974A] py-2 text-sm font-semibold text-[#0F1E3D]"
-            >
-              Entendido
-            </button>
-          </div>
-        </div>
-      )}
-    </>
+  return (
+    <button
+      onClick={handleInstall}
+      className="flex items-center gap-1.5 rounded-full bg-[#C9974A] px-3.5 py-1.5 text-[11px] font-semibold text-[#071328] transition hover:bg-[#d9a75a] shadow-[0_2px_10px_rgba(201,151,74,0.2)] active:scale-95"
+    >
+      <Download size={13} />
+      Instalar app
+    </button>
   );
 }
