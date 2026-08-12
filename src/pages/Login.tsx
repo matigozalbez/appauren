@@ -25,7 +25,9 @@ export default function Login() {
 const [checkingAuth, setCheckingAuth] = useState(true);
 
 useEffect(() => {
-  getRedirectResult(auth)
+  const minDelay = new Promise((resolve) => setTimeout(resolve, 2000)); // mínimo 2 segundos
+
+  const authCheck = getRedirectResult(auth)
     .then(async (result) => {
       if (result) {
         const idToken = await result.user.getIdToken();
@@ -38,8 +40,9 @@ useEffect(() => {
     })
     .catch((err) => {
       console.error('Error en redirect de Google:', err);
-    })
-    .finally(() => setCheckingAuth(false));
+    });
+
+  Promise.all([minDelay, authCheck]).finally(() => setCheckingAuth(false));
 }, [navigate]);
 
 if (checkingAuth) {
