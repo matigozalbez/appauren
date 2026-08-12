@@ -10,6 +10,7 @@ import {
 } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import InstallButton from '../components/InstallButton';
+import SplashScreen from '../components/SplashScreen';
 
 
 export default function Login() {
@@ -43,12 +44,7 @@ useEffect(() => {
 
 if (checkingAuth) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#071328]">
-      <div className="text-center">
-        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[#C9974A] border-t-transparent" />
-        <p className="mt-3 text-xs text-white/50">Cargando...</p>
-      </div>
-    </div>
+  <SplashScreen/>
   );
 }
 
