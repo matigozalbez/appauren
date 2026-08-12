@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, Shield, MessageCircle, Phone, IdCard, Home as HomeIcon, User, ChevronRight} from "lucide-react";
+import { Heart, Shield,  Phone, IdCard, Home as HomeIcon, User, ChevronRight} from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
@@ -80,8 +80,10 @@ export default function Home() {
       {/* Card de afiliación, flotando sobre el header */}
       <div className="-mt-8 px-6 relative z-10">
         <div className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-xl border border-slate-100">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-100">
-            <Shield size={20} className="text-emerald-600" />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center ">
+            <img
+            src="/escudoverde.png"
+            />
           </div>
           <div>
             <p className="font-semibold text-slate-900">Afiliación Activa</p>
@@ -153,7 +155,7 @@ export default function Home() {
           <button className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 w-full text-left">
             <div className="flex items-center gap-3">
               <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                <MessageCircle size={18} />
+                <img src="whatticono.png"/>
               </div>
               <span className="text-xs font-semibold text-slate-800">WhatsApp</span>
             </div>
