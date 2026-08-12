@@ -19,8 +19,11 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  
 
-  useEffect(() => {
+const [checkingAuth, setCheckingAuth] = useState(true);
+
+useEffect(() => {
   getRedirectResult(auth)
     .then(async (result) => {
       if (result) {
@@ -34,8 +37,20 @@ export default function Login() {
     })
     .catch((err) => {
       console.error('Error en redirect de Google:', err);
-    });
+    })
+    .finally(() => setCheckingAuth(false));
 }, [navigate]);
+
+if (checkingAuth) {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-[#071328]">
+      <div className="text-center">
+        <div className="mx-auto h-8 w-8 animate-spin rounded-full border-2 border-[#C9974A] border-t-transparent" />
+        <p className="mt-3 text-xs text-white/50">Cargando...</p>
+      </div>
+    </div>
+  );
+}
 
 const handleSubmit = async (e: FormEvent) => {
   e.preventDefault();
