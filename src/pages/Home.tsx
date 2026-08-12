@@ -1,15 +1,15 @@
-import { Heart, Shield, MessageCircle, Phone, IdCard, Home as HomeIcon, User, ChevronRight } from "lucide-react";
+import { useState } from "react";
+import { Heart, Shield, MessageCircle, Phone, IdCard, Home as HomeIcon, User, ChevronRight, Bell} from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { LogOut } from "lucide-react";
-
 
 export default function Home() {
   const [user] = useAuthState(auth);
   const firstName = user?.displayName?.split(" ")[0] || "Alan";
   const navigate = useNavigate();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleLogout = async () => {
     await signOut(auth);
@@ -20,32 +20,61 @@ export default function Home() {
     <div className="min-h-screen bg-slate-50 pb-24">
       {/* Header navy con curva inferior */}
       <div className="relative bg-[#0F1E3D] px-6 pb-16 pt-6 rounded-b-[30px] shadow-lg">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10">
-              <Heart size={18} className="text-[#C9974A]" />
-            </div>
-            <span className="text-lg font-bold text-white">Auren</span>
-          </div>
+      <div className="flex items-center justify-between">
+  <div className="flex items-center gap-2.5">
+    <img src="/auren-isotipo.png" className="h-8 w-8 object-contain" alt="Auren" />
+    <span
+      className="text-2xl font-bold text-white tracking-tight"
+      style={{ fontFamily: "'Playfair Display', serif" }}
+    >
+      Auren
+    </span>
+  </div>
 
-          <div className="flex items-center gap-2 rounded-full bg-white/10 px-3 py-1.5">
-            {user?.photoURL ? (
-              <img src={user.photoURL} className="h-6 w-6 rounded-full" alt="Perfil" />
-            ) : (
-              <User size={16} className="text-white" />
-            )}
-            <span className="text-sm text-white font-medium">{firstName}</span>
-            <button onClick={handleLogout} className="ml-1 text-white/60 hover:text-white transition">
-              <LogOut size={16} />
+  <div className="flex items-center gap-3">
+    <div className="relative">
+      <button
+        onClick={() => setMenuOpen(!menuOpen)}
+        className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#C9974A] text-sm font-bold text-[#0F1E3D]"
+      >
+        {user?.photoURL ? (
+          <img src={user.photoURL} className="h-full w-full object-cover" alt="Perfil" />
+        ) : (
+          firstName.charAt(0).toUpperCase()
+        )}
+      </button>
+
+      {menuOpen && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
+          <div className="absolute right-0 top-full z-20 mt-2 w-44 overflow-hidden rounded-xl bg-white shadow-lg">
+            <div className="border-b border-slate-100 px-4 py-3">
+              <p className="text-sm font-semibold text-slate-900">{firstName}</p>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="flex w-full items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50"
+            >
+              Cerrar sesión
             </button>
           </div>
-        </div>
+        </>
+      )}
+    </div>
+
+    <button className="relative flex h-9 w-9 items-center justify-center  text-whitetransition">
+     <img
+     src="campanitasinfondo.png "
+     />
+      <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-red-500" />
+    </button>
+  </div>
+</div>
 
         <div className="mt-6 text-center">
           <h1 className="text-2xl font-bold text-white">¡Hola, {firstName}!</h1>
           <p className="text-sm text-[#C9974A] mt-0.5">Bienvenido a Mi Auren</p>
         </div>
-
       </div>
 
       {/* Card de afiliación, flotando sobre el header */}
@@ -85,7 +114,7 @@ export default function Home() {
             </span>
           </div>
 
-           <div className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 shadow-sm">
+          <div className="rounded-2xl border border-amber-100 bg-amber-50/60 p-4 shadow-sm">
             <div className="mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-[#C9974A] shadow-sm">
               <Shield size={18} className="text-white" />
             </div>
@@ -95,14 +124,7 @@ export default function Home() {
             </span>
           </div>
         </div>
-
-
-        
       </div>
-
-      
-
-      
 
       {/* Accesos rápidos */}
       <div className="mt-6 px-6">
@@ -166,7 +188,7 @@ export default function Home() {
           <IdCard size={20} />
           <span className="text-[10px] font-medium">Credencial</span>
         </Link>
-
+  
         <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 transition">
           <User size={20} />
           <span className="text-[10px] font-medium">Perfil</span>

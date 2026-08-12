@@ -88,7 +88,7 @@ export default function MiCredencial() {
             </div>
 
             {/* LÍNEA DORADA SUPERIOR (¡Recuperada y reluciente!) */}
-            <div className="w-full h-[1px] bg-gradient-to-r from-[#C9974A]/80 via-[#C9974A]/30 to-transparent mt-2" />
+          <div className="w-full h-[1px] min-h-[1px] shrink-0 bg-gradient-to-r from-[#C9974A]/80 via-[#C9974A]/30 to-transparent mt-2" />
 
             {/* Nombre */}
             <div className="mt-0.5">
