@@ -33,7 +33,7 @@ const handleSubmit = async (e: FormEvent) => {
 
   setLoading(true);
   try {
-    const res = await fetch("http://localhost:8080/api/crear-usuario", {
+    const res = await fetch(" n = await (await fetch(`https://backendauren.onrender.com/api/verificar-vinculacion`/api/crear-usuario", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password, dni }),

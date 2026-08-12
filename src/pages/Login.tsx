@@ -106,10 +106,8 @@ const loginWithGoogle = async () => {
 
         <div className="mb-6 text-center">
           <div className="flex items-center justify-center gap-2.5 mb-2">
-         <img
-  src="/auren.png"
-  className="h-10 w-10 brightness-0 invert"
-/>
+
+<img src="/auren-isotipo.png" className="h-8 w-8" alt="Auren" />
             <span className="text-4xl font-serif text-white tracking-tight">Auren</span>
           </div>
           
