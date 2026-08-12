@@ -1,4 +1,3 @@
-
 import { ChevronLeft, Share2, Shield, Calendar, MessageCircle, Phone, Globe, ShieldCheck, Wallet, IdCard } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
@@ -13,7 +12,7 @@ export default function MiCredencial() {
     dni: "06.123.456",
     estado: "ACTIVO",
     fechaActivacion: "04/05/2024",
-    planes: ["Auren Salud", "Auren en Ruta"],
+    planes: ["Auren Salud", "Auren en Ruta", "Auren Sepelios"],
   };
 
   return (
@@ -38,33 +37,33 @@ export default function MiCredencial() {
       <div className="px-5 pt-4">
         <div className="relative mx-auto aspect-[1.53/1] w-full max-w-sm overflow-hidden rounded-[16px] bg-[#061e3f] shadow-xl">
 
-          {/* 1. HAZ DE LUZ / BRILLO DIAGONAL (El brillo que te faltaba) */}
+          {/* 1. HAZ DE LUZ / BRILLO DIAGONAL */}
           <div className="pointer-events-none absolute -inset-x-20 top-0 h-full opacity-40 overflow-hidden">
             <div className="absolute transform -rotate-12 -top-10 left-1/4 w-72 h-40 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent blur-2xl" />
           </div>
 
           {/* Watermark del corazón a la derecha */}
-      <div className="pointer-events-none absolute right-4 top-[28%] w-28 opacity-[0.12]">
-  <img src="/auren.png" alt="" className="w-full" />
-</div>
+          <div className="pointer-events-none absolute right-1 top-[32%] w-28 opacity-[0.22]">
+            <img src="/aurenblancocard.png" className="w-full" alt="" />
+          </div>
 
           {/* Curvas doradas inferiores */}
-<svg className="pointer-events-none absolute bottom-0 right-0 z-10 h-[55%] w-[50%]" viewBox="0 0 150 120" fill="none">
-  <defs>
-    <linearGradient id="goldFade1" x1="100%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" stopColor="#C9974A" stopOpacity="0.85" />
-      <stop offset="100%" stopColor="#C9974A" stopOpacity="0" />
-    </linearGradient>
-    <linearGradient id="goldFade2" x1="100%" y1="100%" x2="0%" y2="0%">
-      <stop offset="0%" stopColor="#C9974A" stopOpacity="0.55" />
-      <stop offset="100%" stopColor="#C9974A" stopOpacity="0" />
-    </linearGradient>
-  </defs>
+          <svg className="pointer-events-none absolute bottom-0 right-0 z-10 h-[55%] w-[50%]" viewBox="0 0 150 120" fill="none">
+            <defs>
+              <linearGradient id="goldFade1" x1="100%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stopColor="#C9974A" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#C9974A" stopOpacity="0" />
+              </linearGradient>
+              <linearGradient id="goldFade2" x1="100%" y1="100%" x2="0%" y2="0%">
+                <stop offset="0%" stopColor="#C9974A" stopOpacity="0.55" />
+                <stop offset="100%" stopColor="#C9974A" stopOpacity="0" />
+              </linearGradient>
+            </defs>
 
-  <path d="M150 120 Q90 100 50 60" stroke="url(#goldFade1)" strokeWidth="1.4" fill="none" />
-  <path d="M150 105 Q95 90 60 50" stroke="url(#goldFade2)" strokeWidth="1" fill="none" />
-  <path d="M150 90 Q100 80 70 42" stroke="url(#goldFade2)" strokeWidth="0.7" fill="none" />
-</svg>
+            <path d="M150 120 Q90 100 50 60" stroke="url(#goldFade1)" strokeWidth="1.4" fill="none" />
+            <path d="M150 105 Q95 90 60 50" stroke="url(#goldFade2)" strokeWidth="1" fill="none" />
+            <path d="M150 90 Q100 80 70 42" stroke="url(#goldFade2)" strokeWidth="0.7" fill="none" />
+          </svg>
 
           {/* Contenido */}
           <div className="relative z-20 flex h-full flex-col justify-between px-5 pt-3.5 pb-[13%]">
@@ -73,12 +72,9 @@ export default function MiCredencial() {
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2">
-                  {/* Logo Isotipo */}
-              <img
-  src="/auren.png"
-  className="h-10 w-10 brightness-0 invert"
-/>
-                  <span className="text-xl font-serif tracking-tight text-white font-normal">Auren</span>
+                  <div className="h-6 flex items-center mt-1">
+                    <img src="/aureblanco.png" className="h-full w-auto object-contain" alt="Auren" />
+                  </div>
                 </div>
                 <p className="ml-1 text-[9px] text-[#C9974A] tracking-wide">
                   Cuidamos cada momento.
@@ -91,23 +87,24 @@ export default function MiCredencial() {
               </div>
             </div>
 
-            {/* 2. LÍNEA DORADA SUPERIOR (Justo antes del nombre, como en la foto) */}
-            <div className="w-full h-[1px] bg-gradient-to-r from-[#C9974A]/80 via-[#C9974A]/30 to-transparent -my-1" />
+            {/* LÍNEA DORADA SUPERIOR (¡Recuperada y reluciente!) */}
+            <div className="w-full h-[1px] bg-gradient-to-r from-[#C9974A]/80 via-[#C9974A]/30 to-transparent mt-2" />
 
             {/* Nombre */}
             <div className="mt-0.5">
               <p className="text-lg font-bold leading-tight text-white">{afiliado.nombre}</p>
-              <div className="mt-1 h-[2px] w-7 bg-[#C9974A]" />
+              <div className="mt-0.5 h-[2px] w-7 bg-[#C9974A]" />
             </div>
 
-            {/* Información (DNI, Act activación, Estado, Planes) */}
-            <div className="grid grid-cols-2 mt-0.5">
-              <div>
+            {/* Información (DNI, Act activación, Estado, Planes) - Alineados perfectamente */}
+            <div className="grid grid-cols-2 mt-1 gap-x-4">
+              <div className="flex flex-col justify-between">
                 <div>
-                  <p className="text-[8px] text-[#C9974A]">DNI</p>
+                  <p className="text-[8px] leading-none text-[#C9974A]">DNI</p>
                   <p className="mt-0.5 text-xs font-semibold text-white">{afiliado.dni}</p>
                 </div>
-                <div className="mt-1.5">
+
+                <div className="mt-1">
                   <p className="text-[8px] text-[#C9974A]">Fecha de activación</p>
                   <div className="mt-0.5 flex items-center gap-1">
                     <Calendar size={11} strokeWidth={1.8} className="text-[#C9974A]" />
@@ -116,24 +113,29 @@ export default function MiCredencial() {
                 </div>
               </div>
 
-              <div>
-                <p className="text-[8px] text-[#C9974A]">Estado</p>
-                <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-[#18a957] px-2 py-0.5 text-[8px] font-bold text-white shadow-sm">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
-                  ACTIVO
-                </span>
+              <div className="flex flex-col justify-between">
+                <div>
+                  <p className="text-[8px] leading-none text-[#C9974A]">Estado</p>
+                  <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-[#18a957] px-2 py-0.5 text-[8px] font-bold text-white shadow-sm">
+                    <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
+                    ACTIVO
+                  </span>
+                </div>
 
-                <p className="mt-1.5 text-[8px] text-[#C9974A]">Planes contratados</p>
-                <div className="mt-0.5 space-y-0.5">
-                  {afiliado.planes.map((plan) => (
-                    <div key={plan} className="flex items-center gap-1">
-                      <span className="flex h-[11px] w-[11px] items-center justify-center rounded-full border border-[#C9974A] text-[7px] text-[#C9974A]">✓</span>
-                      <span className="text-[9px] font-medium text-white">{plan}</span>
-                    </div>
-                  ))}
+                <div className="mt-1">
+                  <p className="text-[8px] text-[#C9974A]">Planes contratados</p>
+                  <div className="mt-0.5 space-y-0.5">
+                    {afiliado.planes.map((plan) => (
+                      <div key={plan} className="flex items-center gap-1">
+                        <span className="flex h-[11px] w-[11px] items-center justify-center rounded-full border border-[#C9974A] text-[7px] text-[#C9974A]">✓</span>
+                        <span className="text-[9px] font-medium text-white">{plan}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
+
           </div>
 
           {/* Footer inferior dorado */}
@@ -150,7 +152,7 @@ export default function MiCredencial() {
         </div>
       </div>
 
-      {/* Botón Guardar en Wallet (opcional si ya lo tenías) */}
+      {/* Botón Guardar en Wallet */}
       <div className="px-5 mt-4">
         <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm">
           <p className="text-xs text-slate-600 max-w-[200px] leading-relaxed">
@@ -163,7 +165,7 @@ export default function MiCredencial() {
         </div>
       </div>
 
-      {/* Reverso (Se mantiene igual que ya lo tenías flama) */}
+      {/* Reverso */}
       <div className="px-5 pt-4">
         <div className="relative mx-auto aspect-[1.53/1] w-full max-w-sm overflow-hidden rounded-[16px] bg-[#061e3f] shadow-xl">
           <div className="absolute left-3 top-3 z-10 flex items-center gap-1 rounded-full bg-[#C9974A] px-2.5 py-0.5">
