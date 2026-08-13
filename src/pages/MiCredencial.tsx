@@ -1,18 +1,55 @@
+import { useState, useEffect } from "react";
 import { ChevronLeft, Share2, Shield, Calendar, MessageCircle, Phone, Globe, ShieldCheck, Wallet, IdCard } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 
+interface Socio {
+  nombre?: string;
+  apellido?: string;
+  dni?: string;
+  estado?: string;
+  fechaActivacion?: string;
+  planes?: string[];
+}
+
 export default function MiCredencial() {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
 
+  const [socio, setSocio] = useState<Socio>(() => {
+    const cached = localStorage.getItem("auren_socio");
+    return cached ? JSON.parse(cached) : {};
+  });
+
+  useEffect(() => {
+    const fetchSocio = async () => {
+      if (!user) return;
+      const idToken = await user.getIdToken();
+      try {
+        const res = await fetch("https://backendauren.onrender.com/api/mi-socio", {
+          headers: { Authorization: `Bearer ${idToken}` },
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setSocio(data);
+          localStorage.setItem("auren_socio", JSON.stringify(data));
+        }
+      } catch {
+        // silencioso
+      }
+    };
+    fetchSocio();
+  }, [user]);
+
   const afiliado = {
-    nombre: user?.displayName || "Alan Abad",
-    dni: "06.123.456",
-    estado: "ACTIVO",
-    fechaActivacion: "04/05/2024",
-    planes: ["Auren Salud", "Auren en Ruta", "Auren Sepelios"],
+    nombre: socio.nombre && socio.apellido
+      ? `${socio.nombre} ${socio.apellido}`
+      : user?.displayName || "—",
+    dni: socio.dni || "—",
+    estado: (socio.estado || "activo").toUpperCase(),
+    fechaActivacion: socio.fechaActivacion || "—",
+    planes: socio.planes && socio.planes.length > 0 ? socio.planes : [],
   };
 
   return (
@@ -37,17 +74,14 @@ export default function MiCredencial() {
       <div className="px-5 pt-4">
         <div className="relative mx-auto aspect-[1.53/1] w-full max-w-sm overflow-hidden rounded-[16px] bg-[#061e3f] shadow-xl">
 
-          {/* 1. HAZ DE LUZ / BRILLO DIAGONAL */}
           <div className="pointer-events-none absolute -inset-x-20 top-0 h-full opacity-40 overflow-hidden">
             <div className="absolute transform -rotate-12 -top-10 left-1/4 w-72 h-40 bg-gradient-to-r from-transparent via-cyan-400/20 to-transparent blur-2xl" />
           </div>
 
-          {/* Watermark del corazón a la derecha */}
           <div className="pointer-events-none absolute right-1 top-[32%] w-28 opacity-[0.22]">
             <img src="/aurenblancocard.png" className="w-full" alt="" />
           </div>
 
-          {/* Curvas doradas inferiores */}
           <svg className="pointer-events-none absolute bottom-0 right-0 z-10 h-[55%] w-[50%]" viewBox="0 0 150 120" fill="none">
             <defs>
               <linearGradient id="goldFade1" x1="100%" y1="100%" x2="0%" y2="0%">
@@ -65,10 +99,7 @@ export default function MiCredencial() {
             <path d="M150 90 Q100 80 70 42" stroke="url(#goldFade2)" strokeWidth="0.7" fill="none" />
           </svg>
 
-          {/* Contenido */}
           <div className="relative z-20 flex h-full flex-col justify-between px-5 pt-3.5 pb-[13%]">
-            
-            {/* Header del Frente */}
             <div className="flex items-start justify-between">
               <div>
                 <div className="flex items-center gap-2">
@@ -87,16 +118,13 @@ export default function MiCredencial() {
               </div>
             </div>
 
-            {/* LÍNEA DORADA SUPERIOR (¡Recuperada y reluciente!) */}
-          <div className="w-full h-[1px] min-h-[1px] shrink-0 bg-gradient-to-r from-[#C9974A]/80 via-[#C9974A]/30 to-transparent mt-2" />
+            <div className="w-full h-[1px] min-h-[1px] shrink-0 bg-gradient-to-r from-[#C9974A]/80 via-[#C9974A]/30 to-transparent mt-2" />
 
-            {/* Nombre */}
             <div className="mt-0.5">
               <p className="text-lg font-bold leading-tight text-white">{afiliado.nombre}</p>
               <div className="mt-0.5 h-[2px] w-7 bg-[#C9974A]" />
             </div>
 
-            {/* Información (DNI, Act activación, Estado, Planes) - Alineados perfectamente */}
             <div className="grid grid-cols-2 mt-1 gap-x-4">
               <div className="flex flex-col justify-between">
                 <div>
@@ -118,7 +146,7 @@ export default function MiCredencial() {
                   <p className="text-[8px] leading-none text-[#C9974A]">Estado</p>
                   <span className="mt-0.5 inline-flex items-center gap-1 rounded-full bg-[#18a957] px-2 py-0.5 text-[8px] font-bold text-white shadow-sm">
                     <span className="h-1.5 w-1.5 rounded-full bg-white animate-pulse" />
-                    ACTIVO
+                    {afiliado.estado}
                   </span>
                 </div>
 
@@ -135,10 +163,8 @@ export default function MiCredencial() {
                 </div>
               </div>
             </div>
-
           </div>
 
-          {/* Footer inferior dorado */}
           <div className="absolute bottom-0 left-0 right-0 z-30 flex h-[13%] items-center justify-between bg-[#C9974A] px-4">
             <div className="flex items-center gap-1.5">
               <Shield size={12} className="text-[#061e3f]" />
