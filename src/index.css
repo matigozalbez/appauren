@@ -25,6 +25,15 @@ input, select, textarea {
   font-size: 16px !important;
 }
 
+@media screen and (max-width: 767px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+
 @keyframes slideFromRight {
   from { transform: translateX(100%); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
@@ -36,9 +45,9 @@ input, select, textarea {
 }
 
 .animate-slide-right {
-  animation: slideFromRight 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideFromRight 0.90s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
 
 .animate-slide-left {
-  animation: slideFromLeft 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: slideFromLeft 0.90s cubic-bezier(0.25, 1, 0.5, 1) forwards;
 }
