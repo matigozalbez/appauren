@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, Share2, Shield, Calendar, MessageCircle, Phone, Globe, ShieldCheck, Wallet, IdCard } from "lucide-react";
+import {  Share2, Shield, Calendar, MessageCircle, Phone, Globe, ShieldCheck, Wallet, IdCard } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
