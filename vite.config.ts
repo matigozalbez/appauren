@@ -17,8 +17,8 @@ export default defineConfig({
         name: 'Mi Auren',
         short_name: 'Auren',
         description: 'Todo resuelto, en un solo lugar.',
-        theme_color: '#071328', // Coincide con el fondo de tu app (#071328)
-        background_color: '#071328',
+        theme_color: '#FFFFFF', // Coincide con el fondo de tu app (#071328)
+        background_color: '#FFFFFF',
         display: 'standalone',
         start_url: '/',
         icons: [
