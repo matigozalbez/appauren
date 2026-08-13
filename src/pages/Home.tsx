@@ -11,10 +11,11 @@ export default function Home() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    navigate("/", { replace: true });
-  };
+const handleLogout = async () => {
+  localStorage.removeItem("auren_dni");
+  await signOut(auth);
+  navigate("/", { replace: true });
+};
 
   return (
     <div className="min-h-screen bg-slate-50 pb-24">

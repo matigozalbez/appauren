@@ -18,31 +18,36 @@ import { useNavigate } from "react-router-dom";
 export default function Perfil() {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
-  const [dni, setDni] = useState<string | null>(null);
+const [dni, setDni] = useState<string | null>(() => {
+  // al montar, intenta leer del cache local primero (instantáneo)
+  return localStorage.getItem("auren_dni");
+});
 
-  useEffect(() => {
-    const fetchDni = async () => {
-      if (!user) return;
-      const idToken = await user.getIdToken();
-      try {
-        const res = await fetch("https://backendauren.onrender.com/api/mi-socio", {
-          headers: { Authorization: `Bearer ${idToken}` },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setDni(data.dni);
-        }
-      } catch {
-        // silencioso, no es crítico si falla
+useEffect(() => {
+  const fetchDni = async () => {
+    if (!user) return;
+    const idToken = await user.getIdToken();
+    try {
+      const res = await fetch("https://backendauren.onrender.com/api/mi-socio", {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setDni(data.dni);
+        localStorage.setItem("auren_dni", data.dni); // guardamos para la próxima vez
       }
-    };
-    fetchDni();
-  }, [user]);
-
-  const handleLogout = async () => {
-    await signOut(auth);
-    navigate("/", { replace: true });
+    } catch {
+      // silencioso
+    }
   };
+  fetchDni();
+}, [user]);
+
+const handleLogout = async () => {
+  localStorage.removeItem("auren_dni");
+  await signOut(auth);
+  navigate("/", { replace: true });
+};
 
   return (
     <div className="min-h-screen bg-slate-50 pb-24">
