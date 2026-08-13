@@ -15,7 +15,7 @@ interface Socio {
 
 export default function MiCredencial() {
   const [user] = useAuthState(auth);
-  const navigate = useNavigate();
+
 
   const [socio, setSocio] = useState<Socio>(() => {
     const cached = localStorage.getItem("auren_socio");
