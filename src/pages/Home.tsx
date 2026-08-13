@@ -5,6 +5,7 @@ import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 
+
 export default function Home() {
   const [user] = useAuthState(auth);
   const firstName = user?.displayName?.split(" ")[0] || "Alan";
@@ -17,6 +18,7 @@ export default function Home() {
 
   const direction = sessionStorage.getItem("nav_direction") || "right";
   const animationClass = direction === "right" ? "animate-slide-right" : "animate-slide-left";
+
 
   useEffect(() => {
     const fetchSocio = async () => {
@@ -45,19 +47,17 @@ export default function Home() {
     navigate("/", { replace: true });
   };
 
-  // colores/iconos rotando para cada plan, para no repetir todo azul
   const planStyles = [
-    { icon: Heart, bg: "bg-sky-500", cardBg: "bg-sky-50/60", cardBorder: "border-sky-100", badgeBg: "bg-emerald-500" },
-    { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-amber-50/60", cardBorder: "border-amber-100", badgeBg: "bg-[#C9974A]" },
-    { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-amber-50/60", cardBorder: "border-amber-100", badgeBg: "bg-[#C9974A]" },
-    { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-amber-50/60", cardBorder: "border-amber-100", badgeBg: "bg-[#C9974A]" },
+    { icon: Heart, bg: "bg-[#0F1E3D]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-emerald-600" },
+    { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
+    { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
+    { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
   ];
 
   return (
-     <div className={`min-h-screen-safe bg-slate-50 pb-10 ${animationClass}`}>
-    <div className="min-h-screen bg-slate-50 pb-24">
+    <div className={`min-h-screen bg-slate-50 pb-24 overflow-y-auto ${animationClass}`}>
       {/* Header navy con curva inferior */}
-      <div className="relative bg-[#0F1E3D] px-6 pb-16 pt-6 rounded-b-[30px] shadow-lg">
+      <div className="relative bg-[#0F1E3D] px-6 pb-16 pt-6 rounded-b-[32px] shadow-md">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <img src="/auren-isotipo.png" className="h-8 w-8 object-contain" alt="Auren" />
@@ -73,7 +73,7 @@ export default function Home() {
             <div className="relative">
               <button
                 onClick={() => setMenuOpen(!menuOpen)}
-                className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#C9974A] text-sm font-bold text-[#0F1E3D]"
+                className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#C9974A] text-sm font-bold text-[#0F1E3D] ring-2 ring-white/20 transition hover:scale-105"
               >
                 {user?.photoURL ? (
                   <img src={user.photoURL} className="h-full w-full object-cover" alt="Perfil" />
@@ -85,13 +85,13 @@ export default function Home() {
               {menuOpen && (
                 <>
                   <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
-                  <div className="absolute right-0 top-full z-20 mt-2 w-44 overflow-hidden rounded-xl bg-white shadow-lg">
+                  <div className="absolute right-0 top-full z-20 mt-2 w-44 overflow-hidden rounded-2xl bg-white shadow-xl border border-slate-100">
                     <div className="border-b border-slate-100 px-4 py-3">
                       <p className="text-sm font-semibold text-slate-900">{firstName}</p>
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="flex w-full items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50"
+                      className="flex w-full items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-slate-50 font-medium transition"
                     >
                       Cerrar sesión
                     </button>
@@ -100,27 +100,27 @@ export default function Home() {
               )}
             </div>
 
-            <button className="relative flex h-9 w-9 items-center justify-center text-white transition">
-              <img src="campanitasinfondo.png" />
-              <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-red-500" />
+            <button className="relative flex h-9 w-9 items-center justify-center text-white transition hover:opacity-80">
+              <img src="campanitasinfondo.png" className="w-5 h-5 object-contain" alt="Notificaciones" />
+              <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-[#0F1E3D]" />
             </button>
           </div>
         </div>
 
         <div className="mt-6 text-center">
           <h1 className="text-2xl font-bold text-white">¡Hola, {firstName}!</h1>
-          <p className="text-sm text-[#C9974A] mt-0.5">Bienvenido a Mi Auren</p>
+          <p className="text-xs text-[#C9974A] font-medium tracking-wide mt-1 uppercase">Bienvenido a Mi Auren</p>
         </div>
       </div>
 
       {/* Card de afiliación, flotando sobre el header */}
       <div className="-mt-8 px-6 relative z-10">
-        <div className="flex items-center gap-3 rounded-2xl bg-white p-4 shadow-xl border border-slate-100">
+        <div className="flex items-center gap-3.5 rounded-2xl bg-white p-4 shadow-lg border border-slate-100/80">
           <div className="flex h-10 w-10 shrink-0 items-center justify-center">
-            <img src="/escudoverde.png" />
+            <img src="/escudoverde.png" className="w-full h-full object-contain" alt="Escudo" />
           </div>
           <div>
-            <p className="font-semibold text-slate-900">Afiliación Activa</p>
+            <p className="font-semibold text-slate-900 text-sm">Afiliación Activa</p>
             <p className="text-xs text-slate-500">Tu cobertura está vigente.</p>
           </div>
         </div>
@@ -128,20 +128,24 @@ export default function Home() {
 
       {/* Tus planes */}
       <div className="mt-6 px-6">
-        <h2 className="mb-3 text-sm font-semibold text-slate-700">Tus planes</h2>
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">Tus planes</h2>
         <div className="grid grid-cols-2 gap-3">
           {planes.map((plan, i) => {
             const style = planStyles[i % planStyles.length];
             const Icon = style.icon;
             return (
-              <div key={plan} className={`rounded-2xl border ${style.cardBorder} ${style.cardBg} p-4 shadow-sm`}>
-                <div className={`mb-2 flex h-10 w-10 items-center justify-center rounded-full ${style.bg} shadow-sm`}>
-                  <Icon size={18} className="text-white" />
+              <div key={plan} className={`rounded-2xl border ${style.cardBorder} ${style.cardBg} p-4 shadow-sm transition hover:shadow-md flex flex-col justify-between`}>
+                <div>
+                  <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-xl ${style.bg} text-white shadow-sm`}>
+                    <Icon size={18} />
+                  </div>
+                  <p className="font-semibold text-slate-900 text-sm leading-snug">{plan}</p>
                 </div>
-                <p className="font-semibold text-slate-900 text-sm">{plan}</p>
-                <span className={`mt-2 inline-block rounded-full ${style.badgeBg} px-2 py-0.5 text-[10px] font-bold text-white shadow-xs`}>
-                  ACTIVO
-                </span>
+                <div className="mt-4">
+                  <span className={`inline-block rounded-full ${style.badgeBg} px-2.5 py-0.5 text-[10px] font-bold text-white tracking-wider`}>
+                    ACTIVO
+                  </span>
+                </div>
               </div>
             );
           })}
@@ -150,11 +154,11 @@ export default function Home() {
 
       {/* Accesos rápidos */}
       <div className="mt-6 px-6">
-        <h2 className="mb-3 text-sm font-semibold text-slate-700">Accesos rápidos</h2>
+        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">Accesos rápidos</h2>
         <div className="grid grid-cols-2 gap-3">
-          <Link to="/credencial" className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200">
+          <Link to="/credencial" className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 hover:shadow-md">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-[#0F1E3D]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-[#0F1E3D]">
                 <IdCard size={18} />
               </div>
               <span className="text-xs font-semibold text-slate-800">Mi Credencial</span>
@@ -162,9 +166,9 @@ export default function Home() {
             <ChevronRight size={16} className="text-slate-400" />
           </Link>
 
-          <button className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 w-full text-left">
+          <button className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 hover:shadow-md w-full text-left">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-100 text-[#0F1E3D]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-[#0F1E3D]">
                 <Shield size={18} />
               </div>
               <span className="text-xs font-semibold text-slate-800">Mis Coberturas</span>
@@ -172,19 +176,19 @@ export default function Home() {
             <ChevronRight size={16} className="text-slate-400" />
           </button>
 
-          <button className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 w-full text-left">
+          <button className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 hover:shadow-md w-full text-left">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                <img src="whatticono.png" />
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                <img src="whatticono.png" className="w-5 h-5 object-contain" alt="WhatsApp" />
               </div>
               <span className="text-xs font-semibold text-slate-800">WhatsApp</span>
             </div>
             <ChevronRight size={16} className="text-slate-400" />
           </button>
 
-          <button className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 w-full text-left">
+          <button className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 hover:shadow-md w-full text-left">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-amber-50 text-[#C9974A]">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-[#C9974A]">
                 <Phone size={18} />
               </div>
               <span className="text-xs font-semibold text-slate-800">Contacto</span>
@@ -193,9 +197,6 @@ export default function Home() {
           </button>
         </div>
       </div>
-
-      {/* Nav inferior fija */}
-    </div>
     </div>
   );
 }
