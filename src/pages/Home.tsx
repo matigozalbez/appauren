@@ -175,27 +175,7 @@ export default function Home() {
       </div>
 
       {/* Nav inferior fija */}
-      <div className="fixed bottom-0 left-0 right-0 flex items-center justify-around border-t border-slate-200 bg-white py-2.5 z-50 shadow-lg">
-        <button className="flex flex-col items-center gap-1 text-[#0F1E3D]">
-          <HomeIcon size={20} />
-          <span className="text-[10px] font-bold">Inicio</span>
-        </button>
-
-        <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 transition">
-          <Shield size={20} />
-          <span className="text-[10px] font-medium">Coberturas</span>
-        </button>
-
-        <Link to="/credencial" className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 transition">
-          <IdCard size={20} />
-          <span className="text-[10px] font-medium">Credencial</span>
-        </Link>
-  
-        <button className="flex flex-col items-center gap-1 text-slate-400 hover:text-slate-600 transition">
-          <User size={20} />
-          <span className="text-[10px] font-medium">Perfil</span>
-        </button>
-      </div>
+     
     </div>
   );
 }
