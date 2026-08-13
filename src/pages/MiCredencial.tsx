@@ -53,6 +53,7 @@ export default function MiCredencial() {
   };
 
   return (
+    <div className="animate-slideInFromRight min-h-screen-safe">
     <div className="min-h-screen-safe bg-slate-50 pb-10">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-4">
@@ -287,6 +288,7 @@ export default function MiCredencial() {
           </p>
         </div>
       </div>
+    </div>
     </div>
   );
 }

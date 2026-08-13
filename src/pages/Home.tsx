@@ -51,6 +51,7 @@ export default function Home() {
   ];
 
   return (
+    <div className="animate-slideInFromRight min-h-screen-safe">
     <div className="min-h-screen bg-slate-50 pb-24">
       {/* Header navy con curva inferior */}
       <div className="relative bg-[#0F1E3D] px-6 pb-16 pt-6 rounded-b-[30px] shadow-lg">
@@ -191,6 +192,7 @@ export default function Home() {
       </div>
 
       {/* Nav inferior fija */}
+    </div>
     </div>
   );
 }

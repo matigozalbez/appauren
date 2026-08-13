@@ -50,6 +50,7 @@ const handleLogout = async () => {
 };
 
   return (
+<div className="animate-slideInFromRight min-h-screen-safe">
     <div className="min-h-screen bg-slate-50 pb-24">
       {/* Header navy */}
       <div className="bg-[#0F1E3D] px-6 pb-12 pt-8 rounded-b-[30px] shadow-lg">
@@ -165,6 +166,7 @@ const handleLogout = async () => {
           Cerrar sesión
         </button>
       </div>
+    </div>
     </div>
   );
 }
