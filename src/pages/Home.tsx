@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Heart, Shield,  Phone, IdCard, Home as HomeIcon, User, ChevronRight} from "lucide-react";
+import { Heart, Shield,  Phone, IdCard, Home as ChevronRight} from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
