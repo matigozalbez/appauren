@@ -21,6 +21,8 @@ export default function MiCredencial() {
     const cached = localStorage.getItem("auren_socio");
     return cached ? JSON.parse(cached) : {};
   });
+const direction = sessionStorage.getItem("nav_direction") || "right";
+  const animationClass = direction === "right" ? "animate-slide-right" : "animate-slide-left";
 
   useEffect(() => {
     const fetchSocio = async () => {
@@ -53,7 +55,7 @@ export default function MiCredencial() {
   };
 
   return (
-    <div className="animate-slideInFromRight min-h-screen-safe">
+    <div className={`min-h-screen-safe bg-slate-50 pb-10 ${animationClass}`}>
     <div className="min-h-screen-safe bg-slate-50 pb-10">
       {/* Header */}
       <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-4">

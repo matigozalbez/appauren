@@ -15,6 +15,9 @@ export default function Home() {
     return cached ? JSON.parse(cached) : [];
   });
 
+  const direction = sessionStorage.getItem("nav_direction") || "right";
+  const animationClass = direction === "right" ? "animate-slide-right" : "animate-slide-left";
+
   useEffect(() => {
     const fetchSocio = async () => {
       if (!user) return;
@@ -51,7 +54,7 @@ export default function Home() {
   ];
 
   return (
-    <div className="animate-slideInFromRight min-h-screen-safe">
+     <div className={`min-h-screen-safe bg-slate-50 pb-10 ${animationClass}`}>
     <div className="min-h-screen bg-slate-50 pb-24">
       {/* Header navy con curva inferior */}
       <div className="relative bg-[#0F1E3D] px-6 pb-16 pt-6 rounded-b-[30px] shadow-lg">

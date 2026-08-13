@@ -22,7 +22,8 @@ const [dni, setDni] = useState<string | null>(() => {
   // al montar, intenta leer del cache local primero (instantáneo)
   return localStorage.getItem("auren_dni");
 });
-
+ const direction = sessionStorage.getItem("nav_direction") || "right";
+  const animationClass = direction === "right" ? "animate-slide-right" : "animate-slide-left";
 useEffect(() => {
   const fetchDni = async () => {
     if (!user) return;
@@ -50,7 +51,7 @@ const handleLogout = async () => {
 };
 
   return (
-<div className="animate-slideInFromRight min-h-screen-safe">
+<div className={`min-h-screen-safe bg-slate-50 pb-10 ${animationClass}`}>
     <div className="min-h-screen bg-slate-50 pb-24">
       {/* Header navy */}
       <div className="bg-[#0F1E3D] px-6 pb-12 pt-8 rounded-b-[30px] shadow-lg">
