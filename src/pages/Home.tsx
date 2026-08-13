@@ -4,6 +4,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
+import MarketingCard from "../components/MarketingBanner";
 
 
 export default function Home() {
@@ -114,17 +115,7 @@ export default function Home() {
       </div>
 
       {/* Card de afiliación, flotando sobre el header */}
-      <div className="-mt-8 px-6 relative z-10">
-        <div className="flex items-center gap-3.5 rounded-2xl bg-white p-4 shadow-lg border border-slate-100/80">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center">
-            <img src="/escudoverde.png" className="w-full h-full object-contain" alt="Escudo" />
-          </div>
-          <div>
-            <p className="font-semibold text-slate-900 text-sm">Afiliación Activa</p>
-            <p className="text-xs text-slate-500">Tu cobertura está vigente.</p>
-          </div>
-        </div>
-      </div>
+<MarketingCard/>
 
       {/* Tus planes */}
       <div className="mt-6 px-6">

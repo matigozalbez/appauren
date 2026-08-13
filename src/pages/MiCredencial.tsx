@@ -50,7 +50,7 @@ const direction = sessionStorage.getItem("nav_direction") || "right";
       : user?.displayName || "—",
     dni: socio.dni || "—",
     estado: (socio.estado || "activo").toUpperCase(),
-    fechaActivacion: socio.fechaActivacion || "—",
+    fechaActivacion: socio.fechaActivacion || "13/08",
     planes: socio.planes && socio.planes.length > 0 ? socio.planes : [],
   };
 
@@ -58,15 +58,15 @@ const direction = sessionStorage.getItem("nav_direction") || "right";
     <div className={`min-h-screen-safe bg-slate-50 pb-10 ${animationClass}`}>
     <div className="min-h-screen-safe bg-slate-50 pb-10">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 bg-white px-4 py-4">
-        <button onClick={() => navigate("/home")} className="text-slate-700">
-          <ChevronLeft size={22} />
-        </button>
-        <h1 className="text-base font-semibold text-slate-900">Mi Credencial</h1>
-        <button className="text-slate-700">
+ <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-[#0F1E3D]">
+        <h1 className="text-xl font-bold tracking-tight text-white flex items-center justify-between">
+          <span>Mi Credencial</span>
+           <button className="text-slate-700">
           <Share2 size={20} />
         </button>
+        </h1>
       </div>
+
 
       <p className="mt-4 flex items-center justify-center gap-2 text-center text-xs text-slate-500">
         <ShieldCheck size={14} className="text-[#C9974A]" />
