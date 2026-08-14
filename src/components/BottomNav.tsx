@@ -6,6 +6,7 @@ const routeIndices: { [key: string]: number } = {
   "/home": 1,
   "/coberturas": 2,
   "/credencial": 3,
+  "/medicamentos": 3.5,
   "/perfil": 4,
 };
 
