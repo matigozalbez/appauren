@@ -60,7 +60,7 @@ export default function Home({ openMenu }: HomeProps) {
   ];
 
   return (
-    <div className={`min-h-screen bg-slate-50 pb-24 overflow-y-auto ${animationClass}`}>
+    <div className={`min-h-screen-safe bg-slate-50 pb-24 overflow-y-auto ${animationClass}`}>
       {/* Header navy con curva inferior */}
       <div className="relative bg-[#0F1E3D] px-6 pb-16 pt-6 rounded-b-[32px] shadow-md">
 <button onClick={openMenu}>
