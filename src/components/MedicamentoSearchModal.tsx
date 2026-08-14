@@ -39,8 +39,9 @@ export default function BuscarMedicamentoView() {
   const [buscando, setBuscando] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  /*
   const { descuentos } = useMedicamentosDescuento();
-
+*/
 // Nos aseguramos de que sessionStorage nunca esté vacío
 // Si hay algo guardado lo usa, si es null o vacío, le encaja "right" por defecto al toque
   const direction = sessionStorage.getItem("nav_direction") || "right";
@@ -80,7 +81,7 @@ export default function BuscarMedicamentoView() {
     descuentos.find((d) => d.codigo === codigo);
 
   return (
-    <div className={`min-h-screen-safe bg-slate-50 text-slate-800 pb-24 ${animationClass}`}>
+    <div className={`min-h-screen-safe bg-slate-50 text-slate-800 pb-32 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] ${animationClass}`}>
       
       {/* Header Estilo Perfil */}
       <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-[#0F1E3D] flex items-center gap-4">
