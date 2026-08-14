@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
-import { Heart, Shield, Phone, IdCard, ChevronRight } from "lucide-react";
+import { Heart, Shield, Phone, IdCard, ChevronRight,Menu } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import MarketingCard from "../components/MarketingBanner";
 
+interface HomeProps {
+  openMenu: () => void;
+}
 
-export default function Home() {
+export default function Home({ openMenu }: HomeProps) {
   const [user] = useAuthState(auth);
   const firstName = user?.displayName?.split(" ")[0] || "Alan";
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+
   const [planes, setPlanes] = useState<string[]>(() => {
     const cached = localStorage.getItem("auren_planes");
     return cached ? JSON.parse(cached) : [];
@@ -59,6 +63,9 @@ export default function Home() {
     <div className={`min-h-screen bg-slate-50 pb-24 overflow-y-auto ${animationClass}`}>
       {/* Header navy con curva inferior */}
       <div className="relative bg-[#0F1E3D] px-6 pb-16 pt-6 rounded-b-[32px] shadow-md">
+<button onClick={openMenu}>
+        <Menu size={22} className="text-white" />
+      </button>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <img src="/auren-isotipo.png" className="h-8 w-8 object-contain" alt="Auren" />
@@ -188,6 +195,7 @@ export default function Home() {
           </button>
         </div>
       </div>
+
     </div>
   );
 }
