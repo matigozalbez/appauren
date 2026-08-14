@@ -1,39 +1,35 @@
 @import "tailwindcss";
 
-
 html, body {
   overscroll-behavior: none;
-  overflow-x: hidden;
+  overflow: hidden; /* <--- Bloquea el scroll general de la página entera */
+  height: 100%;     /* <--- Fija el alto exacto al 100% de la pantalla */
+  position: fixed;  /* <--- Evita que el body se mueva */
+  width: 100%;
 }
 
 body {
- background-color: #211a12; /* O el color oscuro/base que combine con tu app */
+  background-color: #211a12;
   margin: 0;
   padding: 0;
-  overflow-x: hidden;
- 
 }
 
+/* El contenedor principal de tu app dentro del body debe tener esto para poder scrollear por dentro */
+.app-container {
+  height: 100vh;
+  height: 100dvh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
 
 .min-h-screen-safe {
   min-height: 100vh;
   min-height: 100dvh;
 }
 
-
-
 input, select, textarea {
   font-size: 16px !important;
 }
-
-@media screen and (max-width: 767px) {
-  input,
-  select,
-  textarea {
-    font-size: 16px !important;
-  }
-}
-
 
 @keyframes slideFromRight {
   from { transform: translateX(100%); opacity: 0; }
