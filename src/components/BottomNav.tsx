@@ -48,8 +48,7 @@ export const BottomNav = () => {
       <Link 
         to="/medicamentos" 
         onClick={() => handleNavClick("/medicamentos")}
-        className="hidden pointer-events-none"
-        aria-hidden="true"
+         className={`flex flex-col items-center gap-1 ${isActive('/perfil') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
       />
 
       <Link 

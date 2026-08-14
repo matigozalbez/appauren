@@ -39,9 +39,9 @@ export default function BuscarMedicamentoView() {
   const [buscando, setBuscando] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  /*
+
   const { descuentos } = useMedicamentosDescuento();
-*/
+
 // Nos aseguramos de que sessionStorage nunca esté vacío
 // Si hay algo guardado lo usa, si es null o vacío, le encaja "right" por defecto al toque
   const direction = sessionStorage.getItem("nav_direction") || "right";
