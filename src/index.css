@@ -1,17 +1,19 @@
 @import "tailwindcss";
 
 html, body {
-  overscroll-behavior: none;
-  overflow: hidden; /* <--- Bloquea el scroll general de la página entera */
-  height: 100%;     /* <--- Fija el alto exacto al 100% de la pantalla */
-  position: fixed;  /* <--- Evita que el body se mueva */
+  background-color: #211a12 !important;
+  overscroll-behavior-y: none;
+  position: fixed;
   width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
+/* 2. Asegura que el cuerpo de la app use el color exacto y no deje baches transparentes */
 body {
-  background-color: #211a12;
   margin: 0;
   padding: 0;
+  background-color: #211a12 !important;
 }
 
 /* El contenedor principal de tu app dentro del body debe tener esto para poder scrollear por dentro */
