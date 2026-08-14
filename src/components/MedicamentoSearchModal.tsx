@@ -42,10 +42,8 @@ export default function BuscarMedicamentoView() {
   const { descuentos } = useMedicamentosDescuento();
 
 // Nos aseguramos de que sessionStorage nunca esté vacío
-  if (!sessionStorage.getItem("nav_direction")) {
-    sessionStorage.setItem("nav_direction", "right");
-  }
-  const direction = sessionStorage.getItem("nav_direction");
+// Si hay algo guardado lo usa, si es null o vacío, le encaja "right" por defecto al toque
+  const direction = sessionStorage.getItem("nav_direction") || "right";
   const animationClass = direction === "right" ? "animate-slide-right" : "animate-slide-left";
 
   useEffect(() => {
@@ -82,7 +80,7 @@ export default function BuscarMedicamentoView() {
     descuentos.find((d) => d.codigo === codigo);
 
   return (
-    <div className={`min-h-screen-safe bg-black text-slate-800 pb-32 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] ${animationClass}`}>
+    <div className={`min-h-screen-safe bg-slate-50 text-slate-800 pb-32 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] ${animationClass}`}>
       
       {/* Header Estilo Perfil */}
       <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-[#0F1E3D] flex items-center gap-4">
