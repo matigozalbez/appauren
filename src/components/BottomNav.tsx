@@ -6,7 +6,7 @@ const routeIndices: { [key: string]: number } = {
   "/home": 1,
   "/coberturas": 2,
   "/credencial": 3,
-  "/medicamentos": 3.5,
+  "/medicamentos": 3.5, // 👈 Sigue manteniendo su lugar exacto para que las direcciones de animación funcionen joya
   "/perfil": 4,
 };
 
@@ -37,12 +37,20 @@ export const BottomNav = () => {
       </Link>
 
       <button 
-        onClick={() => handleNavClick("/coberturas")} // Si más adelante creás la ruta de coberturas
+        onClick={() => handleNavClick("/coberturas")}
         className="flex flex-col items-center gap-1 text-slate-400"
       >
         <Shield size={20} />
         <span className="text-[10px] font-medium">Coberturas</span>
       </button>
+
+      {/* 👻 Botón fantasma/invisible de Medicamentos para que el router y las animaciones lo amen */}
+      <Link 
+        to="/medicamentos" 
+        onClick={() => handleNavClick("/medicamentos")}
+        className="hidden pointer-events-none"
+        aria-hidden="true"
+      />
 
       <Link 
         to="/credencial" 
