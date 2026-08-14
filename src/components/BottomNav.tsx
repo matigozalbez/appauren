@@ -45,11 +45,7 @@ export const BottomNav = () => {
       </button>
 
       {/* 👻 Botón fantasma/invisible de Medicamentos para que el router y las animaciones lo amen */}
-      <Link 
-        to="/medicamentos" 
-        onClick={() => handleNavClick("/medicamentos")}
-         className={`flex flex-col items-center gap-1 ${isActive('/perfil') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
-      />
+
 
       <Link 
         to="/credencial" 

@@ -11,7 +11,7 @@ interface MedicamentoAPI {
   precio: number;
 }
 
-const SEARCH_ENDPOINT = "http://127.0.0.1:8080/api/medicamentos";
+const SEARCH_ENDPOINT = "https://backendauren.onrender.com/api/medicamentos";
 
 function formatPrecio(precio: number) {
   return precio.toLocaleString("es-AR", {
@@ -39,13 +39,7 @@ export default function BuscarMedicamentoView() {
   const [buscando, setBuscando] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-
   const { descuentos } = useMedicamentosDescuento();
-
-// Nos aseguramos de que sessionStorage nunca esté vacío
-// Si hay algo guardado lo usa, si es null o vacío, le encaja "right" por defecto al toque
-  const direction = sessionStorage.getItem("nav_direction") || "right";
-  const animationClass = direction === "right" ? "animate-slide-right" : "animate-slide-left";
 
   useEffect(() => {
     if (!query.trim()) {
@@ -81,7 +75,7 @@ export default function BuscarMedicamentoView() {
     descuentos.find((d) => d.codigo === codigo);
 
   return (
-    <div className={`min-h-screen-safe bg-slate-50 text-slate-800 pb-32 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] ${animationClass}`}>
+    <div className="min-h-screen-safe bg-slate-50 text-slate-800 pb-32 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       
       {/* Header Estilo Perfil */}
       <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-[#0F1E3D] flex items-center gap-4">
@@ -171,9 +165,9 @@ export default function BuscarMedicamentoView() {
                     <p className="text-xs text-slate-400">
                       Laboratorio: <span className="font-medium text-slate-600">{med.laboratorio || "No especificado"}</span>
                     </p>
-                 <p className="text-xs text-slate-400">
-  Precio: <span className="font-medium text-slate-600">${med.precio ? formatPrecio(med.precio) : "No disponible"}</span>
-</p>
+                    <p className="text-xs text-slate-400">
+                      Precio: <span className="font-medium text-slate-600">{med.precio ? formatPrecio(med.precio) : "No disponible"}</span>
+                    </p>
                     <p className="text-xs font-bold text-[#C9974A] pt-0.5">
                       Precio Auren: <span className="text-slate-800">{precioAurenFormatted}</span>
                     </p>
