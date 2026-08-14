@@ -41,7 +41,11 @@ export default function BuscarMedicamentoView() {
 
   const { descuentos } = useMedicamentosDescuento();
 
-  const direction = sessionStorage.getItem("nav_direction") || "right";
+// Nos aseguramos de que sessionStorage nunca esté vacío
+  if (!sessionStorage.getItem("nav_direction")) {
+    sessionStorage.setItem("nav_direction", "right");
+  }
+  const direction = sessionStorage.getItem("nav_direction");
   const animationClass = direction === "right" ? "animate-slide-right" : "animate-slide-left";
 
   useEffect(() => {
