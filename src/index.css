@@ -1,19 +1,17 @@
 @import "tailwindcss";
 
 html, body {
-  background-color: #211a12 !important;
+  background-color: #211a12;
   overscroll-behavior-y: none;
-  position: fixed;
   width: 100%;
-  height: 100%;
-  overflow: hidden;
+  min-height: 100%;
 }
 
-/* 2. Asegura que el cuerpo de la app use el color exacto y no deje baches transparentes */
+/* 2. Asegura que el contenido scrolee bien pero sin dejar baches blancos */
 body {
   margin: 0;
   padding: 0;
-  background-color: #211a12 !important;
+  background-color: #211a12;
 }
 
 /* El contenedor principal de tu app dentro del body debe tener esto para poder scrollear por dentro */
