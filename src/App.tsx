@@ -12,6 +12,7 @@ import SideMenu from './components/SideMenu'
 import { useState } from 'react'
 import { auth } from './firebase'
 import { signOut } from 'firebase/auth'
+import BuscarMedicamentoView from './components/MedicamentoSearchModal'
 
 function App() {
   const location = useLocation();
@@ -35,8 +36,10 @@ function App() {
         <Route path="/home" element={<PrivateRoute><Home openMenu={() => setMenuOpen(true)} /></PrivateRoute>} />
         <Route path="/credencial" element={<PrivateRoute><MiCredencial/></PrivateRoute>} />
         <Route path="/perfil" element={<PrivateRoute><Perfil/></PrivateRoute>} />
+        <Route path="/medicamentos" element={<PrivateRoute><BuscarMedicamentoView/></PrivateRoute>} />
         <Route path="/terminos" element={<TerminosCondiciones />} />
         <Route path="/vincular-dni" element={<VincularDNI />} />
+   
       </Routes>
             <SideMenu
   isOpen={menuOpen}

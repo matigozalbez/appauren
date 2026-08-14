@@ -1,4 +1,4 @@
-import { useState } from "react";
+
 import {
   X,
   Home,
@@ -12,7 +12,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import MedicamentoSearchModal from "./MedicamentoSearchModal";
+
 
 interface Props {
   isOpen: boolean;
@@ -28,7 +28,6 @@ interface MenuItem {
 
 export default function SideMenu({ isOpen, onClose, onLogout }: Props) {
   const navigate = useNavigate();
-  const [medicamentosOpen, setMedicamentosOpen] = useState(false);
 
   const go = (path: string) => {
     onClose();
@@ -40,11 +39,7 @@ export default function SideMenu({ isOpen, onClose, onLogout }: Props) {
     { icon: <Shield size={19} />, label: "Coberturas", onClick: () => go("/coberturas") },
     { icon: <IdCard size={19} />, label: "Credencial", onClick: () => go("/credencial") },
     { icon: <Tag size={19} />, label: "Promociones", onClick: () => go("/promociones") },
-    {
-      icon: <Search size={19} />,
-      label: "Buscar medicamento",
-      onClick: () => setMedicamentosOpen(true),
-    },
+{ icon: <Search size={19} />, label: "Buscar Medicamentos", onClick: () => go("/medicamentos") },
     { icon: <Bell size={19} />, label: "Notificaciones", onClick: () => {} },
     { icon: <HelpCircle size={19} />, label: "Ayuda", onClick: () => {} },
   ];
@@ -117,10 +112,7 @@ export default function SideMenu({ isOpen, onClose, onLogout }: Props) {
         </div>
       </div>
 
-      <MedicamentoSearchModal
-        isOpen={medicamentosOpen}
-        onClose={() => setMedicamentosOpen(false)}
-      />
+
     </>
 
   );
