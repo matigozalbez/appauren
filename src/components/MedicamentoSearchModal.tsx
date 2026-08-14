@@ -97,17 +97,20 @@ export default function MedicamentoSearchModal({ isOpen, onClose }: Props) {
               size={16}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             />
-            <input
-              autoFocus
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ej: Ibuprofeno"
-              className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-sm outline-none focus:border-[#0F1E3D]"
-              autoCapitalize="off"
-              autoComplete="off"
-              spellCheck="false"
-              autoCorrect="off"
-            />
+     <input
+  autoFocus
+  type="search" // <--- Cambiar a search le dice a iOS que es un campo aislado
+  value={query}
+  onChange={(e) => setQuery(e.target.value)}
+  placeholder="Ej: Ibuprofeno"
+  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-sm outline-none focus:border-[#0F1E3D]"
+  autoCapitalize="none"
+  autoComplete="off"
+  spellCheck={false}
+  autoCorrect="off"
+  role="presentation"
+  data-form-type="other"
+/>
           </div>
         </div>
 
