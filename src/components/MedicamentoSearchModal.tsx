@@ -103,7 +103,7 @@ export default function MedicamentoSearchModal({ isOpen, onClose }: Props) {
   value={query}
   onChange={(e) => setQuery(e.target.value)}
   placeholder="Ej: Ibuprofeno"
-  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-sm outline-none focus:border-[#0F1E3D]"
+  className="w-full pl-9 pr-3 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-base outline-none focus:border-[#0F1E3D]"
   autoCapitalize="none"
   autoComplete="off"
   spellCheck={false}
