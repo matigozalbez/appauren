@@ -12,12 +12,14 @@ export default defineConfig({
       injectRegister: 'auto',
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        skipWaiting: true,
+        clientsClaim: true,
       },
       manifest: {
         name: 'Mi Auren',
         short_name: 'Auren',
         description: 'Todo resuelto, en un solo lugar.',
-        theme_color: '#FFFFFF', // Coincide con el fondo de tu app (#071328)
+        theme_color: '#FFFFFF',
         background_color: '#FFFFFF',
         display: 'standalone',
         start_url: '/',

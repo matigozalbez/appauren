@@ -14,6 +14,7 @@ import { auth } from './firebase'
 import { signOut } from 'firebase/auth'
 import BuscarMedicamentoView from './components/MedicamentoSearchModal'
 
+
 function App() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -26,6 +27,7 @@ function App() {
       await signOut(auth);
       navigate("/", { replace: true });
     };
+
 
 
   return (
