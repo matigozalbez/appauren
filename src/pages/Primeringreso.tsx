@@ -7,7 +7,7 @@ import { auth } from "../firebase";
 import aurenIsotipo from "/horizontalazul.png";
 
 // TODO: volver a la URL de Render cuando terminemos de testear en local
-const API_URL = "http://127.0.0.1:8080";
+const API_URL = "https://backendauren.onrender.com";
 
 export default function PrimerIngreso() {
   const navigate = useNavigate();
