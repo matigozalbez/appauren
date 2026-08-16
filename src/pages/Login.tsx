@@ -12,6 +12,8 @@ import { auth, googleProvider } from '../firebase';
 import InstallButton from '../components/InstallButton';
 import SplashScreen from '../components/SplashScreen';
 
+// TODO: volver a la URL de Render cuando terminemos de testear en local
+const API_URL = "https://backendauren.onrender.com";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -20,7 +22,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
 
 const [checkingAuth, setCheckingAuth] = useState(true);
 
@@ -31,7 +33,7 @@ useEffect(() => {
     .then(async (result) => {
       if (result) {
         const idToken = await result.user.getIdToken();
-        const res = await fetch("https://backendauren.onrender.com/api/verificar-vinculacion", {
+        const res = await fetch(`${API_URL}/api/verificar-vinculacion`, {
           headers: { Authorization: `Bearer ${idToken}` },
         });
         const data = await res.json();
@@ -69,24 +71,18 @@ const handleSubmit = async (e: FormEvent) => {
 const loginWithGoogle = async () => {
   setLoading(true);
   try {
-    // 1. Forzamos el uso de un popup. 
-    // En iOS, el truco es que el popup sea invocado DIRECTAMENTE 
-    // sin procesos asíncronos previos.
     const result = await signInWithPopup(auth, googleProvider);
-    
-    // 2. Aquí ya tenemos el usuario, el popup ya se abrió y se cerró solo al loguear.
     const idToken = await result.user.getIdToken();
 
-    const res = await fetch("https://backendauren.onrender.com/api/verificar-vinculacion", {
+    const res = await fetch(`${API_URL}/api/verificar-vinculacion`, {
       headers: { Authorization: `Bearer ${idToken}` },
     });
-    
+
     const data = await res.json();
     navigate(data.vinculado ? "/home" : "/vincular-dni");
-    
+
   } catch (err: any) {
     console.error('Error:', err);
-    // Solo si el error es porque el popup fue bloqueado, informamos
     if (err.code === 'auth/popup-blocked') {
       setError("El navegador bloqueó la ventana emergente. Por favor, habilita las ventanas emergentes.");
     } else {
@@ -124,7 +120,7 @@ const loginWithGoogle = async () => {
 <img src="/auren-isotipo.png" className="h-8 w-8" alt="Auren" />
             <span className="text-4xl font-serif text-white tracking-tight">Auren</span>
           </div>
-          
+
           <h1 className="text-xs font-semibold tracking-widest text-[#C9974A] uppercase mt-1">Mi Auren</h1>
           <div className="my-2.5 h-[1px] w-20 bg-[#C9974A]/50 mx-auto" />
           <p className="text-xs text-slate-300 font-light">Todo resuelto, en un solo lugar.</p>
@@ -198,10 +194,10 @@ const loginWithGoogle = async () => {
         <div className="mt-5 text-center">
           <p className="text-xs text-slate-300 font-light mb-2">¿Es tu primera vez?</p>
           <Link
-            to="/crear-cuenta"
+            to="/primer-ingreso"
             className="block w-full rounded-2xl border border-[#C9974A]/80 py-3 text-center text-xs font-bold tracking-widest text-[#C9974A] uppercase transition hover:bg-[#C9974A]/10 active:scale-[0.99]"
           >
-            CREAR MI ACCESO
+            PRIMER INGRESO
           </Link>
         </div>
 

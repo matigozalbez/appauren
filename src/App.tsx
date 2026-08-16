@@ -1,6 +1,5 @@
 import { Routes, Route, useLocation, useNavigate } from 'react-router-dom'
 import Login from './pages/Login'
-import CrearCuenta from './pages/CrearCuenta'
 import Home from './pages/Home'
 import MiCredencial from './pages/MiCredencial'
 import TerminosCondiciones from './pages/TerminosCondiciones'
@@ -13,6 +12,7 @@ import { useState } from 'react'
 import { auth } from './firebase'
 import { signOut } from 'firebase/auth'
 import BuscarMedicamentoView from './components/MedicamentoSearchModal'
+import PrimerIngreso from './pages/Primeringreso'
 
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Login />} />
-        <Route path="/crear-cuenta" element={<CrearCuenta />} />
+        <Route path="/primer-ingreso" element={<PrimerIngreso />} />
         <Route path="/home" element={<PrivateRoute><Home openMenu={() => setMenuOpen(true)} /></PrivateRoute>} />
         <Route path="/credencial" element={<PrivateRoute><MiCredencial/></PrivateRoute>} />
         <Route path="/perfil" element={<PrivateRoute><Perfil/></PrivateRoute>} />
