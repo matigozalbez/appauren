@@ -1,201 +1,205 @@
-import { useState, useEffect } from "react";
-import { Heart, Shield, Phone, IdCard, ChevronRight,Menu } from "lucide-react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase";
-import { Link, useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
-import MarketingCard from "../components/MarketingBanner";
+  import { useState, useEffect } from "react";
+  import { Heart, Shield,  ChevronRight, Tag, Gift, Percent, User } from "lucide-react";
+  import { useAuthState } from "react-firebase-hooks/auth";
+  import { auth } from "../firebase";
+  import {  useNavigate } from "react-router-dom";
+  import Header from "../components/Header";
+import PlanCard from "../components/PlanCard";
+import BannerCarousel from "../components/BannerCarousel";
 
-interface HomeProps {
-  openMenu: () => void;
-}
+  interface HomeProps {
+    openMenu: () => void;
+  }
 
-export default function Home({ openMenu }: HomeProps) {
-  const [user] = useAuthState(auth);
-  const firstName = user?.displayName?.split(" ")[0] || "Alan";
-  const navigate = useNavigate();
-  const [menuOpen, setMenuOpen] = useState(false);
+  export default function Home({ openMenu }: HomeProps) {
+    const [user] = useAuthState(auth);
+    const firstName = user?.displayName?.split(" ")[0] || "Alan";
 
-  const [planes, setPlanes] = useState<string[]>(() => {
-    const cached = localStorage.getItem("auren_planes");
-    return cached ? JSON.parse(cached) : [];
-  });
+    const navigate = useNavigate();
 
-  const direction = sessionStorage.getItem("nav_direction") || "right";
-  const animationClass = direction === "right" ? "animate-slide-right" : "animate-slide-left";
+    const [planes, setPlanes] = useState<string[]>(() => {
+      const cached = localStorage.getItem("auren_planes");
+      return cached ? JSON.parse(cached) : [];
+    });
 
+    // Estado para el carrusel de publicidad automático
+    const [currentSlide, setCurrentSlide] = useState(0);
 
-  useEffect(() => {
-    const fetchSocio = async () => {
-      if (!user) return;
-      const idToken = await user.getIdToken();
-      try {
-        const res = await fetch("https://backendauren.onrender.com/api/mi-socio", {
-          headers: { Authorization: `Bearer ${idToken}` },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          setPlanes(data.planes || []);
-          localStorage.setItem("auren_planes", JSON.stringify(data.planes || []));
-        }
-      } catch {
-        // silencioso
-      }
-    };
-    fetchSocio();
-  }, [user]);
-
-  const handleLogout = async () => {
-    localStorage.removeItem("auren_dni");
-    localStorage.removeItem("auren_planes");
-    await signOut(auth);
-    navigate("/", { replace: true });
-  };
-
-  const planStyles = [
-    { icon: Heart, bg: "bg-[#0F1E3D]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-emerald-600" },
-    { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
-    { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
-    { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
+const slides = [
+    {
+      badge: "BENEFICIO EXCLUSIVO",
+      title: "Conocé tus coberturas y ahorros vigentes",
+      description: "Accedé a tus descuentos y cartilla médica al instante.",
+      icon: Tag,
+      color: "bg-[#0F1E3D]",
+      bgImage: "url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop')",
+    },
+    {
+      badge: "PROMOCIÓN DEL MES",
+      title: "Descuentos en farmacias adheridas",
+      description: "Presentá tu credencial digital y ahorra en tus medicamentos.",
+      icon: Gift,
+      color: "bg-[#C9974A]",
+      bgImage: "url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop')",
+    },
+    {
+      badge: "NOVEDADES AUREN",
+      title: "Nueva cartilla de especialistas",
+      description: "Sumamos nuevos profesionales",
+      icon: Percent,
+      color: "bg-[#0F1E3D]",
+      bgImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000&auto=format&fit=crop')",
+    },
   ];
+const estilos = [
+  { imageSrc: "/aurensalud.jpg" },
+  { imageSrc: "/aurenenruta.jpg" },
+  { imageSrc: "/aurensepelios.jpg" },
+  { imageSrc: "/aurenmascotas.jpg" },
+];
 
-  return (
-    <div className={`min-h-screen-safe bg-slate-50 pb-24 overflow-y-auto ${animationClass}`}>
-      {/* Header navy con curva inferior */}
-      <div className="relative bg-[#0F1E3D] px-6 pb-16 pt-6 rounded-b-[32px] shadow-md">
-<button onClick={openMenu}>
-        <Menu size={22} className="text-white" />
-      </button>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2.5">
-            <img src="/auren-isotipo.png" className="h-8 w-8 object-contain" alt="Auren" />
-            <span
-              className="text-2xl font-bold text-white tracking-tight"
-              style={{ fontFamily: "'Playfair Display', serif" }}
-            >
-              Auren
-            </span>
-          </div>
+    useEffect(() => {
+      const timer = setInterval(() => {
+        setCurrentSlide((prev) => (prev + 1) % slides.length);
+      }, 4000);
+      return () => clearInterval(timer);
+    }, [slides.length]);
 
-          <div className="flex items-center gap-3">
-            <div className="relative">
-              <button
-                onClick={() => setMenuOpen(!menuOpen)}
-                className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-full bg-[#C9974A] text-sm font-bold text-[#0F1E3D] ring-2 ring-white/20 transition hover:scale-105"
-              >
-                {user?.photoURL ? (
-                  <img src={user.photoURL} className="h-full w-full object-cover" alt="Perfil" />
-                ) : (
-                  firstName.charAt(0).toUpperCase()
-                )}
-              </button>
+    const direction = sessionStorage.getItem("nav_direction") || "right";
+    const animationClass = direction === "right" ? "animate-slide-right" : "animate-slide-left";
 
-              {menuOpen && (
-                <>
-                  <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
-                  <div className="absolute right-0 top-full z-20 mt-2 w-44 overflow-hidden rounded-2xl bg-white shadow-xl border border-slate-100">
-                    <div className="border-b border-slate-100 px-4 py-3">
-                      <p className="text-sm font-semibold text-slate-900">{firstName}</p>
-                    </div>
-                    <button
-                      onClick={handleLogout}
-                      className="flex w-full items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-slate-50 font-medium transition"
-                    >
-                      Cerrar sesión
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
+    useEffect(() => {
+      const fetchSocio = async () => {
+        if (!user) return;
+        const idToken = await user.getIdToken();
+        try {
+          const res = await fetch("https://backendauren.onrender.com/api/mi-socio", {
+            headers: { Authorization: `Bearer ${idToken}` },
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setPlanes(data.planes || []);
+            localStorage.setItem("auren_planes", JSON.stringify(data.planes || []));
+          }
+        } catch {
+          // silencioso
+        }
+      };
+      fetchSocio();
+    }, [user]);
 
-            <button className="relative flex h-9 w-9 items-center justify-center text-white transition hover:opacity-80">
-              <img src="campanitasinfondo.png" className="w-5 h-5 object-contain" alt="Notificaciones" />
-              <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-[#0F1E3D]" />
-            </button>
-          </div>
-        </div>
+    const planStyles = [
+      { icon: Heart, bg: "bg-[#0F1E3D]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-emerald-600" },
+      { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
+      { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
+      { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
+    ];
 
-        <div className="mt-6 text-center">
-          <h1 className="text-2xl font-bold text-white">¡Hola, {firstName}!</h1>
-          <p className="text-xs text-[#C9974A] font-medium tracking-wide mt-1 uppercase">Bienvenido a Mi Auren</p>
-        </div>
-      </div>
-
-      {/* Card de afiliación, flotando sobre el header */}
-<MarketingCard/>
-
-      {/* Tus planes */}
-      <div className="mt-6 px-6">
-        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">Tus planes</h2>
-        <div className="grid grid-cols-2 gap-3">
-          {planes.map((plan, i) => {
-            const style = planStyles[i % planStyles.length];
-            const Icon = style.icon;
-            return (
-              <div key={plan} className={`rounded-2xl border ${style.cardBorder} ${style.cardBg} p-4 shadow-sm transition hover:shadow-md flex flex-col justify-between`}>
-                <div>
-                  <div className={`mb-3 flex h-9 w-9 items-center justify-center rounded-xl ${style.bg} text-white shadow-sm`}>
-                    <Icon size={18} />
-                  </div>
-                  <p className="font-semibold text-slate-900 text-sm leading-snug">{plan}</p>
-                </div>
-                <div className="mt-4">
-                  <span className={`inline-block rounded-full ${style.badgeBg} px-2.5 py-0.5 text-[10px] font-bold text-white tracking-wider`}>
-                    ACTIVO
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Accesos rápidos */}
-      <div className="mt-6 px-6">
-        <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">Accesos rápidos</h2>
-        <div className="grid grid-cols-2 gap-3">
-          <Link to="/credencial" className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 hover:shadow-md">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-[#0F1E3D]">
-                <IdCard size={18} />
-              </div>
-              <span className="text-xs font-semibold text-slate-800">Mi Credencial</span>
-            </div>
-            <ChevronRight size={16} className="text-slate-400" />
-          </Link>
-
-          <button className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 hover:shadow-md w-full text-left">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-100 text-[#0F1E3D]">
-                <Shield size={18} />
-              </div>
-              <span className="text-xs font-semibold text-slate-800">Mis Coberturas</span>
-            </div>
-            <ChevronRight size={16} className="text-slate-400" />
-          </button>
-
-          <button className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 hover:shadow-md w-full text-left">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
-                <img src="whatticono.png" className="w-5 h-5 object-contain" alt="WhatsApp" />
-              </div>
-              <span className="text-xs font-semibold text-slate-800">WhatsApp</span>
-            </div>
-            <ChevronRight size={16} className="text-slate-400" />
-          </button>
-
-          <button className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-sm border border-slate-100 transition hover:border-slate-200 hover:shadow-md w-full text-left">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-[#C9974A]">
-                <Phone size={18} />
-              </div>
-              <span className="text-xs font-semibold text-slate-800">Contacto</span>
-            </div>
-            <ChevronRight size={16} className="text-slate-400" />
-          </button>
-        </div>
-      </div>
-
+    return (
+      <div className={`min-h-screen-safe bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] pb-24 overflow-y-auto ${animationClass}`}>
+        {/* Header superior */}
+        <Header onOpenMenu={openMenu} />
+        
+        {/* Bloque azul con la panza hacia arriba (curva inferior normal y superior recta o viceversa según el flujo visual) */}
+<div className="relative bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] px-6 pt-6 pb-20 rounded-t-3xl shadow-xl"> 
+  <div className="flex items-center justify-between">
+    <div className="flex items-center gap-1.5 flex-wrap">
+      <span className="text-xl font-normal text-slate-300">Hola</span>
+      <h1 className="text-xl font-bold text-white">{firstName} 👋</h1>
     </div>
+    
+    <button
+      onClick={() => navigate("/perfil")}
+      className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#C9974A]/40 backdrop-blur-sm shadow-md"
+    >
+      <User size={18} className="text-[#C9974A]" />
+    </button>
+  </div>
+</div>
+        {/* Carrusel de Publicidad Flotante */}
+       <div className="px-6 -mt-10 relative z-10">
+  <div 
+    className="rounded-3xl p-5 shadow-xl border border-slate-100 transition hover:shadow-2xl overflow-hidden relative"
+    style={{
+      backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.90)), ${slides[currentSlide].bgImage}`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+    }}
+  >
+    {/* Contenido de adentro con la altura fija de 120px que armamos antes */}
+    <div className="flex items-center justify-between gap-4 h-[120px]">
+      <div className="space-y-1.5 flex-1 flex flex-col justify-start h-full">
+        <span className="inline-block px-2.5 py-0.5 rounded-full bg-amber-50 text-[#C9974A] text-[10px] font-bold tracking-wider uppercase self-start">
+          {slides[currentSlide].badge}
+        </span>
+        <div>
+          <h3 className="font-bold text-slate-900 text-sm leading-snug line-clamp-2">
+            {slides[currentSlide].title}
+          </h3>
+          <p className="text-xs text-slate-600 mt-0.5 line-clamp-1">
+            {slides[currentSlide].description}
+          </p>
+        </div>
+      </div>
+      
+  <button 
+  onClick={() => {/* tu lógica de navegación */}}
+  className="absolute right-4 bottom-4 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-[#0F1E3D] text-xs font-bold shadow-lg hover:bg-[#C9974A] hover:text-white transition flex items-center gap-1"
+>
+  <span>Ver más</span>
+  <ChevronRight size={14} />
+</button>
+    </div>
+
+    {/* Puntitos */}
+    <div className="flex justify-center items-center gap-1.5 mt-4">
+      {slides.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => setCurrentSlide(index)}
+          className={`h-2 rounded-full transition-all duration-300 ${
+            currentSlide === index ? "w-6 bg-[#C9974A]" : "w-2 bg-slate-200"
+          }`}
+          aria-label={`Ir al slide ${index + 1}`}
+        />
+      ))}
+    </div>
+  </div>
+</div>
+
+        {/* Tus planes */}
+<div className="mt-6 px-6">
+  <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">Tus planes</h2>
+  <div className="grid grid-cols-2 gap-3">
+{planes.map((plan, i) => {
+  const style = estilos[i % estilos.length];
+  return (
+    <PlanCard key={plan} plan={plan} imageSrc={style.imageSrc} />
   );
-}
+})}
+  </div>
+</div>
+
+       <BannerCarousel
+  banners={[
+    {
+      title: "10 % en combustibles",
+      subtitle: "Promocion valida solo los jueves",
+      imageSrc: "combustible.jpg",
+    },
+    {
+      title: "25% de descuento en articulos de padel",
+      subtitle: "Yo igual jugaria al tenis",
+      imageSrc: "padel.jpg",
+    },
+    {
+      title: "25% en opticas",
+      subtitle: "comprate unos ray ban bro",
+      imageSrc: "/optica.jpg",
+    },
+  ]}
+/>
+        
+      </div>
+    );
+  }

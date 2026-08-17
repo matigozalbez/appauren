@@ -26,7 +26,7 @@ export const BottomNav = () => {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 flex items-center justify-around border-t border-slate-200 bg-white py-2.5 z-50 shadow-lg">
+    <div className="fixed bottom-0 left-0 right-0 flex items-center justify-around border-t border-slate-200 bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] py-2.5 z-50 shadow-lg">
       <Link 
         to="/home" 
         onClick={() => handleNavClick("/home")}

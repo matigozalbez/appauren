@@ -78,7 +78,7 @@ export default function BuscarMedicamentoView() {
     <div className="min-h-screen-safe bg-slate-50 text-slate-800 pb-32 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       
       {/* Header Estilo Perfil */}
-      <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-[#0F1E3D] flex items-center gap-4">
+      <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] flex items-center gap-4">
         <button 
           onClick={() => navigate(-1)} 
           className="text-white/80 hover:text-white transition"

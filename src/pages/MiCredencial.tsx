@@ -73,10 +73,10 @@ export default function MiCredencial() {
   };
 
   return (
-    <div className={`min-h-screen-safe bg-slate-50 pb-10 ${animationClass}`}>
-      <div className="min-h-screen-safe bg-slate-50 pb-10">
+    <div className={`min-h-screen-safe bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] pb-10 ${animationClass}`}>
+      <div className="min-h-screen-safe bg-[#FDFBF7] pb-10">
         {/* Header */}
-        <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-[#0F1E3D]">
+        <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429]">
           <h1 className="text-xl font-bold tracking-tight text-white flex items-center justify-between">
             <span>Mi Credencial</span>
             <button className="text-slate-700">

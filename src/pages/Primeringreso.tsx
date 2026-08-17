@@ -116,7 +116,7 @@ export default function PrimerIngreso() {
   };
 
   return (
-    <div className="flex min-h-screen-safe flex-col justify-center bg-white px-6">
+    <div className="flex min-h-screen-safe flex-col justify-center bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] px-6">
       <div className="mx-auto w-full max-w-sm">
 
         {/* Logo e Isotipo */}

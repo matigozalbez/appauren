@@ -54,3 +54,12 @@ input, select, textarea {
   animation: slideFromLeft 0.90s cubic-bezier(0.25, 1, 0.5, 1) forwards;
   box-shadow: 20px 0 40px rgba(0, 0, 0, 0.18);
 }
+
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
