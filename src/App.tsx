@@ -25,7 +25,7 @@ function App() {
 
   useEffect(() => {
     // Detecta si la app está corriendo instalada (PWA) o en el navegador web
-    const check = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    const check = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
     setIsStandalone(check);
   }, []);
 
