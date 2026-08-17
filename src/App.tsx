@@ -8,18 +8,31 @@ import VincularDNI from './pages/VincularDNI'
 import { BottomNav } from './components/BottomNav'
 import Perfil from './pages/Perfil'
 import SideMenu from './components/SideMenu'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { auth } from './firebase'
 import { signOut } from 'firebase/auth'
 import BuscarMedicamentoView from './components/MedicamentoSearchModal'
 import PrimerIngreso from './pages/Primeringreso'
+import InstalarApp from './pages/AppGuard'
 
 
 function App() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const showNav = location.pathname !== '/';
+ const showNav = location.pathname !== '/' && location.pathname !== '/primer-ingreso';
+ const [isStandalone, setIsStandalone] = useState(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Detecta si la app está corriendo instalada (PWA) o en el navegador web
+    const check = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    setIsStandalone(check);
+  }, []);
+
+
+  if (!isStandalone) {
+    return <InstalarApp/>;
+  }
 
     const handleLogout = async () => {
       localStorage.removeItem("auren_dni");
