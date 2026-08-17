@@ -3,16 +3,14 @@ import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import {
-    getRedirectResult,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
-
 } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import InstallButton from '../components/InstallButton';
 import SplashScreen from '../components/SplashScreen';
 
-// TODO: volver a la URL de Render cuando terminemos de testear en local
 const API_URL = "https://backendauren.onrender.com";
 
 export default function Login() {
@@ -23,83 +21,93 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
-const [checkingAuth, setCheckingAuth] = useState(true);
+  useEffect(() => {
+    const minDelay = new Promise((resolve) => setTimeout(resolve, 2000));
 
-useEffect(() => {
-  const minDelay = new Promise((resolve) => setTimeout(resolve, 2000)); // mínimo 2 segundos
+    // onAuthStateChanged cubre TODOS los casos en uno: sesión persistida de
+    // una visita anterior, Y el resultado de un redirect de Google recién
+    // completado — por eso ya no hace falta getRedirectResult aparte.
+    const authCheck = new Promise<void>((resolve) => {
+      const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+        unsubscribe();
 
-  const authCheck = getRedirectResult(auth)
-    .then(async (result) => {
-      if (result) {
-        const idToken = await result.user.getIdToken();
-        const res = await fetch(`${API_URL}/api/verificar-vinculacion`, {
-          headers: { Authorization: `Bearer ${idToken}` },
-        });
-        const data = await res.json();
-        navigate(data.vinculado ? "/home" : "/vincular-dni");
-      }
-    })
-    .catch((err) => {
-      console.error('Error en redirect de Google:', err);
+        if (currentUser) {
+          try {
+            const idToken = await currentUser.getIdToken();
+            const res = await fetch(`${API_URL}/api/verificar-vinculacion`, {
+              headers: { Authorization: `Bearer ${idToken}` },
+            });
+            const data = await res.json();
+            navigate(data.vinculado ? "/home" : "/vincular-dni", { replace: true });
+          } catch (err) {
+            console.error('Error verificando sesión existente:', err);
+          }
+        }
+        // Si currentUser es null, no hacemos nada más — se queda mostrando
+        // el formulario de login, que es lo correcto para alguien deslogueado.
+        resolve();
+      });
     });
 
-  Promise.all([minDelay, authCheck]).finally(() => setCheckingAuth(false));
-}, [navigate]);
+    Promise.all([minDelay, authCheck]).finally(() => setCheckingAuth(false));
+  }, [navigate]);
 
-if (checkingAuth) {
-  return (
-  <SplashScreen/>
-  );
-}
-
-const handleSubmit = async (e: FormEvent) => {
-  e.preventDefault();
-  setError('');
-  setLoading(true);
-
-  try {
-    await signInWithEmailAndPassword(auth, email, password);
-    navigate('/home');
-  } catch (err: any) {
-    console.error('Error de login:', err.code, err.message);
-    setError('Correo o contraseña incorrectos.');
-  } finally {
-    setLoading(false);
+  if (checkingAuth) {
+    return (
+      <SplashScreen />
+    );
   }
-};
-const loginWithGoogle = async () => {
-  setLoading(true);
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    const idToken = await result.user.getIdToken();
 
-    const res = await fetch(`${API_URL}/api/verificar-vinculacion`, {
-      headers: { Authorization: `Bearer ${idToken}` },
-    });
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
 
-    const data = await res.json();
-    navigate(data.vinculado ? "/home" : "/vincular-dni");
-
-  } catch (err: any) {
-    console.error('Error:', err);
-    if (err.code === 'auth/popup-blocked') {
-      setError("El navegador bloqueó la ventana emergente. Por favor, habilita las ventanas emergentes.");
-    } else {
-      setError("No se pudo iniciar sesión con Google.");
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/home');
+    } catch (err: any) {
+      console.error('Error de login:', err.code, err.message);
+      setError('Correo o contraseña incorrectos.');
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
+
+  const loginWithGoogle = async () => {
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      const idToken = await result.user.getIdToken();
+
+      const res = await fetch(`${API_URL}/api/verificar-vinculacion`, {
+        headers: { Authorization: `Bearer ${idToken}` },
+      });
+
+      const data = await res.json();
+      navigate(data.vinculado ? "/home" : "/vincular-dni");
+
+    } catch (err: any) {
+      console.error('Error:', err);
+      if (err.code === 'auth/popup-blocked') {
+        setError("El navegador bloqueó la ventana emergente. Por favor, habilita las ventanas emergentes.");
+      } else {
+        setError("No se pudo iniciar sesión con Google.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="relative flex  min-h-screen-safe w-full items-center justify-center bg-[#071328] overflow-hidden font-sans antialiased px-6">
-<div className="mt-4 flex justify-center">
-         <div className="absolute top-4 right-4 z-50">
-        <InstallButton/>
+      <div className="mt-4 flex justify-center">
+        <div className="absolute top-4 right-4 z-50">
+          <InstallButton />
+        </div>
       </div>
-
-</div>
       <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-[450px] h-[450px] bg-sky-500/15 rounded-full blur-[130px]" />
 
       <div className="pointer-events-none absolute bottom-0 left-0 w-full h-36 z-0 overflow-hidden">
@@ -116,8 +124,7 @@ const loginWithGoogle = async () => {
 
         <div className="mb-6 text-center">
           <div className="flex items-center justify-center gap-2.5 mb-2">
-
-<img src="/auren-isotipo.png" className="h-8 w-8" alt="Auren" />
+            <img src="/auren-isotipo.png" className="h-8 w-8" alt="Auren" />
             <span className="text-4xl font-serif text-white tracking-tight">Auren</span>
           </div>
 
