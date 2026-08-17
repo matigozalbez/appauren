@@ -195,17 +195,24 @@ export default function MiCredencial() {
                     </span>
                   </div>
 
-                  <div className="mt-1">
-                    <p className="text-[8px] text-[#C9974A]">Planes contratados</p>
-                    <div className="mt-0.5 space-y-0.5">
-                      {personaActiva.planes.map((plan) => (
-                        <div key={plan} className="flex items-center gap-1">
-                          <span className="flex h-[11px] w-[11px] items-center justify-center rounded-full border border-[#C9974A] text-[7px] text-[#C9974A]">✓</span>
-                          <span className="text-[9px] font-medium text-white">{plan}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+<div className="mt-1">
+  <p className="text-[8px] text-[#C9974A]">Planes contratados</p>
+  <div className="mt-0.5 space-y-0.5">
+    {personaActiva.planes.length > 3 ? (
+      <div className="flex items-center gap-1">
+        <span className="flex h-[11px] w-[11px] shrink-0 items-center justify-center rounded-full bg-[#C9974A] text-[7px] text-[#061e3f]">★</span>
+        <span className="text-[9px] font-bold text-[#C9974A] tracking-wide">AUREN BLACK · Todo incluido</span>
+      </div>
+    ) : (
+      personaActiva.planes.map((plan) => (
+        <div key={plan} className="flex items-center gap-1">
+          <span className="flex h-[11px] w-[11px] shrink-0 items-center justify-center rounded-full border border-[#C9974A] text-[7px] text-[#C9974A]">✓</span>
+          <span className="text-[9px] font-medium text-white truncate max-w-[90px]">{plan}</span>
+        </div>
+      ))
+    )}
+  </div>
+</div>
                 </div>
               </div>
             </div>
