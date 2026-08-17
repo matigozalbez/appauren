@@ -10,6 +10,7 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       injectRegister: 'auto',
+      includeAssets: ['apple-touch-icon.png', 'icon-192.png', 'icon-512.png'],
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
         skipWaiting: true,
@@ -19,13 +20,14 @@ export default defineConfig({
         name: 'Mi Auren',
         short_name: 'Auren',
         description: 'Todo resuelto, en un solo lugar.',
-        theme_color: '#FFFFFF',
+        theme_color: '#0F1E3D',
         background_color: '#FFFFFF',
         display: 'standalone',
         start_url: '/',
         icons: [
-          { src: '/auren-isotipo.png', sizes: '192x192', type: 'image/png' },
-          { src: '/auren-isotipo.png', sizes: '512x512', type: 'image/png' },
+          { src: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+          { src: '/icon-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
         ],
       },
     }),
