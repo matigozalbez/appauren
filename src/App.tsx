@@ -20,19 +20,24 @@ function App() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
  const showNav = location.pathname !== '/' && location.pathname !== '/primer-ingreso';
- const [isStandalone, setIsStandalone] = useState(true);
+const [isStandalone, setIsStandalone] = useState<boolean | null>(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Detecta si la app está corriendo instalada (PWA) o en el navegador web
-    const check = window.matchMedia('(display-mode: standalone)').matches || (window.navigator as any).standalone;
-    setIsStandalone(check);
-  }, []);
+useEffect(() => {
+  const check =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    (window.navigator as any).standalone === true;
 
+  setIsStandalone(check);
+}, []);
 
-  if (!isStandalone) {
-    return <InstalarApp/>;
-  }
+if (isStandalone === null) {
+  return null;
+}
+
+if (!isStandalone) {
+  return <InstalarApp />;
+}
 
     const handleLogout = async () => {
       localStorage.removeItem("auren_dni");
