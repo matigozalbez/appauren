@@ -88,12 +88,7 @@ const estilos = [
       fetchSocio();
     }, [user]);
 
-    const planStyles = [
-      { icon: Heart, bg: "bg-[#0F1E3D]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-emerald-600" },
-      { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
-      { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
-      { icon: Shield, bg: "bg-[#C9974A]", cardBg: "bg-white", cardBorder: "border-slate-100", badgeBg: "bg-[#C9974A]" },
-    ];
+
 
     return (
       <div className={`min-h-screen-safe bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] pb-24 overflow-y-auto ${animationClass}`}>
