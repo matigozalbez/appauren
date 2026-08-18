@@ -4,6 +4,7 @@ import { Menu, Bell } from "lucide-react";
 interface HeaderProps {
   onOpenMenu: () => void;
   onOpenNotifications?: () => void;
+  unreadCount?: number;
 }
 
 export default function Header({ onOpenMenu, onOpenNotifications }: HeaderProps) {

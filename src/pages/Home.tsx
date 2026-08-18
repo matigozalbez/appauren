@@ -6,6 +6,8 @@
   import Header from "../components/Header";
 import PlanCard from "../components/PlanCard";
 import BannerCarousel from "../components/BannerCarousel";
+import NotificationsModal, { contarNoLeidas } from "../components/Notificationsmodal";
+
 
   interface HomeProps {
     openMenu: () => void;
@@ -14,6 +16,8 @@ import BannerCarousel from "../components/BannerCarousel";
   export default function Home({ openMenu }: HomeProps) {
     const [user] = useAuthState(auth);
     const firstName = user?.displayName?.split(" ")[0] || "Alan";
+    const [notisOpen, setNotisOpen] = useState(false);
+const [unreadCount, setUnreadCount] = useState<number>(0);
 
     const navigate = useNavigate();
 
@@ -24,6 +28,10 @@ import BannerCarousel from "../components/BannerCarousel";
 
     // Estado para el carrusel de publicidad automático
     const [currentSlide, setCurrentSlide] = useState(0);
+
+    useEffect(() => {
+  contarNoLeidas().then(setUnreadCount);
+}, []);
 
 const slides = [
     {
@@ -93,7 +101,11 @@ const estilos = [
     return (
       <div className={`min-h-screen-safe bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] pb-24 overflow-y-auto ${animationClass}`}>
         {/* Header superior */}
-        <Header onOpenMenu={openMenu} />
+        <Header
+  onOpenMenu={openMenu}
+  onOpenNotifications={() => setNotisOpen(true)}
+  unreadCount={unreadCount}
+/>
         
         {/* Bloque azul con la panza hacia arriba (curva inferior normal y superior recta o viceversa según el flujo visual) */}
 <div className="relative bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] px-6 pt-6 pb-20 rounded-t-3xl shadow-xl"> 
@@ -193,6 +205,12 @@ banners={[
     imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/optica_e193zc.jpg",
   },
 ]}
+/>
+
+<NotificationsModal
+  isOpen={notisOpen}
+  onClose={() => setNotisOpen(false)}
+  onReadStateChange={setUnreadCount}
 />
         
       </div>
