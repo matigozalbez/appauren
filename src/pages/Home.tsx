@@ -11,7 +11,6 @@ import { getToken } from "firebase/messaging";
 
 
 
-
   interface HomeProps {
     openMenu: () => void;
   }
@@ -100,9 +99,7 @@ const estilos = [
     }, [user]);
 
 
-  
-
-useEffect(() => {
+  useEffect(() => {
     const pedirPermisoAutomatico = async () => {
       // Pedimos el permiso del navegador de una
       const permission = await Notification.requestPermission();
@@ -110,7 +107,7 @@ useEffect(() => {
       if (permission === 'granted') {
         try {
           const token = await getToken(messaging, {
-            vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'
+            vapidKey: 'TU_CLAVE_VAPID_DE_FIREBASE'
           });
           
           if (token) {
@@ -126,12 +123,6 @@ useEffect(() => {
     pedirPermisoAutomatico();
   }, []);
 
-  return (
-    <div>
-      <h1>Bienvenido a la App</h1>
-    </div>
-  );
-} 
 
 
 
