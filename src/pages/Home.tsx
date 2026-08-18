@@ -120,9 +120,9 @@ const estilos = [
       } else {
         alert("Permiso denegado por el usuario.");
       }
-    } catch (error) {
-      console.error("Error al obtener el token:", error);
-      alert("Hubo un error, revisa la consola.");
+ } catch (error: any) {
+      console.error("Error completo al obtener el token:", error);
+      alert("Error: " + (error?.message || JSON.stringify(error)));
     }
   };
 
