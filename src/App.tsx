@@ -9,12 +9,12 @@ import { BottomNav } from './components/BottomNav'
 import Perfil from './pages/Perfil'
 import SideMenu from './components/SideMenu'
 import { useState, useEffect } from 'react'
-import { auth, messaging } from './firebase'
+import { auth} from './firebase'
 import { signOut } from 'firebase/auth'
 import BuscarMedicamentoView from './components/MedicamentoSearchModal'
 import PrimerIngreso from './pages/Primeringreso'
 import InstalarApp from './pages/AppGuard'
-import { getToken } from 'firebase/messaging'
+
 
 
 function App() {
@@ -48,29 +48,7 @@ if (!isStandalone) {
       navigate("/", { replace: true });
     };
 
-        useEffect(() => {
-        const pedirPermisoAutomatico = async () => {
-          // Pedimos el permiso del navegador de una
-          const permission = await Notification.requestPermission();
-          
-          if (permission === 'granted') {
-            try {
-              const token = await getToken(messaging, {
-                vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'  
-              });
-              
-              if (token) {
-                console.log("Token obtenido en el Home:", token);
-                // Acá mandas el token a tu backend en Go para guardarlo en Firestore
-              }
-            } catch (error) {
-              console.error("Error al obtener el token:", error);
-            }
-          }
-        };
-    
-        pedirPermisoAutomatico();
-      }, []);
+
 
 
   return (

@@ -1,12 +1,13 @@
   import { useState, useEffect } from "react";
   import { ChevronRight, Tag, Gift, Percent, User } from "lucide-react";
   import { useAuthState } from "react-firebase-hooks/auth";
-  import { auth } from "../firebase";
+  import { auth, messaging } from "../firebase";
   import {  useNavigate } from "react-router-dom";
   import Header from "../components/Header";
 import PlanCard from "../components/PlanCard";
 import BannerCarousel from "../components/BannerCarousel";
 import NotificationsModal, { contarNoLeidas } from "../components/Notificationsmodal";
+import { getToken } from "firebase/messaging";
 
 
 
@@ -100,6 +101,30 @@ const estilos = [
 
   
 
+    const pedirPermiso = async () => {
+    try {
+      // 1. Pedimos permiso explícitamente tras el clic del usuario
+      const permission = await Notification.requestPermission();
+      
+      if (permission === 'granted') {
+        // 2. Si nos dieron el OK, buscamos el token
+        const token = await getToken(messaging, {
+          vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'
+        });
+        
+        if (token) {
+          console.log("Token obtenido:", token);
+          alert("¡Token obtenido! Revisa la consola.");
+          // Aquí enviarías el token a tu backend en Go
+        }
+      } else {
+        alert("Permiso denegado por el usuario.");
+      }
+    } catch (error) {
+      console.error("Error al obtener el token:", error);
+      alert("Hubo un error, revisa la consola.");
+    }
+  };
 
 
     return (
@@ -121,6 +146,13 @@ const estilos = [
     
     <button
       onClick={() => navigate("/perfil")}
+      className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#C9974A]/40 backdrop-blur-sm shadow-md"
+    >
+      <User size={18} className="text-[#C9974A]" />
+    </button>
+
+        <button
+      onClick={pedirPermiso}
       className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#C9974A]/40 backdrop-blur-sm shadow-md"
     >
       <User size={18} className="text-[#C9974A]" />
