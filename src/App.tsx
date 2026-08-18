@@ -24,6 +24,7 @@ const [isStandalone, setIsStandalone] = useState<boolean | null>(null);
   const navigate = useNavigate();
 
 useEffect(() => {
+  
   const check =
     window.matchMedia('(display-mode: standalone)').matches ||
     (window.navigator as any).standalone === true;
