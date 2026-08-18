@@ -52,10 +52,10 @@ const slides = [
     },
   ];
 const estilos = [
-  { imageSrc: "/aurensalud.jpg" },
-  { imageSrc: "/aurenenruta.jpg" },
-  { imageSrc: "/aurensepelios.jpg" },
-  { imageSrc: "/aurenmascotas.jpg" },
+  { imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031889/aurensalud_wnnf8y.jpg" },
+  { imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787032014/aurenenruta_w1xmvo.jpg" },
+  { imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031918/aurensepelios_n6nhbo.jpg" },
+  { imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031918/aurenmascotas_o3ivmq.jpg" },
 ];
 
     useEffect(() => {
@@ -180,17 +180,17 @@ const estilos = [
     {
       title: "10 % en combustibles",
       subtitle: "Promocion valida solo los jueves",
-      imageSrc: "combustible.jpg",
+      imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031918/combustible_cbvszo.jpg",
     },
     {
       title: "25% de descuento en articulos de padel",
       subtitle: "Yo igual jugaria al tenis",
-      imageSrc: "padel.jpg",
+      imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031918/padel_mhtb0k.jpg",
     },
     {
       title: "25% en opticas",
       subtitle: "comprate unos ray ban bro",
-      imageSrc: "/optica.jpg",
+      imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031918/optica_e193zc.jpg",
     },
   ]}
 />
