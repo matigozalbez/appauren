@@ -1,13 +1,13 @@
   import { useState, useEffect } from "react";
   import { ChevronRight, Tag, Gift, Percent, User } from "lucide-react";
   import { useAuthState } from "react-firebase-hooks/auth";
-  import { auth, messaging } from "../firebase";
+  import { auth } from "../firebase";
   import {  useNavigate } from "react-router-dom";
   import Header from "../components/Header";
 import PlanCard from "../components/PlanCard";
 import BannerCarousel from "../components/BannerCarousel";
 import NotificationsModal, { contarNoLeidas } from "../components/Notificationsmodal";
-import { getToken } from "firebase/messaging";
+
 
 
 
@@ -98,7 +98,7 @@ const estilos = [
       fetchSocio();
     }, [user]);
 
-
+/*
 const pedirPermisoConBoton = async () => {
     // Si el navegador ya lo denegó de forma persistente
     if (Notification.permission === 'denied') {
@@ -133,7 +133,7 @@ const pedirPermisoConBoton = async () => {
       alert("Error general: " + (error?.message || JSON.stringify(error)));
     }
   };
-
+*/
 
     return (
       <div className={`min-h-screen-safe bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] pb-24 overflow-y-auto ${animationClass}`}>
@@ -196,9 +196,6 @@ const pedirPermisoConBoton = async () => {
   <ChevronRight size={14} />
 </button>
 
-<button onClick={pedirPermisoConBoton}>
-  Activar Notificaciones
-</button>
     </div>
 
     {/* Puntitos */}
