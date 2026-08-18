@@ -99,30 +99,38 @@ const estilos = [
     }, [user]);
 
 
-  useEffect(() => {
+useEffect(() => {
     const pedirPermisoAutomatico = async () => {
-      // Pedimos el permiso del navegador de una
-      const permission = await Notification.requestPermission();
-      
-      if (permission === 'granted') {
-        try {
-          const token = await getToken(messaging, {
-            vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'
-          });
-          
-          if (token) {
-            console.log("Token obtenido en el Home:", token);
-            // Acá mandas el token a tu backend en Go para guardarlo en Firestore
+      try {
+        // Pedimos el permiso del navegador de una
+        const permission = await Notification.requestPermission();
+        
+        if (permission === 'granted') {
+          try {
+            const token = await getToken(messaging, {
+              vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'
+            });
+            
+            if (token) {
+              console.log("Token obtenido en el Home:", token);
+              alert("¡Token obtenido con éxito!");
+              // Acá mandas el token a tu backend en Go para guardarlo en Firestore
+            }
+          } catch (error: any) {
+            console.error("Error al obtener el token:", error);
+            alert("Error en getToken: " + (error?.message || JSON.stringify(error)));
           }
-        } catch (error) {
-          console.error("Error al obtener el token:", error);
+        } else {
+          alert("Permiso de notificaciones denegado.");
         }
+      } catch (error: any) {
+        console.error("Error general pidiendo permiso:", error);
+        alert("Error general: " + (error?.message || JSON.stringify(error)));
       }
     };
 
     pedirPermisoAutomatico();
   }, []);
-
 
 
 
