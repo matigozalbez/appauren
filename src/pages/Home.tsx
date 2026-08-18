@@ -176,23 +176,23 @@ const estilos = [
 </div>
 
        <BannerCarousel
-  banners={[
-    {
-      title: "10 % en combustibles",
-      subtitle: "Promocion valida solo los jueves",
-      imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031918/combustible_cbvszo.jpg",
-    },
-    {
-      title: "25% de descuento en articulos de padel",
-      subtitle: "Yo igual jugaria al tenis",
-      imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031918/padel_mhtb0k.jpg",
-    },
-    {
-      title: "25% en opticas",
-      subtitle: "comprate unos ray ban bro",
-      imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031918/optica_e193zc.jpg",
-    },
-  ]}
+banners={[
+  {
+    title: "10 % en combustibles",
+    subtitle: "Promocion valida solo los jueves",
+    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/combustible_cbvszo.jpg",
+  },
+  {
+    title: "25% de descuento en articulos de padel",
+    subtitle: "Yo igual jugaria al tenis",
+    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/padel_mhtb0k.jpg",
+  },
+  {
+    title: "25% en opticas",
+    subtitle: "comprate unos ray ban bro",
+    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/optica_e193zc.jpg",
+  },
+]}
 />
         
       </div>
