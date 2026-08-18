@@ -99,39 +99,40 @@ const estilos = [
     }, [user]);
 
 
-useEffect(() => {
-    const pedirPermisoAutomatico = async () => {
-      try {
-        // Pedimos el permiso del navegador de una
-        const permission = await Notification.requestPermission();
-        
-        if (permission === 'granted') {
-          try {
-            const token = await getToken(messaging, {
-              vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'
-            });
-            
-            if (token) {
-              console.log("Token obtenido en el Home:", token);
-              alert("¡Token obtenido con éxito!");
-              // Acá mandas el token a tu backend en Go para guardarlo en Firestore
-            }
-          } catch (error: any) {
-            console.error("Error al obtener el token:", error);
-            alert("Error en getToken: " + (error?.message || JSON.stringify(error)));
+const pedirPermisoConBoton = async () => {
+    // Si el navegador ya lo denegó de forma persistente
+    if (Notification.permission === 'denied') {
+      alert("Permiso de notificaciones denegado.");
+      return;
+    }
+
+    try {
+      // Pedimos el permiso del navegador al hacer clic
+      const permission = await Notification.requestPermission();
+      
+      if (permission === 'granted') {
+        try {
+          const token = await getToken(messaging, {
+            vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'
+          });
+          
+          if (token) {
+            console.log("Token obtenido en el Home:", token);
+            alert("¡Token obtenido con éxito!");
+            // Acá mandas el token a tu backend en Go para guardarlo en Firestore
           }
-        } else {
-          alert("Permiso de notificaciones denegado.");
+        } catch (error: any) {
+          console.error("Error al obtener el token:", error);
+          alert("Error en getToken: " + (error?.message || JSON.stringify(error)));
         }
-      } catch (error: any) {
-        console.error("Error general pidiendo permiso:", error);
-        alert("Error general: " + (error?.message || JSON.stringify(error)));
+      } else {
+        alert("Permiso de notificaciones denegado.");
       }
-    };
-
-    pedirPermisoAutomatico();
-  }, []);
-
+    } catch (error: any) {
+      console.error("Error general pidiendo permiso:", error);
+      alert("Error general: " + (error?.message || JSON.stringify(error)));
+    }
+  };
 
 
     return (
@@ -193,6 +194,10 @@ useEffect(() => {
 >
   <span>Ver más</span>
   <ChevronRight size={14} />
+</button>
+
+<button onClick={pedirPermisoConBoton}>
+  Activar Notificaciones
 </button>
     </div>
 
