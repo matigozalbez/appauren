@@ -11,6 +11,7 @@ import { getToken } from "firebase/messaging";
 
 
 
+
   interface HomeProps {
     openMenu: () => void;
   }
@@ -101,30 +102,37 @@ const estilos = [
 
   
 
-    const pedirPermiso = async () => {
-    try {
-      // 1. Pedimos permiso explícitamente tras el clic del usuario
+useEffect(() => {
+    const pedirPermisoAutomatico = async () => {
+      // Pedimos el permiso del navegador de una
       const permission = await Notification.requestPermission();
       
       if (permission === 'granted') {
-        // 2. Si nos dieron el OK, buscamos el token
-        const token = await getToken(messaging, {
-          vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'
-        });
-        
-        if (token) {
-          console.log("Token obtenido:", token);
-          alert("¡Token obtenido! Revisa la consola.");
-          // Aquí enviarías el token a tu backend en Go
+        try {
+          const token = await getToken(messaging, {
+            vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'
+          });
+          
+          if (token) {
+            console.log("Token obtenido en el Home:", token);
+            // Acá mandas el token a tu backend en Go para guardarlo en Firestore
+          }
+        } catch (error) {
+          console.error("Error al obtener el token:", error);
         }
-      } else {
-        alert("Permiso denegado por el usuario.");
       }
- } catch (error: any) {
-      console.error("Error completo al obtener el token:", error);
-      alert("Error: " + (error?.message || JSON.stringify(error)));
-    }
-  };
+    };
+
+    pedirPermisoAutomatico();
+  }, []);
+
+  return (
+    <div>
+      <h1>Bienvenido a la App</h1>
+    </div>
+  );
+} 
+
 
 
     return (
@@ -151,12 +159,7 @@ const estilos = [
       <User size={18} className="text-[#C9974A]" />
     </button>
 
-        <button
-      onClick={pedirPermiso}
-      className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#C9974A]/40 backdrop-blur-sm shadow-md"
-    >
-      <User size={18} className="text-[#C9974A]" />
-    </button>
+
   </div>
 </div>
         {/* Carrusel de Publicidad Flotante */}
