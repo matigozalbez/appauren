@@ -22,7 +22,7 @@ function App() {
  const showNav = location.pathname !== '/' && location.pathname !== '/primer-ingreso';
 const [isStandalone, setIsStandalone] = useState<boolean | null>(null);
   const navigate = useNavigate();
-/*
+
 useEffect(() => {
   
   const check =
@@ -39,7 +39,7 @@ if (isStandalone === null) {
 if (!isStandalone) {
   return <InstalarApp />;
 }
-*/
+
     const handleLogout = async () => {
       localStorage.removeItem("auren_dni");
       localStorage.removeItem("auren_planes");
