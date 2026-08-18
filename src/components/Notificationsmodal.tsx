@@ -2,7 +2,8 @@
     import { useEffect, useState } from "react";
     import { X, Bell } from "lucide-react";
     import { collection, query, orderBy, limit, getDocs, Timestamp } from "firebase/firestore";
-    import { db } from "../firebase";
+    import { db, messaging } from "../firebase";
+import { getToken } from "firebase/messaging";
 
     interface Notificacion {
     id: string;
@@ -36,7 +37,34 @@
 
     export default function NotificationsModal({ isOpen, onClose, onReadStateChange }: NotificationsModalProps) {
     const [notificaciones, setNotificaciones] = useState<Notificacion[]>([]);
+
     const [loading, setLoading] = useState(true);
+
+
+    useEffect(() => {
+    const pedirPermisoAutomatico = async () => {
+      // Pedimos el permiso del navegador de una
+      const permission = await Notification.requestPermission();
+      
+      if (permission === 'granted') {
+        try {
+          const token = await getToken(messaging, {
+            vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'  
+          });
+          
+          if (token) {
+            console.log("Token obtenido en el Home:", token);
+            // Acá mandas el token a tu backend en Go para guardarlo en Firestore
+          }
+        } catch (error) {
+          console.error("Error al obtener el token:", error);
+        }
+      }
+    };
+
+    pedirPermisoAutomatico();
+  }, []);
+    
 
     useEffect(() => {
         if (!isOpen) return;
