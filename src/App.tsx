@@ -47,6 +47,7 @@ if (!isStandalone) {
       navigate("/", { replace: true });
     };
 
+    
 
 
   return (

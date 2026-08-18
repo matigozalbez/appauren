@@ -1,12 +1,13 @@
   import { useState, useEffect } from "react";
   import { ChevronRight, Tag, Gift, Percent, User } from "lucide-react";
   import { useAuthState } from "react-firebase-hooks/auth";
-  import { auth } from "../firebase";
+  import { auth, messaging } from "../firebase";
   import {  useNavigate } from "react-router-dom";
   import Header from "../components/Header";
 import PlanCard from "../components/PlanCard";
 import BannerCarousel from "../components/BannerCarousel";
 import NotificationsModal, { contarNoLeidas } from "../components/Notificationsmodal";
+import { getToken } from "firebase/messaging";
 
 
   interface HomeProps {
@@ -95,6 +96,31 @@ const estilos = [
       };
       fetchSocio();
     }, [user]);
+
+
+    useEffect(() => {
+    const pedirPermisoAutomatico = async () => {
+      // Pedimos el permiso del navegador de una
+      const permission = await Notification.requestPermission();
+      
+      if (permission === 'granted') {
+        try {
+          const token = await getToken(messaging, {
+            vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'  
+          });
+          
+          if (token) {
+            console.log("Token obtenido en el Home:", token);
+            // Acá mandas el token a tu backend en Go para guardarlo en Firestore
+          }
+        } catch (error) {
+          console.error("Error al obtener el token:", error);
+        }
+      }
+    };
+
+    pedirPermisoAutomatico();
+  }, []);
 
 
 
