@@ -10,17 +10,4 @@ firebase.initializeApp({
   appId: "1:335604735631:web:b3e04bdda6305fdbf11afa"
 });
 
-
-const messaging = firebase.messaging();
-
-messaging.onBackgroundMessage((payload) => {
-  console.log('[firebase-messaging-sw.js] Mensaje en segundo plano:', payload);
-  
-  const notificationTitle = payload.notification?.title || 'Nueva notificación';
-  const notificationOptions = {
-    body: payload.notification?.body || '',
-    icon: '/logoazulsolo.png'
-  };
-
-  self.registration.showNotification(notificationTitle, notificationOptions);
-});
+// Dejamos que el navegador maneje la push automáticamente gracias al Webpush del backend.
