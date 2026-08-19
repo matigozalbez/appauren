@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getToken} from "firebase/messaging";
+import { getToken } from "firebase/messaging";
 import { doc, setDoc } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { messaging, auth, db } from "../firebase";
