@@ -26,7 +26,9 @@ export default function Login() {
   const [checkingAuth, setCheckingAuth] = useState(true);
 
 
-const [showSplash] = useState(false);
+const [showSplash] = useState(
+  sessionStorage.getItem("auren_splash_shown") !== "true"
+);
 
   useEffect(() => {
   const minDelay = showSplash
