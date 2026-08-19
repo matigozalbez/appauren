@@ -12,6 +12,7 @@ import InstallButton from '../components/InstallButton';
 import SplashScreen from '../components/SplashScreen';
 
 
+
 const API_URL = "https://backendauren.onrender.com";
 
 export default function Login() {
@@ -212,6 +213,7 @@ export default function Login() {
         </div>
 
       </div>
+   
 
     </div>
   );

@@ -7,6 +7,7 @@
 import PlanCard from "../components/PlanCard";
 import BannerCarousel from "../components/BannerCarousel";
 import NotificationsModal, { contarNoLeidas } from "../components/Notificationsmodal";
+import { GestorNotificaciones } from "../components/GestorNotificaciones";
 
 
 
@@ -212,7 +213,7 @@ banners={[
   },
 ]}
 />
-
+<GestorNotificaciones/>
 <NotificationsModal
   isOpen={notisOpen}
   onClose={() => setNotisOpen(false)}
