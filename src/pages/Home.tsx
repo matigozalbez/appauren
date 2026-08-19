@@ -6,8 +6,9 @@
   import Header from "../components/Header";
 import PlanCard from "../components/PlanCard";
 import BannerCarousel from "../components/BannerCarousel";
-import NotificationsModal, {contarNoLeidas} from "../components/NotificationsModal";
 import { GestorNotificaciones } from "../components/GestorNotificaciones";
+import NotificationsModal from "../components/Modalnotis";
+
 
 
 
@@ -34,9 +35,7 @@ const [unreadCount, setUnreadCount] = useState<number>(0);
     // Estado para el carrusel de publicidad automático
     const [currentSlide, setCurrentSlide] = useState(0);
 
-    useEffect(() => {
-  contarNoLeidas().then(setUnreadCount);
-}, []);
+
 
 const slides = [
     {
