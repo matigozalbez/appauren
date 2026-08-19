@@ -6,11 +6,7 @@ import './index.css'
 import ScrollToTop from './components/ScrollToTop.tsx'
 import { registerSW } from 'virtual:pwa-register'
 
-const updateSW = registerSW({
-  onNeedRefresh() {
-    updateSW(true); // Fuerza la recarga automática apenas hay versión nueva
-  },
-})
+registerSW();
 
 createRoot(document.getElementById('root')!).render(
    <BrowserRouter>
