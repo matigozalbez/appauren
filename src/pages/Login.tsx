@@ -22,7 +22,6 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   const [checkingAuth, setCheckingAuth] = useState(true);
 
@@ -72,6 +71,9 @@ const [showSplash] = useState(
   });
 }, [navigate, showSplash]);
 
+if (checkingAuth && showSplash) {
+  return <SplashScreen />;
+}
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -114,23 +116,6 @@ const [showSplash] = useState(
     }
   };
 
-  const criticalImages = [
-  "/logovertical.png",
-  "/icon-192.png",
-  "/icon-512.png",
-  // Agregá acá cualquier otra imagen externa o local que cargues al inicio:
-  "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787135257/auren-isotipo_tbm0gw.png"
-];
-
-if (!isLoaded) {
-  return (
-    <SplashScreen 
-      images={criticalImages} 
-      onFinish={() => setIsLoaded(true)} 
-    />
-  );
-}
-
   return (
     <div className="relative flex min-h-screen-safe w-full items-center justify-center bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] overflow-hidden font-sans antialiased px-6">
       <div className="mt-4 flex justify-center">
@@ -157,7 +142,7 @@ if (!isLoaded) {
 
         <div className="mb-6 text-center">
           <div className="flex items-center justify-center gap-2.5 mb-2">
-            <img src="https://res.cloudinary.com/dt6f9th0x/image/upload/v1787135257/auren-isotipo_tbm0gw.png" className="h-8 w-8" alt="Auren" />
+            <img src="/auren-isotipo.png" className="h-8 w-8" alt="Auren" />
             <span className="text-4xl font-serif text-[#0F1E3D] tracking-tight">Auren</span>
           </div>
 
