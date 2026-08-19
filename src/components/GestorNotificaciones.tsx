@@ -12,20 +12,20 @@ export function GestorNotificaciones() {
     const [estadoPermiso, setEstadoPermiso] = useState<"default" | "granted" | "denied">("default");
     const [guardando, setGuardando] = useState(false);
 
-const guardarToken = async (token: string) => {
-    if (!user) return;
-    try {
-        await setDoc(doc(db, "push_tokens", user.uid), {
-            token,
-            user_id: user.uid, // <--- Esto es lo único que necesita el backend para el envío individual
-            updatedAt: new Date(),
-        }, { merge: true });
-    } catch (error) {
-        console.error("Error al guardar el token en Firestore:", error);
-    }
-};
+    const guardarToken = async (token: string) => {
+        if (!user) return;
+        try {
+            await setDoc(doc(db, "push_tokens", user.uid), {
+                token,
+                user_id: user.uid, // <--- Esto es lo único que necesita el backend para el envío individual
+                updatedAt: new Date(),
+            }, { merge: true });
+        } catch (error) {
+            console.error("Error al guardar el token en Firestore:", error);
+        }
+    };
 
-    const obtenerYGuardarToken = async () => {
+const obtenerYGuardarToken = async () => {
         try {
             const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
             await navigator.serviceWorker.ready;
@@ -40,6 +40,7 @@ const guardarToken = async (token: string) => {
             }
         } catch (error) {
             console.error("Error obteniendo/guardando token:", error);
+            throw error; // Lanzamos el error para que caiga en el catch principal si falla
         }
     };
 
@@ -60,22 +61,22 @@ const guardarToken = async (token: string) => {
 
     // Escuchar mensajes en FOREGROUND
 
-    const solicitarPermisoNoti = async () => {
+const solicitarPermisoNoti = async () => {
         setGuardando(true);
         try {
             const permission = await Notification.requestPermission();
 
             if (permission === "granted") {
                 await obtenerYGuardarToken();
-                setMostrarModal(false);
                 setEstadoPermiso("granted");
+                setMostrarModal(false); // <--- Forzamos el cierre acá de forma explícita
             } else {
                 setEstadoPermiso("denied");
             }
         } catch (error) {
             console.error("Error al solicitar permiso:", error);
         } finally {
-            setGuardando(false);
+            setGuardando(false); // Esto apaga el "Activando..." pase lo que pase
         }
     };
 
