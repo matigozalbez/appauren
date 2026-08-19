@@ -12,17 +12,18 @@ export function GestorNotificaciones() {
     const [estadoPermiso, setEstadoPermiso] = useState<"default" | "granted" | "denied">("default");
     const [guardando, setGuardando] = useState(false);
 
-    const guardarToken = async (token: string) => {
-        if (!user) return;
-        try {
-            await setDoc(doc(db, "push_tokens", user.uid), {
-                token,
-                updatedAt: new Date(),
-            }, { merge: true });
-        } catch (error) {
-            console.error("Error al guardar el token en Firestore:", error);
-        }
-    };
+const guardarToken = async (token: string) => {
+    if (!user) return;
+    try {
+        await setDoc(doc(db, "push_tokens", user.uid), {
+            token,
+            user_id: user.uid, // <--- Esto es lo único que necesita el backend para el envío individual
+            updatedAt: new Date(),
+        }, { merge: true });
+    } catch (error) {
+        console.error("Error al guardar el token en Firestore:", error);
+    }
+};
 
     const obtenerYGuardarToken = async () => {
         try {
