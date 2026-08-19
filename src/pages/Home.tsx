@@ -100,9 +100,12 @@ const estilos = [
       fetchSocio();
     }, [user]);
 
-        useEffect(() => {
-  contarNoLeidas().then(setUnreadCount);
-}, []);
+useEffect(() => {
+  contarNoLeidas().then((count) => {
+    console.log("Notificaciones no leídas calculadas:", count);
+    setUnreadCount(count);
+  });
+}, [])
 
 
     return (
