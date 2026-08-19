@@ -8,13 +8,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
-      registerType: 'autoUpdate',
+      registerType: 'prompt', // Cambiado de autoUpdate a prompt
       injectRegister: 'auto',
       includeAssets: ['apple-touch-icon.png', 'icon-192.png', 'icon-512.png'],
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-        skipWaiting: true,
-        clientsClaim: true,
+        // Sacamos skipWaiting y clientsClaim para que no force el takeover
       },
       manifest: {
         name: 'Mi Auren',
