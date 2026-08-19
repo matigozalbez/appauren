@@ -142,7 +142,7 @@ if (checkingAuth && showSplash) {
 
         <div className="mb-6 text-center">
           <div className="flex items-center justify-center gap-2.5 mb-2">
-            <img src="/auren-isotipo.png" className="h-8 w-8" alt="Auren" />
+            <img src="https://res.cloudinary.com/dt6f9th0x/image/upload/v1787135257/auren-isotipo_tbm0gw.png" className="h-8 w-8" alt="Auren" />
             <span className="text-4xl font-serif text-[#0F1E3D] tracking-tight">Auren</span>
           </div>
 
