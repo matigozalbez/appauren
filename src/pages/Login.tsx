@@ -10,7 +10,7 @@ import {
 import { auth, googleProvider } from '../firebase';
 import InstallButton from '../components/InstallButton';
 import SplashScreen from '../components/SplashScreen';
-import { GestorNotificaciones } from '../components/GestorNotificaciones';
+
 
 const API_URL = "https://backendauren.onrender.com";
 
@@ -212,7 +212,7 @@ export default function Login() {
         </div>
 
       </div>
-      <GestorNotificaciones />
+
     </div>
   );
 }
