@@ -7,7 +7,7 @@
 import PlanCard from "../components/PlanCard";
 import BannerCarousel from "../components/BannerCarousel";
 import { GestorNotificaciones } from "../components/GestorNotificaciones";
-import NotificationsModal from "../components/Modalnotis";
+import NotificationsModal, {contarNoLeidas} from "../components/Modalnotis";
 
 
 
@@ -100,6 +100,9 @@ const estilos = [
       fetchSocio();
     }, [user]);
 
+        useEffect(() => {
+  contarNoLeidas().then(setUnreadCount);
+}, []);
 
 
     return (
