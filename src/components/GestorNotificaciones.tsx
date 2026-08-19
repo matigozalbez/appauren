@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { getToken } from "firebase/messaging";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { messaging, auth, db } from "../firebase";
 
@@ -12,14 +12,30 @@ export function GestorNotificaciones() {
     const [estadoPermiso, setEstadoPermiso] = useState<"default" | "granted" | "denied">("default");
     const [guardando, setGuardando] = useState(false);
 
-    const guardarToken = async (token: string) => {
+const guardarToken = async (token: string) => {
         if (!user) return;
         try {
+            // 1. Buscamos los planes del socio en Firestore usando su UID
+            let planesSocio: string[] = [];
+            const socioDocRef = doc(db, "socios", user.uid);
+            const socioSnap = await getDoc(socioDocRef);
+            
+            if (socioSnap.exists()) {
+                const dataSocio = socioSnap.data();
+                if (dataSocio.planes && Array.isArray(dataSocio.planes)) {
+                    planesSocio = dataSocio.planes;
+                }
+            }
+
+            // 2. Guardamos el token junto con el user_id y los planes
             await setDoc(doc(db, "push_tokens", user.uid), {
                 token,
-                user_id: user.uid, // <--- Esto es lo único que necesita el backend para el envío individual
+                user_id: user.uid,
+                planes: planesSocio, // <--- ¡Guardamos el array de planes acá!
                 updatedAt: new Date(),
             }, { merge: true });
+
+            console.log("Token y planes guardados con éxito para:", user.uid);
         } catch (error) {
             console.error("Error al guardar el token en Firestore:", error);
         }
