@@ -1,26 +1,26 @@
     // components/NotificationsModal.tsx
-    import { useEffect, useState } from "react";
-    import { X, Bell } from "lucide-react";
-    import { collection, query, orderBy, limit, getDocs, Timestamp } from "firebase/firestore";
-    import { db} from "../firebase";
+import { useEffect, useState } from "react";
+import { X, Bell } from "lucide-react";
+import { collection, query, orderBy, limit, getDocs, Timestamp } from "firebase/firestore";
+ import { db} from "../firebase";
 
 
-    interface Notificacion {
-    id: string;
+ interface Notificacion {
+     id: string;
     titulo: string;
     mensaje: string;
     fecha: Timestamp;
-    }
+ }
 
-    interface NotificationsModalProps {
+interface NotificationsModalProps {
     isOpen: boolean;
     onClose: () => void;
     onReadStateChange?: (unreadCount: number) => void;
-    }
+ }
 
-    const LEIDAS_KEY = "auren_notis_leidas";
+const LEIDAS_KEY = "auren_notis_leidas";
 
-    function getLeidas(): string[] {
+function getLeidas(): string[] {
     try {
         const raw = localStorage.getItem(LEIDAS_KEY);
         return raw ? JSON.parse(raw) : [];
@@ -35,20 +35,20 @@
     localStorage.setItem(LEIDAS_KEY, JSON.stringify(nuevas));
     }
 
-    export default function NotificationsModal({ isOpen, onClose, onReadStateChange }: NotificationsModalProps) {
-    const [notificaciones, setNotificaciones] = useState<Notificacion[]>([]);
+export default function NotificationsModal({ isOpen, onClose, onReadStateChange }: NotificationsModalProps) {
+const [notificaciones, setNotificaciones] = useState<Notificacion[]>([]);
 
-    const [loading, setLoading] = useState(true);
+const [loading, setLoading] = useState(true);
 
 
 
     
 
-    useEffect(() => {
-        if (!isOpen) return;
+useEffect(() => {
+    if (!isOpen) return;
 
-        const fetchNotificaciones = async () => {
-        setLoading(true);
+    const fetchNotificaciones = async () => {
+    setLoading(true);
         try {
             const q = query(collection(db, "notificaciones"), orderBy("fecha", "desc"), limit(30));
             const snap = await getDocs(q);
@@ -106,7 +106,7 @@
             ) : notificaciones.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-60 text-center gap-2">
                 <Bell size={32} className="text-[#0F1E3D]" />
-                <p className="text-[#0F1E3D]text-sm">No tenés notificaciones por el momento</p>
+                <p className="text-[#0F1E3D] text-sm">No tenés notificaciones por el momento</p>
             </div>
                         ) : (
           <div className="space-y-3">
