@@ -20,19 +20,21 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onLogout: () => void;
+  onOpenNotifications?: () => void;
+  unreadCount?: number;
 }
 
 interface MenuItem {
   icon: React.ReactNode;
   label: string;
   onClick: () => void;
+  badge?: number;
 }
 
-export default function SideMenu({ isOpen, onClose, onLogout }: Props) {
+export default function SideMenu({ isOpen, onClose, onLogout, onOpenNotifications, unreadCount = 0 }: Props) {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
 
-  // Obtenemos el nombre y apellido de Firebase (o un fallback por defecto)
   const displayName = user?.displayName || "Usuario Auren";
 
   const go = (path: string) => {
@@ -46,7 +48,15 @@ export default function SideMenu({ isOpen, onClose, onLogout }: Props) {
     { icon: <IdCard size={19} />, label: "Credencial", onClick: () => go("/credencial") },
     { icon: <Tag size={19} />, label: "Promociones", onClick: () => go("/promociones") },
     { icon: <Search size={19} />, label: "Buscar Medicamentos", onClick: () => go("/medicamentos") },
-    { icon: <Bell size={19} />, label: "Notificaciones", onClick: () => {} },
+    {
+      icon: <Bell size={19} />,
+      label: "Notificaciones",
+      onClick: () => {
+        onClose();
+        onOpenNotifications?.();
+      },
+      badge: unreadCount,
+    },
     { icon: <FileText size={19} />, label: "Legales", onClick: () => go("/legales") },
   ];
 
@@ -106,7 +116,14 @@ export default function SideMenu({ isOpen, onClose, onLogout }: Props) {
                 text-[#0F1E3D] bg-slate-50 hover:bg-[#C9974A]/10 active:scale-[0.98] transition group"
             >
               <div className="flex items-center gap-3.5">
-                <span className="text-[#C9974A]">{item.icon}</span>
+                <span className="relative text-[#C9974A]">
+                  {item.icon}
+                  {!!item.badge && item.badge > 0 && (
+                    <span className="absolute -top-1.5 -right-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 text-white text-[9px] font-bold px-1">
+                      {item.badge > 9 ? "9+" : item.badge}
+                    </span>
+                  )}
+                </span>
                 <span className="text-sm font-semibold">{item.label}</span>
               </div>
               <ChevronRight

@@ -3,6 +3,7 @@ import { getToken } from "firebase/messaging";
 import { doc, setDoc } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { messaging, auth, db } from "../firebase";
+import { onMessage } from "firebase/messaging";
 
 const VAPID_KEY = "BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4";
 
@@ -53,6 +54,22 @@ export function GestorNotificaciones() {
       setMostrarModal(true);
     }
   }, [user]);
+
+  useEffect(() => {
+  const unsubscribe = onMessage(messaging, (payload) => {
+    console.log("Mensaje en foreground:", payload);
+    
+    // Opción simple: notificación nativa del browser aunque esté en foreground
+    if (Notification.permission === "granted") {
+      new Notification(payload.notification?.title || "Auren", {
+        body: payload.notification?.body,
+        icon: "/icon-192.png",
+      });
+    }
+  });
+
+  return () => unsubscribe();
+}, []);
 
   const solicitarPermisoNoti = async () => {
     setGuardando(true);
