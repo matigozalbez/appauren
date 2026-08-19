@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getToken, onMessage } from "firebase/messaging";
+import { getToken} from "firebase/messaging";
 import { doc, setDoc } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { messaging, auth, db } from "../firebase";
@@ -58,15 +58,6 @@ export function GestorNotificaciones() {
     }, [user]);
 
     // Escuchar mensajes en FOREGROUND
-useEffect(() => {
-    const unsubscribe = onMessage(messaging, (payload) => {
-        console.log("Mensaje en foreground recibido:", payload);
-        // Ya no hace falta crear el "new Notification()" a mano aquí, 
-        // el sistema operativo o el Service Worker se encargan de mostrarla limpiamente.
-    });
-
-    return () => unsubscribe();
-}, []);
 
     const solicitarPermisoNoti = async () => {
         setGuardando(true);
