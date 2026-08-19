@@ -1,77 +1,100 @@
-import { useState, useEffect } from 'react';
-import { getToken } from 'firebase/messaging';
-import { messaging } from '../firebase';
-// Ajustá la ruta de tu archivo de firebase
+import { useState, useEffect } from "react";
+import { getToken } from "firebase/messaging";
+import { doc, setDoc } from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { messaging, auth, db } from "../firebase";
 
 export function GestorNotificaciones() {
+  const [user] = useAuthState(auth);
   const [notiActivas, setNotiActivas] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [estadoPermiso, setEstadoPermiso] = useState<'default' | 'granted' | 'denied'>('default');
+  const [estadoPermiso, setEstadoPermiso] = useState<"default" | "granted" | "denied">("default");
+  const [guardando, setGuardando] = useState(false);
 
   useEffect(() => {
-    // Verificamos el estado real al entrar
-    if (Notification.permission === 'granted') {
+    if (typeof Notification === "undefined") return; // por las dudas en algún entorno raro
+
+    if (Notification.permission === "granted") {
       setNotiActivas(true);
       setMostrarModal(false);
-    } else if (Notification.permission === 'denied') {
+    } else if (Notification.permission === "denied") {
       setNotiActivas(false);
-      setMostrarModal(true); // Ya lo denegó antes, mostramos el modal para guiarlo a ajustes
-      setEstadoPermiso('denied');
+      setMostrarModal(true);
+      setEstadoPermiso("denied");
     } else {
-      // Si está en 'default', mostramos el modal apenas entra para que elija
       setMostrarModal(true);
     }
   }, []);
 
+  const guardarToken = async (token: string) => {
+    if (!user) return;
+    await setDoc(doc(db, "push_tokens", user.uid), {
+      token,
+      updatedAt: new Date(),
+    });
+  };
+
+
   const solicitarPermisoNoti = async () => {
+    setGuardando(true);
     try {
       const permission = await Notification.requestPermission();
-      
-      if (permission === 'granted') {
+
+      if (permission === "granted") {
         const token = await getToken(messaging, {
-          vapidKey: 'BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4'
+          vapidKey: "BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4",
         });
-        
+
         if (token) {
-          console.log("Token obtenido:", token);
-          alert("¡Token obtenido con éxito!");
-          // Acá mandarías el token a tu backend en Go
+          await guardarToken(token);
         }
 
         setNotiActivas(true);
         setMostrarModal(false);
-        setEstadoPermiso('granted');
+        setEstadoPermiso("granted");
       } else {
-        // Tocó que "no" (denegado para siempre en este flujo)
         setNotiActivas(false);
-        setEstadoPermiso('denied');
-        // El modal sigue abierto pero ahora cambia su mensaje para guiarlo a la configuración
+        setEstadoPermiso("denied");
       }
     } catch (error: any) {
       console.error("Error al obtener el token:", error);
-      alert("Error: " + (error?.message || JSON.stringify(error)));
+    } finally {
+      setGuardando(false);
     }
   };
 
-  // Si ya están activas, no mostramos nada (o podés mostrar otra cosa)
   if (notiActivas) return null;
 
   return (
     <>
       {mostrarModal && (
-        <div style={modalOverlayStyle}>
-          <div style={modalContentStyle}>
-            {estadoPermiso === 'denied' ? (
+        <div className="fixed inset-0 z-[9999] bg-[#0F1E3D]/60 backdrop-blur-sm flex items-center justify-center px-6">
+          <div className="bg-white rounded-3xl p-6 text-center max-w-[320px] w-full shadow-xl">
+            {estadoPermiso === "denied" ? (
               <>
-                <h3>¡Notificaciones bloqueadas!</h3>
-                <p>Activa las notificaciones desde la configuración de tu teléfono para no perderte nada.</p>
+                <h3 className="text-[#0F1E3D] font-bold text-lg">Notificaciones bloqueadas</h3>
+                <p className="text-slate-500 text-sm mt-2 leading-relaxed">
+                  Activá las notificaciones desde la configuración de tu teléfono para no perderte novedades ni beneficios.
+                </p>
+                <button
+                  onClick={() => setMostrarModal(false)}
+                  className="mt-5 w-full py-2.5 rounded-full bg-[#0F1E3D]/5 text-[#0F1E3D] text-sm font-bold active:scale-95 transition"
+                >
+                  Entendido
+                </button>
               </>
             ) : (
               <>
-                <h3>¡Activa las notificaciones!</h3>
-                <p>Enterate de las novedades al instante.</p>
-                <button onClick={solicitarPermisoNoti} style={botonStyle}>
-                  Activar notificaciones
+                <h3 className="text-[#0F1E3D] font-bold text-lg">Activá las notificaciones</h3>
+                <p className="text-slate-500 text-sm mt-2 leading-relaxed">
+                  Enterate al instante de descuentos, novedades y avisos importantes de Auren.
+                </p>
+                <button
+                  onClick={solicitarPermisoNoti}
+                  disabled={guardando}
+                  className="mt-5 w-full py-2.5 rounded-full bg-[#0F1E3D] text-white text-sm font-bold active:scale-95 transition disabled:opacity-60"
+                >
+                  {guardando ? "Activando..." : "Activar notificaciones"}
                 </button>
               </>
             )}
@@ -81,38 +104,3 @@ export function GestorNotificaciones() {
     </>
   );
 }
-
-// Estilos rápidos para que se vea como modal
-const modalOverlayStyle: React.CSSProperties = {
-  position: 'fixed',
-  top: 0,
-  left: 0,
-  width: '100vw',
-  height: '100vh',
-  backgroundColor: 'rgba(0,0,0,0.6)',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  zIndex: 9999,
-};
-
-const modalContentStyle: React.CSSProperties = {
-  backgroundColor: '#ffffff',
-  padding: '24px',
-  borderRadius: '12px',
-  textAlign: 'center',
-  maxWidth: '320px',
-  width: '90%',
-  boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
-};
-
-const botonStyle: React.CSSProperties = {
-  marginTop: '16px',
-  padding: '10px 20px',
-  backgroundColor: '#007AFF',
-  color: '#fff',
-  border: 'none',
-  borderRadius: '8px',
-  fontWeight: 'bold',
-  cursor: 'pointer',
-};
