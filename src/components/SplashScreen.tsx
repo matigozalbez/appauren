@@ -1,16 +1,38 @@
 import { useEffect, useState } from "react";
 
-export default function SplashScreen() {
+interface SplashScreenProps {
+  images?: string[];
+  onFinish?: () => void;
+}
+
+export default function SplashScreen({ images = [], onFinish }: SplashScreenProps) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const appear = setTimeout(() => setVisible(true), 100);
-    const timer = setTimeout(() => setVisible(false), 10000);
-    return () => {
-      clearTimeout(appear);
-      clearTimeout(timer);
+
+    const loadImages = async () => {
+      const imagePromises = images.map((src) => {
+        return new Promise<void>((resolve) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+        });
+      });
+
+      await Promise.race([
+        Promise.all(imagePromises),
+        new Promise((resolve) => setTimeout(resolve, 5000))
+      ]);
+
+      if (onFinish) onFinish();
     };
-  }, []);
+
+    loadImages();
+
+    return () => clearTimeout(appear);
+  }, [images, onFinish]);
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#071328]">
