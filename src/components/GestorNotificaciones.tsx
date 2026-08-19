@@ -58,20 +58,15 @@ export function GestorNotificaciones() {
     }, [user]);
 
     // Escuchar mensajes en FOREGROUND
-    useEffect(() => {
-        const unsubscribe = onMessage(messaging, (payload) => {
-            console.log("Mensaje en foreground:", payload);
+useEffect(() => {
+    const unsubscribe = onMessage(messaging, (payload) => {
+        console.log("Mensaje en foreground recibido:", payload);
+        // Ya no hace falta crear el "new Notification()" a mano aquí, 
+        // el sistema operativo o el Service Worker se encargan de mostrarla limpiamente.
+    });
 
-            if (Notification.permission === "granted") {
-                new Notification(payload.notification?.title || "Auren", {
-                    body: payload.notification?.body,
-                    icon: "/icon-192.png",
-                });
-            }
-        });
-
-        return () => unsubscribe();
-    }, []);
+    return () => unsubscribe();
+}, []);
 
     const solicitarPermisoNoti = async () => {
         setGuardando(true);
