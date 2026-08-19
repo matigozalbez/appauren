@@ -4,27 +4,14 @@ import { doc, setDoc } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { messaging, auth, db } from "../firebase";
 
+const VAPID_KEY = "BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4";
+
 export function GestorNotificaciones() {
   const [user] = useAuthState(auth);
   const [notiActivas, setNotiActivas] = useState(false);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [estadoPermiso, setEstadoPermiso] = useState<"default" | "granted" | "denied">("default");
   const [guardando, setGuardando] = useState(false);
-
-  useEffect(() => {
-    if (typeof Notification === "undefined") return; // por las dudas en algún entorno raro
-
-    if (Notification.permission === "granted") {
-      setNotiActivas(true);
-      setMostrarModal(false);
-    } else if (Notification.permission === "denied") {
-      setNotiActivas(false);
-      setMostrarModal(true);
-      setEstadoPermiso("denied");
-    } else {
-      setMostrarModal(true);
-    }
-  }, []);
 
   const guardarToken = async (token: string) => {
     if (!user) return;
@@ -34,6 +21,38 @@ export function GestorNotificaciones() {
     });
   };
 
+  const obtenerYGuardarToken = async () => {
+    try {
+      const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
+      const token = await getToken(messaging, {
+        vapidKey: VAPID_KEY,
+        serviceWorkerRegistration: registration,
+      });
+      if (token) {
+        await guardarToken(token);
+      }
+    } catch (error) {
+      console.error("Error obteniendo/guardando token:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof Notification === "undefined" || !user) return;
+
+    if (Notification.permission === "granted") {
+      setNotiActivas(true);
+      setMostrarModal(false);
+      // El permiso ya estaba concedido de antes: igual necesitamos
+      // asegurarnos de tener el token guardado para este dispositivo/usuario.
+      obtenerYGuardarToken();
+    } else if (Notification.permission === "denied") {
+      setNotiActivas(false);
+      setMostrarModal(true);
+      setEstadoPermiso("denied");
+    } else {
+      setMostrarModal(true);
+    }
+  }, [user]);
 
   const solicitarPermisoNoti = async () => {
     setGuardando(true);
@@ -41,14 +60,7 @@ export function GestorNotificaciones() {
       const permission = await Notification.requestPermission();
 
       if (permission === "granted") {
-        const token = await getToken(messaging, {
-          vapidKey: "BCB0-_Qu_aFcJ5x3_SJEvCFDkphk1RizC0ZEpHTRbcf1TkC3aoFn8cZ4qYYJt_fMTihbbMI0lL3zo_5guUGoNc4",
-        });
-
-        if (token) {
-          await guardarToken(token);
-        }
-
+        await obtenerYGuardarToken();
         setNotiActivas(true);
         setMostrarModal(false);
         setEstadoPermiso("granted");
