@@ -16,7 +16,7 @@ import SplashScreen from '../components/SplashScreen';
 const API_URL = "https://backendauren.onrender.com";
 
 export default function Login() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -25,37 +25,55 @@ export default function Login() {
 
   const [checkingAuth, setCheckingAuth] = useState(true);
 
+
+const [showSplash] = useState(
+  sessionStorage.getItem("auren_splash_shown") !== "true"
+);
+
   useEffect(() => {
-    const minDelay = new Promise((resolve) => setTimeout(resolve, 2000));
+  const minDelay = showSplash
+    ? new Promise((resolve) => setTimeout(resolve, 2000))
+    : Promise.resolve();
 
-    const authCheck = new Promise<void>((resolve) => {
-      const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-        unsubscribe();
+  const authCheck = new Promise<void>((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      unsubscribe();
 
-        if (currentUser) {
-          try {
-            const idToken = await currentUser.getIdToken();
-            const res = await fetch(`${API_URL}/api/verificar-vinculacion`, {
-              headers: { Authorization: `Bearer ${idToken}` },
-            });
-            const data = await res.json();
-            navigate(data.vinculado ? "/home" : "/vincular-dni", { replace: true });
-          } catch (err) {
-            console.error('Error verificando sesión existente:', err);
-          }
+      if (currentUser) {
+        try {
+          const idToken = await currentUser.getIdToken();
+
+          const res = await fetch(`${API_URL}/api/verificar-vinculacion`, {
+            headers: { Authorization: `Bearer ${idToken}` },
+          });
+
+          const data = await res.json();
+
+          navigate(
+            data.vinculado ? "/home" : "/vincular-dni",
+            { replace: true }
+          );
+        } catch (err) {
+          console.error("Error verificando sesión existente:", err);
         }
-        resolve();
-      });
+      }
+
+      resolve();
     });
+  });
 
-    Promise.all([minDelay, authCheck]).finally(() => setCheckingAuth(false));
-  }, [navigate]);
+  Promise.all([minDelay, authCheck]).finally(() => {
+    setCheckingAuth(false);
 
-  if (checkingAuth) {
-    return (
-      <SplashScreen />
-    );
-  }
+    if (showSplash) {
+      sessionStorage.setItem("auren_splash_shown", "true");
+    }
+  });
+}, [navigate, showSplash]);
+
+if (checkingAuth && showSplash) {
+  return <SplashScreen />;
+}
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
