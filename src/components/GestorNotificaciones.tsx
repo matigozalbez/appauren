@@ -24,23 +24,22 @@ export function GestorNotificaciones() {
         }
     };
 
-    const obtenerYGuardarToken = async () => {
-        try {
-            const registration = await navigator.serviceWorker.register("/firebase-messaging-sw.js");
-            await navigator.serviceWorker.ready;
+const obtenerYGuardarToken = async () => {
+  try {
+    const registration = await navigator.serviceWorker.ready;
 
-            const token = await getToken(messaging, {
-                vapidKey: VAPID_KEY,
-                serviceWorkerRegistration: registration,
-            });
+    const token = await getToken(messaging, {
+      vapidKey: VAPID_KEY,
+      serviceWorkerRegistration: registration,
+    });
 
-            if (token) {
-                await guardarToken(token);
-            }
-        } catch (error) {
-            console.error("Error obteniendo/guardando token:", error);
-        }
-    };
+    if (token) {
+      await guardarToken(token);
+    }
+  } catch (error) {
+    console.error("Error obteniendo/guardando token:", error);
+  }
+};
 
     // Control de permisos iniciales
     useEffect(() => {
