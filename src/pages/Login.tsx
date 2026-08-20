@@ -1,14 +1,15 @@
-import { useState, type FormEvent} from 'react';
+import { useState, type FormEvent, useEffect } from 'react';
 import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import {
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import InstallButton from '../components/InstallButton';
-
+import SplashScreen from '../components/SplashScreen';
 
 
 
@@ -21,16 +22,14 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-/*
-  const [checkingAuth, setCheckingAuth] = useState(true);
-  */
 
-/*
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+
 const [showSplash] = useState(
   sessionStorage.getItem("auren_splash_shown") !== "true"
 );
-*/
-/*
+
   useEffect(() => {
   const minDelay = showSplash
     ? new Promise((resolve) => setTimeout(resolve, 2000))
@@ -71,8 +70,10 @@ const [showSplash] = useState(
     }
   });
 }, [navigate, showSplash]);
-*/
 
+if (checkingAuth && showSplash) {
+  return <SplashScreen />;
+}
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
