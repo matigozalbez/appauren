@@ -48,15 +48,13 @@ useEffect(() => {
     if (!isOpen) return;
 
     const fetchNotificaciones = async () => {
-    setLoading(true);
+        setLoading(true);
         try {
-            const q = query(collection(db, "notificaciones"), orderBy("fecha", "desc"), limit(30));
-            const snap = await getDocs(q);
-            const items: Notificacion[] = snap.docs.map((d) => ({
-            id: d.id,
-            ...(d.data() as Omit<Notificacion, "id">),
-            }));
-            setNotificaciones(items);
+            const res = await fetch("https://backendauren.onrender.com/api/notificaciones");
+            if (!res.ok) throw new Error("Error al obtener notificaciones");
+
+            const items: Notificacion[] = await res.json();
+            setNotificaciones(items || []);
 
             // Marcamos todas como leídas al abrir el modal
             const ids = items.map((n) => n.id);
@@ -67,10 +65,10 @@ useEffect(() => {
         } finally {
             setLoading(false);
         }
-        };
+    };
 
-        fetchNotificaciones();
-    }, [isOpen]);
+    fetchNotificaciones();
+}, [isOpen]);
 
     if (!isOpen) return null;
 
