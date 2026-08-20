@@ -142,7 +142,11 @@ if (checkingAuth && showSplash) {
 
         <div className="mb-6 text-center">
           <div className="flex items-center justify-center gap-2.5 mb-2">
-            <img src="/auren-isotipo.png" className="h-8 w-8" alt="Auren" />
+            <img 
+  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZoAAAG6CAYAAAAxqoBVAAAxEUlEQVR4nO3dTXJa1/Y28Meu25f+IzB3BCItmiYjMoleqhAeQcgIjEdw8Qh8RBXtoBEEepDW0AgCI3jFCPw29joSkkGcj7332h/Pr0oVO3HQiiL0nP219rsfP36AdG3mw2sAXQB9AJ2jjw8V/vUHAI8AtgB2ALa90WJltUAiohbeMWh0bObDPoABTLJdbcOPgUxaokAMAo1jMi02ADBFtfJkKzYjB02AY2ATAKh0rEABN3a65QhT6gKAc2OAKbL7YAG0u60rIAZ1u7W3Yn35M60LdASZ1i6g0GzZ+t8Wv9lR6sAGL2wEwzNltK68Y8w+EAIjI3Xv3wYvWb5nZAXmAA4Yx0W63p4i8m3mAA4AAkACg856I03sD3h8mU5h62z8AAAAASUVORK5CYII=" 
+  className="h-8 w-8" 
+  alt="Auren" 
+/>
             <span className="text-4xl font-serif text-[#0F1E3D] tracking-tight">Auren</span>
           </div>
 
