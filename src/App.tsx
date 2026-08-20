@@ -8,21 +8,23 @@ import VincularDNI from './pages/VincularDNI'
 import { BottomNav } from './components/BottomNav'
 import Perfil from './pages/Perfil'
 import SideMenu from './components/SideMenu'
-import { useState, useEffect } from 'react'
+import { useState} from 'react'
 import { auth} from './firebase'
 import { signOut } from 'firebase/auth'
 import BuscarMedicamentoView from './components/MedicamentoSearchModal'
 import PrimerIngreso from './pages/Primeringreso'
-import InstalarApp from './pages/AppGuard'
+
 
 
 function App() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const showNav = location.pathname !== '/' && location.pathname !== '/primer-ingreso';
+  /*
   const [isStandalone, setIsStandalone] = useState<boolean | null>(null);
+  */
   const navigate = useNavigate();
-
+/*
 useEffect(() => {
   
   const check =
@@ -39,7 +41,7 @@ if (isStandalone === null) {
 if (!isStandalone) {
   return <InstalarApp />;
 }
-
+*/
     const handleLogout = async () => {
       localStorage.removeItem("auren_dni");
       localStorage.removeItem("auren_planes");
