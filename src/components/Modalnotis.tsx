@@ -6,7 +6,7 @@ import { collection, query, orderBy, limit, getDocs, Timestamp } from "firebase/
 
 
  interface Notificacion {
-     id: string;
+    id: string;
     titulo: string;
     mensaje: string;
     fecha: Timestamp;
@@ -72,11 +72,22 @@ useEffect(() => {
 
     if (!isOpen) return null;
 
-    const formatFecha = (ts: Timestamp) => {
-        if (!ts) return "";
-        const date = ts.toDate();
-        return date.toLocaleDateString("es-AR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
-    };
+const formatFecha = (fechaInput: any) => {
+    if (!fechaInput) return "";
+
+    // Si viene como string de Go (ej: "2026-04-06T...") o ya es un objeto Date
+    const fecha = new Date(fechaInput);
+    
+    if (isNaN(fecha.getTime())) return "";
+
+    return fecha.toLocaleDateString("es-AR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+};
 
     return (
         <div className="fixed inset-0 z-50 bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] flex flex-col animate-slide-up">
