@@ -9,7 +9,7 @@ import {
 } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase';
 import InstallButton from '../components/InstallButton';
-import SplashScreen from '../components/SplashScreen';
+
 
 
 
@@ -71,9 +71,7 @@ const [showSplash] = useState(
   });
 }, [navigate, showSplash]);
 
-if (checkingAuth && showSplash) {
-  return <SplashScreen />;
-}
+
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
