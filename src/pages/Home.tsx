@@ -11,7 +11,10 @@ import NotificationsModal, {contarNoLeidas} from "../components/Modalnotis";
 
 
 
-
+interface PlanSocio {
+  nombre: string;
+  estado: string;
+}
 
 
 
@@ -27,11 +30,10 @@ const [unreadCount, setUnreadCount] = useState<number>(0);
 
     const navigate = useNavigate();
 
-    const [planes, setPlanes] = useState<string[]>(() => {
-      const cached = localStorage.getItem("auren_planes");
-      return cached ? JSON.parse(cached) : [];
-    });
-
+const [planes, setPlanes] = useState<PlanSocio[]>(() => {
+  const cached = localStorage.getItem("auren_planes");
+  return cached ? JSON.parse(cached) : [];
+});
     // Estado para el carrusel de publicidad automático
     const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -194,7 +196,11 @@ useEffect(() => {
 {planes.map((plan, i) => {
   const style = estilos[i % estilos.length];
   return (
-    <PlanCard key={plan} plan={plan} imageSrc={style.imageSrc} />
+    <PlanCard
+  key={plan.nombre}
+  plan={plan.nombre}
+  imageSrc={style.imageSrc}
+/>
   );
 })}
   </div>
