@@ -3,7 +3,8 @@ import { useParams } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 
-const API_URL = "http://127.0.0.1:8080";
+const API_URL = "https://backendauren.onrender.com";
+
 
 interface Beneficio {
   clave: string;
