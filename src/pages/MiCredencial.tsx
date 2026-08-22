@@ -11,13 +11,18 @@ interface Adherente {
   relacion?: string;
 }
 
+interface PlanSocio {
+  nombre: string;
+  estado: string;
+}
+
 interface Socio {
   nombre?: string;
   apellido?: string;
   dni?: string;
   estado?: string;
   fechaActivacion?: string;
-  planes?: string[];
+  planes?: PlanSocio[];
   adherentes?: Adherente[];
 }
 
@@ -205,9 +210,9 @@ export default function MiCredencial() {
       </div>
     ) : (
       personaActiva.planes.map((plan) => (
-        <div key={plan} className="flex items-center gap-1">
+        <div key={plan.nombre} className="flex items-center gap-1">
           <span className="flex h-[11px] w-[11px] shrink-0 items-center justify-center rounded-full border border-[#C9974A] text-[7px] text-[#C9974A]">✓</span>
-          <span className="text-[9px] font-medium text-white truncate max-w-[90px]">{plan}</span>
+          <span className="text-[9px] font-medium text-white truncate max-w-[90px]">{plan.nombre}</span>
         </div>
       ))
     )}

@@ -11,6 +11,7 @@ import NotificationsModal, {contarNoLeidas} from "../components/Modalnotis";
 
 
 
+
 interface PlanSocio {
   nombre: string;
   estado: string;
@@ -195,12 +196,16 @@ useEffect(() => {
   <div className="grid grid-cols-2 gap-3">
 {planes.map((plan, i) => {
   const style = estilos[i % estilos.length];
+
   return (
     <PlanCard
-  key={plan.nombre}
-  plan={plan.nombre}
-  imageSrc={style.imageSrc}
-/>
+      key={plan.nombre}
+      plan={plan.nombre}
+      imageSrc={style.imageSrc}
+      onVerDetalle={() =>
+        navigate(`/planes/${encodeURIComponent(plan.nombre)}`)
+      }
+    />
   );
 })}
   </div>
@@ -234,6 +239,7 @@ banners={[
   onClose={() => setNotisOpen(false)}
   onReadStateChange={setUnreadCount}
 />
+
         
       </div>
     );

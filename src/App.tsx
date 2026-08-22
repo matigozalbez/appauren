@@ -14,17 +14,18 @@ import { signOut } from 'firebase/auth'
 import BuscarMedicamentoView from './components/MedicamentoSearchModal'
 import PrimerIngreso from './pages/Primeringreso'
 import InstalarApp from './pages/AppGuard'
+import DetallePlan from './pages/DetallePlan'
 
 
 function App() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const showNav = location.pathname !== '/' && location.pathname !== '/primer-ingreso';
+  const showNav = location.pathname !== '/' && location.pathname !== '/primer-ingreso' && location.pathname !== '/vincular-dni';
 
   const [isStandalone, setIsStandalone] = useState<boolean | null>(null);
 
   const navigate = useNavigate();
-
+/*
 useEffect(() => {
   
   const check =
@@ -41,7 +42,7 @@ if (isStandalone === null) {
 if (!isStandalone) {
   return <InstalarApp />;
 }
-
+*/
     const handleLogout = async () => {
       localStorage.removeItem("auren_dni");
       localStorage.removeItem("auren_planes");
@@ -61,6 +62,7 @@ if (!isStandalone) {
         <Route path="/credencial" element={<PrivateRoute><MiCredencial/></PrivateRoute>} />
         <Route path="/perfil" element={<PrivateRoute><Perfil/></PrivateRoute>} />
         <Route path="/medicamentos" element={<PrivateRoute><BuscarMedicamentoView/></PrivateRoute>} />
+        <Route path="/planes/:plan" element={<PrivateRoute><DetallePlan/></PrivateRoute>} />
         <Route path="/terminos" element={<TerminosCondiciones />} />
         <Route path="/vincular-dni" element={<VincularDNI />} />
    
