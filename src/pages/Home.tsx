@@ -112,7 +112,7 @@ useEffect(() => {
 
 
     return (
-      <div className={`min-h-screen-safe h-[100dvh] w-full flex flex-col overflow-hidden bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] ${animationClass}`}>
+      <div className={`min-h-screen-safe h-[100dvh] w-full flex flex-col overflow-hidden bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] ${animationClass} style={{ overscrollBehaviorY: 'none' }`}>
         {/* Header superior */}
         <Header
   onOpenMenu={openMenu}
