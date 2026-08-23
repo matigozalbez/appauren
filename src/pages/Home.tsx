@@ -112,13 +112,16 @@ useEffect(() => {
 
 
     return (
-      <div className={`min-h-screen-safe h-[100dvh] w-full flex flex-col overflow-hidden bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] ${animationClass} `}>
+   <div 
+        className={`min-h-screen bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2]  text-slate-800 pb-32 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] ${animationClass}`}
+        >
         {/* Header superior */}
         <Header
   onOpenMenu={openMenu}
   onOpenNotifications={() => setNotisOpen(true)}
   unreadCount={unreadCount}
 />
+
 
         {/* Bloque azul con la panza hacia arriba (curva inferior normal y superior recta o viceversa según el flujo visual) */}
 <div className="relative bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] px-6 pt-6 pb-20 rounded-t-3xl shadow-xl"> 
