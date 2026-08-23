@@ -8,7 +8,7 @@
 
     export default function Header({ onOpenMenu, onOpenNotifications, unreadCount = 0 }: HeaderProps) {
       return (
-        <header className="sticky top-0 left-0 w-full bg-[#FDFBF7] px-4 py-3 flex items-center justify-between shadow-sm z-50">
+        <header className="fixed top-0 left-0 w-full bg-[#FDFBF7] px-4 py-3 flex items-center justify-between shadow-sm z-50">
           {/* Botón de menú hamburguesa */}
           <button
             onClick={onOpenMenu}

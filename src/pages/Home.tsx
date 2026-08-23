@@ -112,7 +112,7 @@ useEffect(() => {
 
 
     return (
-      <div className={`min-h-screen-safe bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] pb-24 overflow-y-auto ${animationClass}`}>
+      <div className={`min-h-screen-safe pt-16  bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] pb-24 overflow-y-auto ${animationClass}`}>
         {/* Header superior */}
         <Header
   onOpenMenu={openMenu}
