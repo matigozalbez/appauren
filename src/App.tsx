@@ -27,6 +27,19 @@ function App() {
 
   const navigate = useNavigate();
 
+        useEffect(() => {
+  const bloquearEdgeSwipe = (e: TouchEvent) => {
+    const touchX = e.touches[0].clientX;
+    if (touchX < 20) { // margen del borde izquierdo, ajustable
+      e.preventDefault();
+    }
+  };
+  document.addEventListener("touchstart", bloquearEdgeSwipe, { passive: false });
+  return () => document.removeEventListener("touchstart", bloquearEdgeSwipe);
+}, []);
+
+
+
 useEffect(() => {
   
   const check =
@@ -44,23 +57,16 @@ if (!isStandalone) {
   return <InstalarApp />;
 }
 
-    const handleLogout = async () => {
+   
+
+const handleLogout = async () => {
       localStorage.removeItem("auren_dni");
       localStorage.removeItem("auren_planes");
       await signOut(auth);
       navigate("/", { replace: true });
     };
 
-    useEffect(() => {
-  const bloquearEdgeSwipe = (e: TouchEvent) => {
-    const touchX = e.touches[0].clientX;
-    if (touchX < 20) { // margen del borde izquierdo, ajustable
-      e.preventDefault();
-    }
-  };
-  document.addEventListener("touchstart", bloquearEdgeSwipe, { passive: false });
-  return () => document.removeEventListener("touchstart", bloquearEdgeSwipe);
-}, []);
+
 
 
 
