@@ -15,6 +15,7 @@ import BuscarMedicamentoView from './components/MedicamentoSearchModal'
 import PrimerIngreso from './pages/Primeringreso'
 import InstalarApp from './pages/AppGuard'
 import DetallePlan from './pages/DetallePlan'
+import RecuperarPassword from './pages/RecuperarPassword'
 
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
   const [isStandalone, setIsStandalone] = useState<boolean | null>(null);
 
   const navigate = useNavigate();
-
+/*
 useEffect(() => {
   
   const check =
@@ -42,7 +43,7 @@ if (isStandalone === null) {
 if (!isStandalone) {
   return <InstalarApp />;
 }
-
+*/
     const handleLogout = async () => {
       localStorage.removeItem("auren_dni");
       localStorage.removeItem("auren_planes");
@@ -57,6 +58,7 @@ if (!isStandalone) {
     <>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/recuperar-password" element={<RecuperarPassword/>} />
         <Route path="/primer-ingreso" element={<PrimerIngreso />} />
         <Route path="/home" element={<PrivateRoute><Home openMenu={() => setMenuOpen(true)} /></PrivateRoute>} />
         <Route path="/credencial" element={<PrivateRoute><MiCredencial/></PrivateRoute>} />

@@ -9,7 +9,7 @@ import aurenIsotipo from "/horizontalazul.png";
 // TODO: volver a la URL de Render cuando terminemos de testear en local
 const API_URL = "https://backendauren.onrender.com";
 
-export default function PrimerIngreso() {
+export default function RecuperarPassword() {
   const navigate = useNavigate();
 
   const [paso, setPaso] = useState(1);
@@ -20,11 +20,9 @@ export default function PrimerIngreso() {
   const [mailEnmascarado, setMailEnmascarado] = useState("");
 
   const [codigo, setCodigo] = useState("");
-
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [aceptaTerminos, setAceptaTerminos] = useState(false);
 
   const handleSolicitarCodigo = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
@@ -38,7 +36,7 @@ export default function PrimerIngreso() {
       const res = await fetch(`${API_URL}/api/afiliados/solicitar-codigo`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dni: dni.trim(), flujo: "primer_ingreso" }),
+        body: JSON.stringify({ dni: dni.trim(), flujo: "recuperar_password" }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "No pudimos enviar el código");
@@ -52,34 +50,14 @@ export default function PrimerIngreso() {
     }
   };
 
-  const handleVerificarCodigo = async (e?: React.FormEvent) => {
+  const handleFinalizar = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setError("");
+
     if (codigo.trim().length !== 6) {
       setError("El código tiene 6 dígitos");
       return;
     }
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_URL}/api/afiliados/verificar-codigo`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ dni: dni.trim(), codigo: codigo.trim() }),
-      });
-      const data = await res.json();
-      if (!res.ok || !data.verificado) throw new Error(data.error || "Código incorrecto");
-
-      setPaso(3);
-    } catch (err: any) {
-      setError(err.message || "Código incorrecto o vencido");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCrearCuenta = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    setError("");
     if (password.length < 8) {
       setError("La contraseña debe tener al menos 8 caracteres");
       return;
@@ -88,28 +66,36 @@ export default function PrimerIngreso() {
       setError("Las contraseñas no coinciden");
       return;
     }
-    if (!aceptaTerminos) {
-      setError("Tenés que aceptar los Términos y Condiciones para continuar");
-      return;
-    }
 
     setLoading(true);
     try {
-      const res = await fetch(`${API_URL}/api/afiliados/crear-password`, {
+      // 1. Verificamos el código primero
+      const resVerif = await fetch(`${API_URL}/api/afiliados/verificar-codigo`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ dni: dni.trim(), codigo: codigo.trim() }),
+      });
+      const dataVerif = await resVerif.json();
+      if (!resVerif.ok || !dataVerif.verificado) {
+        throw new Error(dataVerif.error || "Código incorrecto o vencido");
+      }
+
+      // 2. Si el código es válido, cambiamos la contraseña
+      const resPass = await fetch(`${API_URL}/api/afiliados/cambiar-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ dni: dni.trim(), password }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "No pudimos crear tu cuenta");
+      const dataPass = await resPass.json();
+      if (!resPass.ok) throw new Error(dataPass.error || "No pudimos actualizar tu contraseña");
 
-      if (data.customToken) {
-        await signInWithCustomToken(auth, data.customToken);
+      if (dataPass.customToken) {
+        await signInWithCustomToken(auth, dataPass.customToken);
       }
 
       navigate("/home");
     } catch (err: any) {
-      setError(err.message || "No pudimos crear tu cuenta");
+      setError(err.message || "Ocurrió un error al procesar tu solicitud");
     } finally {
       setLoading(false);
     }
@@ -126,10 +112,10 @@ export default function PrimerIngreso() {
             alt="Auren Logo" 
             className="mb-3 h-auto w-32 object-contain" 
           />
-          <span className="text-xs font-semibold tracking-widest text-[#C9974A] uppercase mt-1">Primer Ingreso</span>
+          <span className="text-xs font-semibold tracking-widest text-[#C9974A] uppercase mt-1">Recuperar contraseña</span>
         </div>
 
-        {/* Indicador de pasos */}
+        {/* Indicador de 2 pasos */}
         <div className="mb-8 flex items-center justify-center gap-3">
           <div className={`flex h-9 w-9 items-center justify-center rounded-full text-base font-semibold ${
             paso >= 1 ? "bg-[#C9974A] text-white" : "bg-zinc-100 text-zinc-400"
@@ -143,13 +129,6 @@ export default function PrimerIngreso() {
           }`}>
             2
           </div>
-          <div className={`h-0.5 w-16 ${paso >= 3 ? "bg-[#C9974A]" : "bg-zinc-200"}`} />
-
-          <div className={`flex h-9 w-9 items-center justify-center rounded-full text-base font-semibold ${
-            paso >= 3 ? "bg-[#C9974A] text-white" : "bg-zinc-100 text-zinc-400"
-          }`}>
-            3
-          </div>
         </div>
 
         {/* PASO 1: Ingreso de DNI */}
@@ -158,7 +137,7 @@ export default function PrimerIngreso() {
             <div className="text-left mb-6">
               <h2 className="text-2xl font-bold text-[#0F1E3D]">Ingresá tu DNI</h2>
               <p className="mt-1.5 text-sm text-zinc-600">
-                Ingresá tu número de documento para activar tu cuenta.
+                Ingresá tu número de documento para recuperar tu acceso.
               </p>
             </div>
 
@@ -187,13 +166,13 @@ export default function PrimerIngreso() {
           </form>
         )}
 
-        {/* PASO 2: Ingreso de Código */}
+        {/* PASO 2: Código de Verificación + Nueva Contraseña */}
         {paso === 2 && (
-          <form onSubmit={handleVerificarCodigo} className="space-y-5">
+          <form onSubmit={handleFinalizar} className="space-y-5">
             <div className="text-left mb-6">
-              <h2 className="text-2xl font-bold text-[#0F1E3D]">Código de Verificación</h2>
+              <h2 className="text-2xl font-bold text-[#0F1E3D]">Nueva contraseña</h2>
               <p className="mt-1.5 text-sm text-zinc-600">
-                Te enviamos un código a <span className="font-medium text-[#0F1E3D]">{mailEnmascarado || "tu correo"}</span>.
+                Te enviamos un código a <span className="font-medium text-[#0F1E3D]">{mailEnmascarado || "tu correo"}</span>. Ingresalo junto con tu nueva clave.
               </p>
             </div>
 
@@ -211,46 +190,13 @@ export default function PrimerIngreso() {
               />
             </div>
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full rounded-full bg-[#0F1E3D] py-4 text-sm font-semibold text-white tracking-wider shadow-md transition-opacity hover:opacity-90 disabled:bg-zinc-400"
-            >
-              {loading ? "VERIFICANDO..." : "SIGUIENTE"}
-            </button>
-
-            <div className="text-center">
-              <button
-                type="button"
-                onClick={() => handleSolicitarCodigo()}
-                disabled={loading}
-                className="text-xs font-medium text-[#C9974A] hover:underline"
-              >
-                Reenviar código
-              </button>
-            </div>
-          </form>
-        )}
-
-        {/* PASO 3: Contraseña y Términos */}
-        {paso === 3 && (
-          <form onSubmit={handleCrearCuenta} className="space-y-5">
-            <div className="text-left mb-6">
-              <h2 className="text-2xl font-bold text-[#0F1E3D]">Creá tu contraseña</h2>
-              <p className="mt-1.5 text-sm text-zinc-600">
-                Establecé tu clave de acceso para finalizar la activación.
-              </p>
-            </div>
-
             <div className="relative">
               <Lock size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Crear contraseña"
+                placeholder="Nueva contraseña"
                 className="w-full rounded-xl border border-zinc-200 bg-zinc-50 py-3.5 pl-12 pr-12 text-[#0F1E3D] placeholder-zinc-400 outline-none focus:border-[#C9974A]"
                 required
               />
@@ -269,25 +215,11 @@ export default function PrimerIngreso() {
                 type={showPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="Confirmar contraseña"
+                placeholder="Confirmar nueva contraseña"
                 className="w-full rounded-xl border border-zinc-200 bg-zinc-50 py-3.5 pl-12 pr-4 text-[#0F1E3D] placeholder-zinc-400 outline-none focus:border-[#C9974A]"
                 required
               />
             </div>
-
-            <label className="flex items-start gap-3 text-sm text-zinc-600 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={aceptaTerminos}
-                onChange={(e) => setAceptaTerminos(e.target.checked)}
-                className="mt-1 h-5 w-5 shrink-0 rounded border-zinc-300 bg-white accent-[#C9974A]"
-              />
-              <span>
-                Acepto los{" "}
-                <span className="font-medium text-[#C9974A]">Términos y Condiciones</span> y la{" "}
-                <span className="font-medium text-[#C9974A]">Política de Privacidad</span>.
-              </span>
-            </label>
 
             {error && <p className="text-sm text-red-600">{error}</p>}
 
@@ -296,8 +228,19 @@ export default function PrimerIngreso() {
               disabled={loading}
               className="w-full rounded-full bg-[#0F1E3D] py-4 text-sm font-semibold text-white tracking-wider shadow-md transition-opacity hover:opacity-90 disabled:bg-zinc-400"
             >
-              {loading ? "CREANDO CUENTA..." : "FINALIZAR"}
+              {loading ? "PROCESANDO..." : "CAMBIAR CONTRASEÑA"}
             </button>
+
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => handleSolicitarCodigo()}
+                disabled={loading}
+                className="text-xs font-medium text-[#C9974A] hover:underline"
+              >
+                Reenviar código
+              </button>
+            </div>
           </form>
         )}
 

@@ -187,9 +187,11 @@ if (checkingAuth && showSplash) {
 
           {error && <p className="text-[11px] text-red-500">{error}</p>}
 
-          <div className="text-right pt-0.5">
-            <a href="#" className="text-[11px] text-[#C9974A] hover:underline font-light">¿Olvidaste tu contraseña?</a>
-          </div>
+        <div className="text-right pt-0.5">
+  <Link to="/recuperar-password" className="text-[11px] text-[#C9974A] hover:underline font-light">
+    ¿Olvidaste tu contraseña?
+  </Link>
+</div>
 
           <button
             type="submit"
