@@ -119,7 +119,7 @@ useEffect(() => {
   onOpenNotifications={() => setNotisOpen(true)}
   unreadCount={unreadCount}
 />
-        <div className="min-h-screen-safe flex-1 pb-20 overflow-y-auto scrollbar-hide w-full"
+        
   style={{ overscrollBehaviorY: 'contain' }}>
         {/* Bloque azul con la panza hacia arriba (curva inferior normal y superior recta o viceversa según el flujo visual) */}
 <div className="relative bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] px-6 pt-6 pb-20 rounded-t-3xl shadow-xl"> 
@@ -243,6 +243,6 @@ banners={[
 
         
       </div>
-      </div>
+     
     );
   }
