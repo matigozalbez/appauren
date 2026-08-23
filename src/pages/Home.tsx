@@ -112,7 +112,7 @@ useEffect(() => {
 
 
     return (
-      <div className={`h-[100dvh] w-full flex flex-col bg-[#FDFBF7] overflow-hidden ${animationClass}`}>
+      <div className={`h-[100dvh] w-full flex flex-col bg-[#FDFBF7]  ${animationClass}`}>
         {/* Header superior */}
         
         <Header
