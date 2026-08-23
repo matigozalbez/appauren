@@ -112,14 +112,15 @@ useEffect(() => {
 
 
     return (
-      <div className={`min-h-screen-safe h-[100dvh] w-full flex flex-col overflow-hidden bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] ${animationClass} style={{ overscrollBehaviorY: 'none' }`}>
+      <div className={`min-h-screen-safe h-[100dvh] w-full flex flex-col overflow-hidden bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] ${animationClass} `}>
         {/* Header superior */}
         <Header
   onOpenMenu={openMenu}
   onOpenNotifications={() => setNotisOpen(true)}
   unreadCount={unreadCount}
 />
-        <div className="min-h-screen-safe flex-1 pb-20 overflow-y-auto scrollbar-hide w-full ">
+        <div className="min-h-screen-safe flex-1 pb-20 overflow-y-auto scrollbar-hide w-full"
+  style={{ overscrollBehaviorY: 'contain' }}>
         {/* Bloque azul con la panza hacia arriba (curva inferior normal y superior recta o viceversa según el flujo visual) */}
 <div className="relative bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] px-6 pt-6 pb-20 rounded-t-3xl shadow-xl"> 
   <div className="flex items-center justify-between">
