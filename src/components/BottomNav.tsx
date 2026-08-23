@@ -31,18 +31,20 @@ export const BottomNav = () => {
         to="/home" 
         onClick={() => handleNavClick("/home")}
         className={`flex flex-col items-center gap-1 ${isActive('/home') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
+        style={{ touchAction: "manipulation" }}
       >
         <HomeIcon size={20} />
         <span className="text-[10px] font-bold">Inicio</span>
       </Link>
 
-      <button 
-        onClick={() => handleNavClick("/coberturas")}
-        className="flex flex-col items-center gap-1 text-slate-400"
-      >
-        <Shield size={20} />
-        <span className="text-[10px] font-medium">Coberturas</span>
-      </button>
+<Link 
+  to="/coberturas"
+  onClick={() => handleNavClick("/coberturas")}
+  className={`flex flex-col items-center gap-1 ${isActive('/coberturas') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
+>
+  <Shield size={20} />
+  <span className="text-[10px] font-medium">Coberturas</span>
+</Link>
 
       {/* 👻 Botón fantasma/invisible de Medicamentos para que el router y las animaciones lo amen */}
 
@@ -51,6 +53,7 @@ export const BottomNav = () => {
         to="/credencial" 
         onClick={() => handleNavClick("/credencial")}
         className={`flex flex-col items-center gap-1 ${isActive('/credencial') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
+        style={{ touchAction: "manipulation" }}
       >
         <IdCard size={20} />
         <span className="text-[10px] font-medium">Credencial</span>
@@ -60,6 +63,7 @@ export const BottomNav = () => {
         to="/perfil" 
         onClick={() => handleNavClick("/perfil")}
         className={`flex flex-col items-center gap-1 ${isActive('/perfil') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
+        style={{ touchAction: "manipulation" }}
       >
         <User size={20} />
         <span className="text-[10px] font-medium">Perfil</span>

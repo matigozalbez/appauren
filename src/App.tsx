@@ -21,7 +21,7 @@ import RecuperarPassword from './pages/RecuperarPassword'
 function App() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const showNav = location.pathname !== '/' && location.pathname !== '/primer-ingreso' && location.pathname !== '/vincular-dni';
+  const showNav = location.pathname !== '/' && location.pathname !== '/primer-ingreso' && location.pathname !== '/vincular-dni' && location.pathname !== '/recuperar-password';
 
   const [isStandalone, setIsStandalone] = useState<boolean | null>(null);
 
