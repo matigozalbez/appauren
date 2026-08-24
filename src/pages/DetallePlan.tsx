@@ -5,7 +5,6 @@ import { auth } from "../firebase";
 
 const API_URL = import.meta.env.VITE_API_URL_LINK;
 
-
 interface Beneficio {
   clave: string;
   titulo: string;
@@ -27,204 +26,229 @@ interface Socio {
   beneficios?: Record<string, unknown>;
 }
 
+// Borde tipo "ticket / póliza" — construido una sola vez, no depende de datos.
+const TEETH = 22;
+const ZIGZAG_CLIP_PATH = `polygon(0% 0%, 100% 0%, ${Array.from(
+  { length: TEETH + 1 },
+  (_, i) => {
+    const x = 100 - (i / TEETH) * 100;
+    const y = i % 2 === 0 ? 100 : 55;
+    return `${x}% ${y}%`;
+  }
+).join(", ")})`;
 
 export default function DetallePlan() {
-const [user] = useAuthState(auth);
-const { plan } = useParams<{ plan: string }>()
+  const [user] = useAuthState(auth);
+  const { plan } = useParams<{ plan: string }>();
   const [socio, setSocio] = useState<Socio | null>(null);
   const [catalogo, setCatalogo] = useState<CatalogoPlan | null>(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
 
-useEffect(() => {
-  const cargarDetalle = async () => {
-    try {
-      setCargando(true);
-      setError("");
-      console.log(socio)
-      if (!user) {
-        setError("Usuario no autenticado");
-        setCargando(false);
-        return;
-      }
+  // Tipografía: Fraunces (display, con carácter, para el nombre del plan y
+  // los números de cláusula) + Inter (texto). Se inyecta una sola vez.
+  useEffect(() => {
+    if (document.getElementById("detalle-plan-fonts")) return;
+    const link = document.createElement("link");
+    link.id = "detalle-plan-fonts";
+    link.rel = "stylesheet";
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap";
+    document.head.appendChild(link);
+  }, []);
 
-      if (!plan) {
-        setError("No se especificó el plan");
-        setCargando(false);
-        return;
-      }
+  useEffect(() => {
+    const cargarDetalle = async () => {
+      try {
+        setCargando(true);
+        setError("");
 
-      const idToken = await user.getIdToken();
+        if (!user) {
+          setError("Usuario no autenticado");
+          setCargando(false);
+          return;
+        }
 
-      // 1. Obtener información del socio
- const resSocio = await fetch(
-  `${API_URL}/api/mi-socio`,
-        {
+        if (!plan) {
+          setError("No se especificó el plan");
+          setCargando(false);
+          return;
+        }
+
+        const idToken = await user.getIdToken();
+
+        // 1. Obtener información del socio
+        const resSocio = await fetch(`${API_URL}/api/mi-socio`, {
           headers: {
             Authorization: `Bearer ${idToken}`,
           },
+        });
+
+        if (!resSocio.ok) {
+          throw new Error("No se pudo obtener la información del socio");
         }
-      );
 
-      if (!resSocio.ok) {
-        throw new Error("No se pudo obtener la información del socio");
+        const dataSocio = await resSocio.json();
+
+        // 2. Verificar que tenga este plan
+        const tienePlan = (dataSocio.planes || []).some(
+          (p: PlanSocio) => p.nombre === plan && p.estado === "activo"
+        );
+
+        if (!tienePlan) {
+          throw new Error("No tenés contratado este plan");
+        }
+
+        setSocio(dataSocio);
+
+        // 3. Obtener beneficios del catálogo
+        const resCatalogo = await fetch(
+          `${API_URL}/api/planes/detalle?nombre=${encodeURIComponent(plan)}`
+        );
+
+        if (!resCatalogo.ok) {
+          throw new Error("No se pudo obtener el catálogo del plan");
+        }
+
+        const dataCatalogo = await resCatalogo.json();
+
+        setCatalogo(dataCatalogo);
+      } catch (err) {
+        console.error("Error cargando detalle del plan:", err);
+
+        setError(
+          err instanceof Error
+            ? err.message
+            : "No se pudo cargar el detalle del plan"
+        );
+      } finally {
+        setCargando(false);
       }
+    };
 
-      const dataSocio = await resSocio.json();
+    cargarDetalle();
+  }, [user, plan]);
 
-      // 2. Verificar que tenga este plan
-      const tienePlan = (dataSocio.planes || []).some(
-        (p: PlanSocio) =>
-          p.nombre === plan && p.estado === "activo"
-      );
-
-      if (!tienePlan) {
-        throw new Error("No tenés contratado este plan");
-      }
-
-      setSocio(dataSocio);
-
-      // 3. Obtener beneficios del catálogo
-  const resCatalogo = await fetch(
-  `${API_URL}/api/planes/detalle?nombre=${encodeURIComponent(plan)}`
-);
-
-      if (!resCatalogo.ok) {
-        throw new Error("No se pudo obtener el catálogo del plan");
-      }
-
-      const dataCatalogo = await resCatalogo.json();
-
-      setCatalogo(dataCatalogo);
-
-    } catch (err) {
-      console.error("Error cargando detalle del plan:", err);
-
-      setError(
-        err instanceof Error
-          ? err.message
-          : "No se pudo cargar el detalle del plan"
-      );
-    } finally {
-      setCargando(false);
-    }
-  };
-
-  cargarDetalle();
-}, [user, plan]);
-
-return (
-  <div className="min-h-screen bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] px-4 py-6 sm:px-6">
-    <div className="mx-auto max-w-3xl space-y-6">
-
-      {/* Encabezado */}
-      <div className="overflow-hidden rounded-3xl bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] shadow-xl">
-        <div className="px-6 py-7">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[#C9974A]">
-            Tu cobertura
-          </p>
-
-          <h1 className="mt-2 text-2xl font-bold text-white">
-            {plan}
-          </h1>
-
-          <p className="mt-1 text-sm text-white/60">
-            Conocé todos los beneficios incluidos en tu plan
-          </p>
-        </div>
-      </div>
-
-      {/* Contenido */}
-      <div className="rounded-3xl border border-white/70 bg-white/80 p-5 shadow-sm backdrop-blur-sm sm:p-6">
-
-        {cargando && (
-          <div className="flex flex-col items-center justify-center py-16">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-[#0F1E3D]" />
-
-            <p className="mt-4 text-sm font-medium text-slate-400">
-              Cargando beneficios...
-            </p>
-          </div>
-        )}
-
-        {!cargando && error && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-5">
-            <p className="text-sm font-semibold text-red-600">
-              {error}
-            </p>
-          </div>
-        )}
-
-        {!cargando && !error && catalogo && (
-          <div>
-            {/* Título sección */}
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <h2 className="text-base font-bold text-[#0F1E3D]">
-                  Beneficios incluidos
-                </h2>
-
-                <p className="mt-0.5 text-xs text-slate-400">
-                  Todo lo que tenés disponible con tu cobertura
-                </p>
-              </div>
-
-              <span className="rounded-full bg-[#0F1E3D]/5 px-3 py-1 text-xs font-bold text-[#0F1E3D]">
-                {catalogo.beneficios.length}
-              </span>
+  return (
+    <div
+      className="min-h-screen bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] px-4 py-8 sm:px-6"
+      style={{ fontFamily: "'Inter', sans-serif" }}
+    >
+      <div className="mx-auto max-w-2xl">
+        {/* ── Cabecera tipo credencial de cobertura ── */}
+        <div className="overflow-hidden rounded-t-[28px] bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] shadow-xl shadow-[#0F1E3D]/10">
+          <div className="px-7 pb-9 pt-8 sm:px-9">
+            <div className="flex items-center gap-2">
+              <span className="h-px w-6 bg-[#C9974A]" />
+              <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#C9974A]">
+                Tu cobertura
+              </p>
             </div>
 
-            {catalogo.beneficios.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-slate-200 bg-slate-50 p-8 text-center">
-                <p className="text-sm font-medium text-slate-400">
-                  Este plan no tiene beneficios cargados.
-                </p>
-              </div>
-            ) : (
-              <div className="grid gap-3 sm:grid-cols-2">
-                {catalogo.beneficios.map((beneficio, index) => (
-                  <div
-                    key={beneficio.clave}
-                    className="group rounded-2xl border border-slate-200 bg-white p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-[#C9974A]/40 hover:shadow-md"
-                  >
-                    <div className="flex gap-3">
+            <h1
+              className="mt-3 text-[2rem] leading-[1.1] text-white sm:text-[2.5rem]"
+              style={{ fontFamily: "'Fraunces', serif", fontWeight: 500 }}
+            >
+              {plan}
+            </h1>
 
-                      {/* Número */}
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[#0F1E3D] text-xs font-bold text-white">
-                        {String(index + 1).padStart(2, "0")}
-                      </div>
-
-                      <div className="min-w-0">
-                        <h3 className="text-sm font-bold leading-snug text-[#0F1E3D]">
-                          {beneficio.titulo}
-                        </h3>
-
-                        {beneficio.descripciones.length > 0 && (
-                          <div className="mt-2 space-y-1.5">
-                            {beneficio.descripciones.map(
-                              (descripcion, index) => (
-                                <div
-                                  key={index}
-                                  className="flex gap-2 text-xs leading-relaxed text-slate-500"
-                                >
-                                  <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-[#C9974A]" />
-                                  <p>{descripcion}</p>
-                                </div>
-                              )
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                    </div>
-                  </div>
-                ))}
+            {!cargando && !error && catalogo && (
+              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2">
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/70">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                  Plan activo
+                </span>
+                <span className="text-xs font-medium text-white/50">
+                  {catalogo.beneficios.length}{" "}
+                  {catalogo.beneficios.length === 1
+                    ? "beneficio incluido"
+                    : "beneficios incluidos"}
+                </span>
               </div>
             )}
           </div>
-        )}
+        </div>
+
+        {/* Borde dentado — la credencial "se despega" del documento de beneficios */}
+        <div
+          className="h-3.5 bg-[#0A1429]"
+          style={{ clipPath: ZIGZAG_CLIP_PATH }}
+          aria-hidden="true"
+        />
+
+        {/* ── Cuerpo: documento de beneficios, sin card sobre card ── */}
+        <div className="rounded-b-[28px] border border-t-0 border-[#0F1E3D]/[0.06] bg-white/60 px-7 pb-10 pt-8 sm:px-9">
+          {cargando && (
+            <div className="flex flex-col items-center justify-center py-20">
+              <div className="h-7 w-7 animate-spin rounded-full border-[3px] border-[#0F1E3D]/10 border-t-[#0F1E3D]" />
+              <p
+                className="mt-4 text-sm text-slate-400"
+                style={{ fontFamily: "'Fraunces', serif" }}
+              >
+                Cargando tu cobertura…
+              </p>
+            </div>
+          )}
+
+          {!cargando && error && (
+            <div className="border-l-2 border-red-400 py-1 pl-5">
+              <p className="text-sm font-semibold text-[#0F1E3D]">
+                No pudimos mostrar este plan
+              </p>
+              <p className="mt-1 text-sm text-slate-500">{error}</p>
+            </div>
+          )}
+
+          {!cargando && !error && catalogo && (
+            <>
+              {catalogo.beneficios.length === 0 ? (
+                <div className="border-l-2 border-dashed border-[#0F1E3D]/15 py-1 pl-5">
+                  <p className="text-sm font-medium text-slate-400">
+                    Este plan todavía no tiene beneficios cargados.
+                  </p>
+                </div>
+              ) : (
+                <div className="columns-1 gap-x-10 sm:columns-2">
+                  {catalogo.beneficios.map((beneficio, index) => (
+                    <div
+                      key={beneficio.clave}
+                      className="mb-7 break-inside-avoid-column border-t border-[#0F1E3D]/[0.07] pt-4 [&:first-child]:border-t-0 [&:first-child]:pt-0"
+                    >
+                      <div className="flex items-baseline gap-2.5">
+                        <span
+                          className="shrink-0 text-sm text-[#C9974A]"
+                          style={{ fontFamily: "'Fraunces', serif", fontWeight: 600 }}
+                        >
+                          N.{String(index + 1).padStart(2, "0")}
+                        </span>
+                        <h3
+                          className="text-[15px] leading-snug text-[#0F1E3D]"
+                          style={{ fontFamily: "'Fraunces', serif", fontWeight: 500 }}
+                        >
+                          {beneficio.titulo}
+                        </h3>
+                      </div>
+
+                      {beneficio.descripciones.length > 0 && (
+                        <div className="mt-2 space-y-1.5 pl-[1.65rem]">
+                          {beneficio.descripciones.map((descripcion, i) => (
+                            <p
+                              key={i}
+                              className="text-[13px] leading-relaxed text-slate-500"
+                            >
+                              {descripcion}
+                            </p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 }
