@@ -6,6 +6,7 @@ body {
   padding: 0;
   min-height: 100%;
   overflow-x: hidden;
+  overflow-y: auto;
 
   /* Permite swipe/scroll, pero evita el efecto de rebote */
   overscroll-behavior: none;
