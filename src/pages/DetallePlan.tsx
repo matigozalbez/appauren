@@ -57,6 +57,8 @@ export default function DetallePlan() {
     document.head.appendChild(link);
   }, []);
 
+  console.log(socio)
+
   useEffect(() => {
     const cargarDetalle = async () => {
       try {
