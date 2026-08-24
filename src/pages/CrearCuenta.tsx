@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 // Asegurate de tener la imagen en tu carpeta public o assets y ajustar el import/ruta si es necesario.
 // Para este ejemplo, asumimos que la imagen está en la carpeta public.
 import aurenIsotipo from "/horizontalazul.png"; 
-
+const API_URL = import.meta.env.VITE_API_URL_LINK;
 export default function CrearCuenta() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,8 +36,7 @@ export default function CrearCuenta() {
     setLoading(true);
     try {
       // He corregido el error de sintaxis en el string del fetch original
-      const res = await fetch("https://backendauren.onrender.com/api/crear-usuario", {
-        method: "POST",
+      const res = await fetch(`${API_URL}/api/crear-usuario`, {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, dni }),
       });

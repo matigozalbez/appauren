@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { X, Bell } from "lucide-react";
 import { collection, query, orderBy, limit, getDocs, Timestamp } from "firebase/firestore";
  import { db} from "../firebase";
-
+const API_URL = import.meta.env.VITE_API_URL_LINK;
 
  interface Notificacion {
     id: string;
@@ -50,7 +50,7 @@ useEffect(() => {
     const fetchNotificaciones = async () => {
         setLoading(true);
         try {
-            const res = await fetch("https://backendauren.onrender.com/api/notificaciones");
+            const res = await fetch(`${API_URL}/api/notificaciones`);
             if (!res.ok) throw new Error("Error al obtener notificaciones");
 
             const items: Notificacion[] = await res.json();

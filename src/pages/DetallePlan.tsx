@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 
-const API_URL = "https://backendauren.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL_LINK;
 
 
 interface Beneficio {

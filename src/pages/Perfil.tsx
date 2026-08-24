@@ -23,7 +23,7 @@
     // Agregá los campos que te mande tu backend
     }
     const CACHE_KEY = "auren_socio";
-
+const API_URL = import.meta.env.VITE_API_URL_LINK;
     export default function Perfil() {
     const [user] = useAuthState(auth);
     const navigate = useNavigate();
@@ -41,7 +41,7 @@
         if (!user) return;
         const idToken = await user.getIdToken();
         try {
-            const res = await fetch("https://backendauren.onrender.com/api/mi-socio", {
+            const res = await fetch(`${API_URL}/api/mi-socio`, {
             headers: { Authorization: `Bearer ${idToken}` },
             });
             if (res.ok) {

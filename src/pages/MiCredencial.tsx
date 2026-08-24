@@ -25,7 +25,7 @@ interface Socio {
   planes?: PlanSocio[];
   adherentes?: Adherente[];
 }
-
+const API_URL = import.meta.env.VITE_API_URL_LINK;
 export default function MiCredencial() {
   const [user] = useAuthState(auth);
   const [socio, setSocio] = useState<Socio>(() => {
@@ -43,7 +43,7 @@ export default function MiCredencial() {
       if (!user) return;
       const idToken = await user.getIdToken();
       try {
-        const res = await fetch("https://backendauren.onrender.com/api/mi-socio", {
+        const res = await fetch(`${API_URL}/api/mi-socio`, {
           headers: { Authorization: `Bearer ${idToken}` },
         });
         if (res.ok) {

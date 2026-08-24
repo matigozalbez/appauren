@@ -4,7 +4,7 @@ import { IdCard } from "lucide-react";
 import { auth } from "../firebase";
 
 import aurenIsotipo from "/horizontalazul.png";
-
+const API_URL = import.meta.env.VITE_API_URL_LINK;
 export default function VincularDNI() {
   const [dni, setDni] = useState("");
   const [error, setError] = useState("");
@@ -18,7 +18,7 @@ export default function VincularDNI() {
 
     try {
       const idToken = await auth.currentUser?.getIdToken();
-      const res = await fetch("https://backendauren.onrender.com/api/vincular-socio", {
+      const res = await fetch(`${API_URL}/api/vincular-socio`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

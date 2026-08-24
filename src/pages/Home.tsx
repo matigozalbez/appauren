@@ -9,7 +9,7 @@ import BannerCarousel from "../components/BannerCarousel";
 import { GestorNotificaciones } from "../components/GestorNotificaciones";
 import NotificationsModal, {contarNoLeidas} from "../components/Modalnotis";
 
-
+const API_URL = import.meta.env.VITE_API_URL_LINK;
 
 
 interface PlanSocio {
@@ -88,7 +88,7 @@ const estilos = [
         if (!user) return;
         const idToken = await user.getIdToken();
         try {
-          const res = await fetch("https://backendauren.onrender.com/api/mi-socio", {
+          const res = await fetch(`${API_URL}/api/mi-socio`, {
             headers: { Authorization: `Bearer ${idToken}` },
           });
           if (res.ok) {
@@ -112,9 +112,9 @@ useEffect(() => {
 
 
     return (
-   <div 
-        className={`min-h-screen bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2]  text-slate-800 pb-32 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] ${animationClass}`}
-        >
+<div 
+  className={`min-h-screen bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] text-slate-800 pb-32 ${animationClass}`}
+>
         {/* Header superior */}
         <Header
   onOpenMenu={openMenu}

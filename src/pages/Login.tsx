@@ -13,7 +13,7 @@ import SplashScreen from '../components/SplashScreen';
 
 
 
-const API_URL = "https://backendauren.onrender.com";
+const API_URL = import.meta.env.VITE_API_URL_LINK;
 
 export default function Login() {
   const navigate = useNavigate(); 
