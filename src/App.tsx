@@ -13,9 +13,9 @@ import { auth} from './firebase'
 import { signOut } from 'firebase/auth'
 import BuscarMedicamentoView from './components/MedicamentoSearchModal'
 import PrimerIngreso from './pages/Primeringreso'
-/*
+
 import InstalarApp from './pages/AppGuard'
-*/
+
 import DetallePlan from './pages/DetallePlan'
 import RecuperarPassword from './pages/RecuperarPassword'
 
@@ -24,9 +24,9 @@ function App() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const showNav = location.pathname !== '/' && location.pathname !== '/primer-ingreso' && location.pathname !== '/vincular-dni' && location.pathname !== '/recuperar-password';
-/*
+
   const [isStandalone, setIsStandalone] = useState<boolean | null>(null);
-*/
+
   const navigate = useNavigate();
 
         useEffect(() => {
@@ -40,7 +40,7 @@ function App() {
   return () => document.removeEventListener("touchstart", bloquearEdgeSwipe);
 }, []);
 
-/*
+
 
 useEffect(() => {
   
@@ -58,7 +58,7 @@ if (isStandalone === null) {
 if (!isStandalone) {
   return <InstalarApp />;
 }
-*/
+
 
 const handleLogout = async () => {
       localStorage.removeItem("auren_dni");
