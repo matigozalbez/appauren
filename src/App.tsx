@@ -59,7 +59,6 @@ if (!isStandalone) {
   return <InstalarApp />;
 }
 
-
 const handleLogout = async () => {
       localStorage.removeItem("auren_dni");
       localStorage.removeItem("auren_planes");
