@@ -18,6 +18,9 @@ import InstalarApp from './pages/AppGuard'
 
 import DetallePlan from './pages/DetallePlan'
 import RecuperarPassword from './pages/RecuperarPassword'
+import SolicitudTurno from './pages/SolicitudTurno'
+import CartillaMedica from './pages/CartillaMedica'
+import Citas from './pages/Citas'
 
 
 function App() {
@@ -58,14 +61,29 @@ if (isStandalone === null) {
 if (!isStandalone) {
   return <InstalarApp />;
 }
+  
 
 const handleLogout = async () => {
-      localStorage.removeItem("auren_dni");
-      localStorage.removeItem("auren_planes");
-      await signOut(auth);
-      navigate("/", { replace: true });
-    };
+  // 1. Borramos las keys fijas que ya tenías
+  localStorage.removeItem("auren_dni");
+  localStorage.removeItem("auren_planes");
+  localStorage.removeItem("nombre_socio");
+  localStorage.removeItem("auren_socio"); 
 
+  // 2. Buscamos y borramos TODAS las keys dinámicas de los planes
+  const keysAEliminar = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith("auren_detalle_plan_")) {
+      keysAEliminar.push(key);
+    }
+  }
+  keysAEliminar.forEach((key) => localStorage.removeItem(key));
+
+  // 3. Cerramos sesión y redirigimos
+  await signOut(auth);
+  navigate("/", { replace: true });
+};
 
 
 
@@ -81,6 +99,9 @@ const handleLogout = async () => {
         <Route path="/credencial" element={<PrivateRoute><MiCredencial/></PrivateRoute>} />
         <Route path="/perfil" element={<PrivateRoute><Perfil/></PrivateRoute>} />
         <Route path="/medicamentos" element={<PrivateRoute><BuscarMedicamentoView/></PrivateRoute>} />
+        <Route path="/citas" element={<PrivateRoute><Citas/></PrivateRoute>} />
+        <Route path="/cartilla" element={<PrivateRoute><CartillaMedica/></PrivateRoute>} />
+        <Route path="/turnos" element={<PrivateRoute><SolicitudTurno/></PrivateRoute>} />
         <Route path="/planes/:plan" element={<PrivateRoute><DetallePlan/></PrivateRoute>} />
         <Route path="/terminos" element={<TerminosCondiciones />} />
         <Route path="/vincular-dni" element={<VincularDNI />} />

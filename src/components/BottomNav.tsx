@@ -4,7 +4,7 @@ import { Shield, IdCard, Home as HomeIcon, User } from "lucide-react";
 // Mapeamos los índices numéricos para saber qué está a la izquierda y qué a la derecha
 const routeIndices: { [key: string]: number } = {
   "/home": 1,
-  "/coberturas": 2,
+  "/citas": 2,
   "/credencial": 3,
   "/medicamentos": 3.5, // 👈 Sigue manteniendo su lugar exacto para que las direcciones de animación funcionen joya
   "/perfil": 4,
@@ -38,12 +38,12 @@ export const BottomNav = () => {
       </Link>
 
 <Link 
-  to="/coberturas"
+  to="/citas"
   onClick={() => handleNavClick("/coberturas")}
   className={`flex flex-col items-center gap-1 ${isActive('/coberturas') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
 >
   <Shield size={20} />
-  <span className="text-[10px] font-medium">Coberturas</span>
+  <span className="text-[10px] font-medium">Citas</span>
 </Link>
 
       {/* 👻 Botón fantasma/invisible de Medicamentos para que el router y las animaciones lo amen */}

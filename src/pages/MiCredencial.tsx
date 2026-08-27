@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Share2, Shield, Calendar, MessageCircle, Phone, Globe, ShieldCheck, Wallet, IdCard, Users } from "lucide-react";
+import { Share2, Shield, Calendar, MessageCircle, Phone, Globe, ShieldCheck, IdCard, Users } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 
@@ -25,14 +25,19 @@ interface Socio {
   planes?: PlanSocio[];
   adherentes?: Adherente[];
 }
+
 const API_URL = import.meta.env.VITE_API_URL_LINK;
+
 export default function MiCredencial() {
   const [user] = useAuthState(auth);
+  
+  // Inicializamos caché y estado de carga inicial
   const [socio, setSocio] = useState<Socio>(() => {
     const cached = localStorage.getItem("auren_socio");
     return cached ? JSON.parse(cached) : {};
   });
-
+  
+  const [cargando, setCargando] = useState(() => !localStorage.getItem("auren_socio"));
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const direction = sessionStorage.getItem("nav_direction") || "right";
@@ -41,8 +46,8 @@ export default function MiCredencial() {
   useEffect(() => {
     const fetchSocio = async () => {
       if (!user) return;
-      const idToken = await user.getIdToken();
       try {
+        const idToken = await user.getIdToken();
         const res = await fetch(`${API_URL}/api/mi-socio`, {
           headers: { Authorization: `Bearer ${idToken}` },
         });
@@ -53,6 +58,8 @@ export default function MiCredencial() {
         }
       } catch {
         // silencioso
+      } finally {
+        setCargando(false);
       }
     };
     fetchSocio();
@@ -95,7 +102,7 @@ export default function MiCredencial() {
           Tu credencial es personal e intransferible.
         </p>
 
-        {/* Selector de Credenciales (Titular + Adherentes) */}
+        {/* Selector de Credenciales */}
         {totalCredenciales > 1 && (
           <div className="px-5 mt-4">
             <div className="flex items-center justify-center gap-2 bg-slate-200/70 p-1.5 rounded-2xl max-w-sm mx-auto">
@@ -143,7 +150,6 @@ export default function MiCredencial() {
                   <stop offset="100%" stopColor="#C9974A" stopOpacity="0" />
                 </linearGradient>
               </defs>
-
               <path d="M150 120 Q90 100 50 60" stroke="url(#goldFade1)" strokeWidth="1.4" fill="none" />
               <path d="M150 105 Q95 90 60 50" stroke="url(#goldFade2)" strokeWidth="1" fill="none" />
               <path d="M150 90 Q100 80 70 42" stroke="url(#goldFade2)" strokeWidth="0.7" fill="none" />
@@ -170,16 +176,28 @@ export default function MiCredencial() {
 
               <div className="w-full h-[1px] min-h-[1px] shrink-0 bg-gradient-to-r from-[#C9974A]/80 via-[#C9974A]/30 to-transparent mt-2" />
 
-              <div className="mt-0.5">
-                <p className="text-lg font-bold leading-tight text-white">{personaActiva.nombre}</p>
-                <div className="mt-0.5 h-[2px] w-7 bg-[#C9974A]" />
-              </div>
+              {/* Contenido dinámico con soporte de Skeleton Borroso */}
+              {cargando && !socio.dni ? (
+                <div className="space-y-2 mt-0.5 blur-[2px] animate-pulse" aria-hidden="true">
+                  <div className="h-5 w-3/4 rounded bg-white/20" />
+                  <div className="h-2 w-7 bg-[#C9974A]/50" />
+                </div>
+              ) : (
+                <div className="mt-0.5">
+                  <p className="text-lg font-bold leading-tight text-white">{personaActiva.nombre}</p>
+                  <div className="mt-0.5 h-[2px] w-7 bg-[#C9974A]" />
+                </div>
+              )}
 
               <div className="grid grid-cols-2 mt-1 gap-x-4">
                 <div className="flex flex-col justify-between">
                   <div>
                     <p className="text-[8px] leading-none text-[#C9974A]">DNI</p>
-                    <p className="mt-0.5 text-xs font-semibold text-white">{personaActiva.dni}</p>
+                    {cargando && !socio.dni ? (
+                      <div className="mt-1 h-3 w-20 rounded bg-white/20 animate-pulse blur-[2px]" />
+                    ) : (
+                      <p className="mt-0.5 text-xs font-semibold text-white">{personaActiva.dni}</p>
+                    )}
                   </div>
 
                   <div className="mt-1">
@@ -200,24 +218,26 @@ export default function MiCredencial() {
                     </span>
                   </div>
 
-<div className="mt-1">
-  <p className="text-[8px] text-[#C9974A]">Planes contratados</p>
-  <div className="mt-0.5 space-y-0.5">
-    {personaActiva.planes.length > 3 ? (
-      <div className="flex items-center gap-1">
-        <span className="flex h-[11px] w-[11px] shrink-0 items-center justify-center rounded-full bg-[#C9974A] text-[7px] text-[#061e3f]">★</span>
-        <span className="text-[9px] font-bold text-[#C9974A] tracking-wide">AUREN BLACK · Todo incluido</span>
-      </div>
-    ) : (
-      personaActiva.planes.map((plan) => (
-        <div key={plan.nombre} className="flex items-center gap-1">
-          <span className="flex h-[11px] w-[11px] shrink-0 items-center justify-center rounded-full border border-[#C9974A] text-[7px] text-[#C9974A]">✓</span>
-          <span className="text-[9px] font-medium text-white truncate max-w-[90px]">{plan.nombre}</span>
-        </div>
-      ))
-    )}
-  </div>
-</div>
+                  <div className="mt-1">
+                    <p className="text-[8px] text-[#C9974A]">Planes contratados</p>
+                    <div className="mt-0.5 space-y-0.5">
+                      {cargando && !socio.planes ? (
+                        <div className="h-3 w-20 rounded bg-white/20 animate-pulse blur-[2px]" />
+                      ) : personaActiva.planes.length > 3 ? (
+                        <div className="flex items-center gap-1">
+                          <span className="flex h-[11px] w-[11px] shrink-0 items-center justify-center rounded-full bg-[#C9974A] text-[7px] text-[#061e3f]">★</span>
+                          <span className="text-[9px] font-bold text-[#C9974A] tracking-wide">AUREN BLACK · Todo incluido</span>
+                        </div>
+                      ) : (
+                        personaActiva.planes.map((plan) => (
+                          <div key={plan.nombre} className="flex items-center gap-1">
+                            <span className="flex h-[11px] w-[11px] shrink-0 items-center justify-center rounded-full border border-[#C9974A] text-[7px] text-[#C9974A]">✓</span>
+                            <span className="text-[9px] font-medium text-white truncate max-w-[90px]">{plan.nombre}</span>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -232,19 +252,6 @@ export default function MiCredencial() {
                 <span className="text-[9px] font-bold uppercase text-[#061e3f]">Verificada</span>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Botón Guardar en Wallet */}
-        <div className="px-5 mt-4">
-          <div className="flex items-center justify-between rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm">
-            <p className="text-xs text-slate-600 max-w-[200px] leading-relaxed">
-              Mostrá esta credencial al solicitar cualquier asistencia o servicio.
-            </p>
-            <button className="flex items-center gap-2 rounded-xl border border-slate-300 px-3.5 py-2 text-xs font-semibold text-slate-800 transition hover:bg-slate-50">
-              <Wallet size={16} className="text-slate-700" />
-              Guardar en Wallet
-            </button>
           </div>
         </div>
 
@@ -334,16 +341,6 @@ export default function MiCredencial() {
           </div>
         </div>
 
-        {/* Aviso importante */}
-        <div className="mx-5 mt-6 flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4">
-          <ShieldCheck size={20} className="mt-0.5 shrink-0 text-[#C9974A]" />
-          <div>
-            <p className="text-sm font-semibold text-slate-900">Importante</p>
-            <p className="mt-1 text-xs text-slate-500">
-              En caso de pérdida o robo de tu credencial, comunicate con nosotros para generar una nueva.
-            </p>
-          </div>
-        </div>
       </div>
     </div>
   );

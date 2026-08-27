@@ -1,288 +1,438 @@
-  import { useState, useEffect } from "react";
-  import { ChevronRight, Tag, Gift, Percent, User } from "lucide-react";
-  import { useAuthState } from "react-firebase-hooks/auth";
-  import { auth } from "../firebase";
-  import {  useNavigate } from "react-router-dom";
-  import Header from "../components/Header";
-import PlanCard from "../components/PlanCard";
-import BannerCarousel from "../components/BannerCarousel";
+import { useState, useEffect } from "react";
+import {
+  ChevronRight,
+  Tag,
+  Gift,
+  Percent,
+  User,
+  CreditCard,
+  Stethoscope,
+  FileCheck,
+  BadgePercent,
+  MessageCircle,
+  Phone,
+} from "lucide-react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase";
+import { useNavigate } from "react-router-dom";
+import Header from "../components/Header";
 import { GestorNotificaciones } from "../components/GestorNotificaciones";
-import NotificationsModal, {contarNoLeidas} from "../components/Modalnotis";
+import NotificationsModal, {
+  contarNoLeidas,
+} from "../components/Modalnotis";
+import PlanesCarousel from "../components/PlanesCarousel";
 
 const API_URL = import.meta.env.VITE_API_URL_LINK;
-
 
 interface PlanSocio {
   nombre: string;
   estado: string;
 }
 
+interface HomeProps {
+  openMenu: () => void;
+}
 
+export default function Home({ openMenu }: HomeProps) {
+ const [user] = useAuthState(auth);
+  
+ const [nombresocio,SetnombreSocio] = useState("")
 
-  interface HomeProps {
-    openMenu: () => void;
-  }
+  const [notisOpen, setNotisOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
 
-  export default function Home({ openMenu }: HomeProps) {
-    const [user] = useAuthState(auth);
-    const firstName = user?.displayName?.split(" ")[0] || "Alan";
-    const [notisOpen, setNotisOpen] = useState(false);
-const [unreadCount, setUnreadCount] = useState<number>(0);
+  const [planes, setPlanes] = useState<PlanSocio[]>(() => {
+    const cached = localStorage.getItem("auren_planes");
+    return cached ? JSON.parse(cached) : [];
+  });
 
-    const navigate = useNavigate();
+  const [currentSlide, setCurrentSlide] = useState(0);
 
-const [planes, setPlanes] = useState<PlanSocio[]>(() => {
-  const cached = localStorage.getItem("auren_planes");
-  return cached ? JSON.parse(cached) : [];
-});
-    // Estado para el carrusel de publicidad automático
-    const [currentSlide, setCurrentSlide] = useState(0);
+  const navigate = useNavigate();
 
-
-
-const slides = [
+  const slides = [
     {
       badge: "BENEFICIO EXCLUSIVO",
       title: "Conocé tus coberturas y ahorros vigentes",
       description: "Accedé a tus descuentos y cartilla médica al instante.",
       icon: Tag,
-      color: "bg-[#0F1E3D]",
-      bgImage: "url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop')",
+      bgImage:
+        "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop",
     },
     {
       badge: "PROMOCIÓN DEL MES",
       title: "Descuentos en farmacias adheridas",
-      description: "Presentá tu credencial digital y ahorra en tus medicamentos.",
+      description:
+        "Presentá tu credencial digital y ahorrá en tus medicamentos.",
       icon: Gift,
-      color: "bg-[#C9974A]",
-      bgImage: "url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop')",
+      bgImage:
+        "https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop",
     },
     {
       badge: "NOVEDADES AUREN",
       title: "Nueva cartilla de especialistas",
-      description: "Sumamos nuevos profesionales",
+      description: "Sumamos nuevos profesionales.",
       icon: Percent,
-      color: "bg-[#0F1E3D]",
-      bgImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000&auto=format&fit=crop')",
+      bgImage:
+        "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000&auto=format&fit=crop",
     },
   ];
-const estilos = [
-  { imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031889/aurensalud_wnnf8y.jpg" },
-  { imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787032014/aurenenruta_w1xmvo.jpg" },
-  { imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031918/aurensepelios_n6nhbo.jpg" },
-  { imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/v1787031918/aurenmascotas_o3ivmq.jpg" },
-];
 
-    useEffect(() => {
-      const timer = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % slides.length);
-      }, 4000);
-      return () => clearInterval(timer);
-    }, [slides.length]);
+  useEffect(() => {
+  const nombreGuardado = localStorage.getItem("nombre_socio");
 
-    const direction = sessionStorage.getItem("nav_direction") || "right";
-    const animationClass = direction === "right" ? "animate-slide-right" : "animate-slide-left";
+  if (nombreGuardado) {
+    SetnombreSocio(JSON.parse(nombreGuardado));
+  }
+}, []);
 
-    useEffect(() => {
-      const fetchSocio = async () => {
-        if (!user) return;
-        const idToken = await user.getIdToken();
-        try {
-          const res = await fetch(`${API_URL}/api/mi-socio`, {
-            headers: { Authorization: `Bearer ${idToken}` },
-          });
-          if (res.ok) {
-            const data = await res.json();
-            setPlanes(data.planes || []);
-            localStorage.setItem("auren_planes", JSON.stringify(data.planes || []));
-          }
-        } catch {
-          // silencioso
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    }, 4000);
+
+    return () => clearInterval(timer);
+  }, [slides.length]);
+
+  const direction = sessionStorage.getItem("nav_direction") || "right";
+
+  const animationClass =
+    direction === "right"
+      ? "animate-slide-right"
+      : "animate-slide-left";
+
+  useEffect(() => {
+    const fetchSocio = async () => {
+      if (!user) return;
+
+      const idToken = await user.getIdToken();
+
+      try {
+        const res = await fetch(`${API_URL}/api/mi-socio`, {
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+
+          setPlanes(data.planes || []);
+          SetnombreSocio(data.nombre)
+
+          localStorage.setItem(
+            "auren_planes",
+            JSON.stringify(data.planes || [])
+          );
+
+          localStorage.setItem("nombre_socio", JSON.stringify(data.nombre || "")
+        );
         }
-      };
-      fetchSocio();
-    }, [user]);
+      } catch {
+        // silencioso
+      }
+    };
 
-useEffect(() => {
-  contarNoLeidas().then((count) => {
-    console.log("Notificaciones no leídas calculadas:", count);
-    setUnreadCount(count);
-  });
-}, [])
+    fetchSocio();
+  }, [user]);
 
-
-    return (
-<div 
-  className={`min-h-screen bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] text-slate-800 pb-32 ${animationClass}`}
->
-        {/* Header superior */}
-        <Header
-  onOpenMenu={openMenu}
-  onOpenNotifications={() => setNotisOpen(true)}
-  unreadCount={unreadCount}
-/>
-
-
-        {/* Bloque azul con la panza hacia arriba (curva inferior normal y superior recta o viceversa según el flujo visual) */}
-<div className="relative bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] px-6 pt-6 pb-20 rounded-t-3xl shadow-xl"> 
-  <div className="flex items-center justify-between">
-    <div className="flex items-center gap-1.5 flex-wrap">
-      <span className="text-xl font-normal text-slate-300">Hola</span>
-      <h1 className="text-xl font-bold text-white">{firstName} 👋</h1>
-    </div>
-    
-    <button
-      onClick={() => navigate("/perfil")}
-      className="flex h-10 w-10 items-center justify-center rounded-full bg-white border border-[#C9974A]/40 backdrop-blur-sm shadow-md"
-    >
-      <User size={18} className="text-[#C9974A]" />
-    </button>
-
-
-  </div>
-</div>
-        {/* Carrusel de Publicidad Flotante */}
-       <div className="px-6 -mt-10 relative z-10">
-  <div 
-    className="rounded-3xl p-5 shadow-xl border border-slate-100 transition hover:shadow-2xl overflow-hidden relative"
-    style={{
-      backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.90)), ${slides[currentSlide].bgImage}`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-    }}
-  >
-    {/* Contenido de adentro con la altura fija de 120px que armamos antes */}
-    <div className="flex items-center justify-between gap-4 h-[120px]">
-      <div className="space-y-1.5 flex-1 flex flex-col justify-start h-full">
-        <span className="inline-block px-2.5 py-0.5 rounded-full bg-amber-50 text-[#C9974A] text-[10px] font-bold tracking-wider uppercase self-start">
-          {slides[currentSlide].badge}
-        </span>
-        <div>
-          <h3 className="font-bold text-slate-900 text-sm leading-snug line-clamp-2">
-            {slides[currentSlide].title}
-          </h3>
-          <p className="text-xs text-slate-600 mt-0.5 line-clamp-1">
-            {slides[currentSlide].description}
-          </p>
-        </div>
-      </div>
-      
-  <button 
-  onClick={() => {/* tu lógica de navegación */}}
-  className="absolute right-4 bottom-4 px-3.5 py-1.5 rounded-full bg-white/90 backdrop-blur-md text-[#0F1E3D] text-xs font-bold shadow-lg hover:bg-[#C9974A] hover:text-white transition flex items-center gap-1"
->
-  <span>Ver más</span>
-  <ChevronRight size={14} />
-</button>
-
-    </div>
-
-    {/* Puntitos */}
-    <div className="flex justify-center items-center gap-1.5 mt-4">
-      {slides.map((_, index) => (
-        <button
-          key={index}
-          onClick={() => setCurrentSlide(index)}
-          className={`h-2 rounded-full transition-all duration-300 ${
-            currentSlide === index ? "w-6 bg-[#C9974A]" : "w-2 bg-slate-200"
-          }`}
-          aria-label={`Ir al slide ${index + 1}`}
-        />
-      ))}
-    </div>
-  </div>
-</div>
-
-        {/* Tus planes */}
-<div className="mt-6 px-6">
-  <h2 className="mb-3 text-xs font-bold uppercase tracking-wider text-slate-400">Tus planes</h2>
-  <div className="grid grid-cols-2 gap-3">
-{planes.map((plan, i) => {
-  const style = estilos[i % estilos.length];
+  useEffect(() => {
+    contarNoLeidas().then((count) => {
+      setUnreadCount(count);
+    });
+  }, []);
 
   return (
-    <PlanCard
-      key={plan.nombre}
-      plan={plan.nombre}
-      imageSrc={style.imageSrc}
-      onVerDetalle={() =>
-        navigate(`/planes/${encodeURIComponent(plan.nombre)}`)
-      }
-    />
-  );
-})}
+    <div
+      className={`min-h-screen bg-[#F8F5EF] text-slate-800 pb-32 ${animationClass}`}
+    >
+      <Header
+        onOpenMenu={openMenu}
+        onOpenNotifications={() => setNotisOpen(true)}
+        unreadCount={unreadCount}
+      />
+
+      {/* ───────────────── HEADER / SALUDO ───────────────── */}
+
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] px-6 pb-16 pt-5">
+        <div className="pointer-events-none absolute -right-20 -top-20 h-56 w-56 rounded-full bg-[#C9974A]/10 blur-3xl" />
+
+        <div className="relative z-10 flex items-start justify-between">
+          <div>
+            <p className="text-sm font-medium text-slate-300">
+              Buenos días
+            </p>
+
+            <h1 className="mt-1 text-2xl font-bold tracking-tight text-white">
+              {nombresocio} 👋
+            </h1>
+
+            <p className="mt-1 text-xs text-slate-400">
+              Todo lo que necesitás, en un solo lugar.
+            </p>
+          </div>
+
+          <button
+            onClick={() => navigate("/perfil")}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white shadow-md"
+          >
+            <User size={18} className="text-[#C9974A]" />
+          </button>
+        </div>
+      </section>
+
+      {/* ───────────────── BANNER ───────────────── */}
+
+      <section className="-mt-9 px-6">
+        <div
+          className="relative h-[155px] overflow-hidden rounded-[26px] shadow-xl"
+          style={{
+            backgroundImage: `
+              linear-gradient(
+                90deg,
+                rgba(255,255,255,.97) 0%,
+                rgba(255,255,255,.88) 52%,
+                rgba(255,255,255,.35) 100%
+              ),
+              url("${slides[currentSlide].bgImage}")
+            `,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          <div className="relative z-10 flex h-full max-w-[75%] flex-col justify-center p-5">
+            <span className="mb-2 w-fit rounded-full bg-[#C9974A]/10 px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.15em] text-[#A67932]">
+              {slides[currentSlide].badge}
+            </span>
+
+            <h2 className="text-base font-bold leading-snug text-[#0F1E3D]">
+              {slides[currentSlide].title}
+            </h2>
+
+            <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
+              {slides[currentSlide].description}
+            </p>
+          </div>
+
+          <button
+            onClick={() => {}}
+            className="absolute bottom-4 right-4 z-10 flex items-center gap-1 rounded-full bg-[#0F1E3D] px-3 py-1.5 text-[10px] font-bold text-white shadow-md"
+          >
+            Ver más
+            <ChevronRight size={12} />
+          </button>
+        </div>
+
+        <div className="mt-3 flex justify-center gap-1.5">
+          {slides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentSlide(index)}
+              className={`h-1.5 rounded-full transition-all ${
+                currentSlide === index
+                  ? "w-5 bg-[#C9974A]"
+                  : "w-1.5 bg-slate-300"
+              }`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* ───────────────── COBERTURA ───────────────── */}
+
+      <section className="mt-7">
+        <div className="mb-3 flex items-end justify-between px-6">
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#C9974A]">
+              Tu salud
+            </p>
+
+            <h2 className="mt-1 text-xl font-bold tracking-tight text-[#0F1E3D]">
+              Tu cobertura
+            </h2>
+          </div>
+
+
+        </div>
+
+        <PlanesCarousel
+          planes={planes}
+          titulo=""
+        />
+      </section>
+
+      {/* ───────────────── ACCESOS ───────────────── */}
+
+    {/* ───────────────── ACCESOS ───────────────── */}
+
+      {/* ───────────────── ACCESOS ───────────────── */}
+
+   {/* ───────────────── ACCESOS ───────────────── */}
+
+      <section className="mt-8 px-6">
+  <div className="mb-3">
+    <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#C9974A]">
+      Accesos rápidos
+    </p>
+
+    <h2 className="mt-1 text-lg font-bold text-[#0F1E3D]">
+      ¿Qué necesitás?
+    </h2>
   </div>
-</div>
 
-       <BannerCarousel
-banners={[
-  {
-    title: "10 % en combustibles",
-    subtitle: "Promocion valida solo los jueves",
-    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/combustible_cbvszo.jpg",
-  },
-  {
-    title: "25% de descuento en articulos de padel",
-    subtitle: "Yo igual jugaria al tenis",
-    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/padel_mhtb0k.jpg",
-  },
-  {
-    title: "25% en opticas",
-    subtitle: "comprate unos ray ban bro",
-    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/optica_e193zc.jpg",
-  },
-]}
-/>
-       <BannerCarousel
-banners={[
-  {
-    title: "10 % en combustibles",
-    subtitle: "Promocion valida solo los jueves",
-    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/combustible_cbvszo.jpg",
-  },
-  {
-    title: "25% de descuento en articulos de padel",
-    subtitle: "Yo igual jugaria al tenis",
-    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/padel_mhtb0k.jpg",
-  },
-  {
-    title: "25% en opticas",
-    subtitle: "comprate unos ray ban bro",
-    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/optica_e193zc.jpg",
-  },
-]}
-/>
-       <BannerCarousel
-banners={[
-  {
-    title: "10 % en combustibles",
-    subtitle: "Promocion valida solo los jueves",
-    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/combustible_cbvszo.jpg",
-  },
-  {
-    title: "25% de descuento en articulos de padel",
-    subtitle: "Yo igual jugaria al tenis",
-    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/padel_mhtb0k.jpg",
-  },
-  {
-    title: "25% en opticas",
-    subtitle: "comprate unos ray ban bro",
-    imageSrc: "https://res.cloudinary.com/dt6f9th0x/image/upload/w_800,q_auto,f_auto/v1787031918/optica_e193zc.jpg",
-  },
-]}
-/>
+  <style>{`
+    @keyframes slideUpFade {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  `}</style>
 
+  <div className="grid grid-cols-4 gap-2">
+    {/* Credencial */}
+    <button
+      onClick={() => navigate("/credencial")}
+      style={{ 
+        animation: "slideUpFade 0.4s ease-out 0.1s forwards", 
+        opacity: 0,
+        backgroundImage: `
+          radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.3) 0%, transparent 55%),
+          linear-gradient(180deg, rgba(15, 30, 61, 0.15) 0%, rgba(15, 30, 61, 0.88) 100%),
+          url("https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=300&auto=format&fit=crop")
+        `,
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }}
+      className="group relative h-20 overflow-hidden rounded-2xl p-2 text-left shadow-sm ring-1 ring-slate-900/[0.08] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 flex flex-col justify-end"
+    >
+      <span className="text-[8px] font-medium text-[#C9974A] uppercase tracking-wider leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        Digital
+      </span>
+      <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mt-0.5 truncate">
+        Credencial
+      </span>
+    </button>
 
-<GestorNotificaciones/>
+    {/* Cartilla */}
+    <button
+      onClick={() => navigate("/cartilla")}
+      style={{ 
+        animation: "slideUpFade 0.4s ease-out 0.2s forwards", 
+        opacity: 0,
+        backgroundImage: `
+          radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.3) 0%, transparent 55%),
+          linear-gradient(180deg, rgba(15, 30, 61, 0.15) 0%, rgba(15, 30, 61, 0.88) 100%),
+          url("https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?q=80&w=300&auto=format&fit=crop")
+        `,
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }}
+      className="group relative h-20 overflow-hidden rounded-2xl p-2 text-left shadow-sm ring-1 ring-slate-900/[0.08] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 flex flex-col justify-end"
+    >
+      <span className="text-[8px] font-medium text-[#C9974A] uppercase tracking-wider leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        Médica
+      </span>
+      <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mt-0.5 truncate">
+        Cartilla
+      </span>
+    </button>
 
-<NotificationsModal
-  isOpen={notisOpen}
-  onClose={() => setNotisOpen(false)}
-  onReadStateChange={setUnreadCount}
-/>
+    {/* Turnos */}
+    <button
+      onClick={() => navigate("/turnos")}
+      style={{ 
+        animation: "slideUpFade 0.4s ease-out 0.3s forwards", 
+        opacity: 0,
+        backgroundImage: `
+          radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.3) 0%, transparent 55%),
+          linear-gradient(180deg, rgba(15, 30, 61, 0.15) 0%, rgba(15, 30, 61, 0.88) 100%),
+          url("https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=300&auto=format&fit=crop")
+        `,
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }}
+      className="group relative h-20 overflow-hidden rounded-2xl p-2 text-left shadow-sm ring-1 ring-slate-900/[0.08] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 flex flex-col justify-end"
+    >
+      <span className="text-[8px] font-medium text-[#C9974A] uppercase tracking-wider leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        Agenda
+      </span>
+      <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mt-0.5 truncate">
+        Turnos
+      </span>
+    </button>
 
-        
-      </div>
-    
-    );
-  }
+    {/* Medicamentos */}
+    <button
+      onClick={() => navigate("/medicamentos")}
+      style={{ 
+        animation: "slideUpFade 0.4s ease-out 0.4s forwards", 
+        opacity: 0,
+        backgroundImage: `
+          radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.3) 0%, transparent 55%),
+          linear-gradient(180deg, rgba(15, 30, 61, 0.15) 0%, rgba(15, 30, 61, 0.88) 100%),
+          url("https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=300&auto=format&fit=crop")
+        `,
+        backgroundSize: "cover",
+        backgroundPosition: "center"
+      }}
+      className="group relative h-20 overflow-hidden rounded-2xl p-2 text-left shadow-sm ring-1 ring-slate-900/[0.08] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 flex flex-col justify-end"
+    >
+      <span className="text-[8px] font-medium text-[#C9974A] uppercase tracking-wider leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
+        Descuentos
+      </span>
+      <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mt-0.5 truncate">
+        Medicamentos
+      </span>
+    </button>
+  </div>
+</section>
+
+      {/* ───────────────── AYUDA ───────────────── */}
+
+      <section className="mt-10 px-6">
+        <div className="flex items-center gap-3">
+          <div className="h-px flex-1 bg-[#C9974A]/20" />
+
+          <span className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#C9974A]">
+            Estamos para ayudarte
+          </span>
+
+          <div className="h-px flex-1 bg-[#C9974A]/20" />
+        </div>
+
+        <div className="mt-4 flex items-center justify-center gap-6">
+          <a
+            href="tel:0800XXXXXXX"
+            className="flex items-center gap-2 text-xs font-semibold text-[#0F1E3D]"
+          >
+            <Phone size={15} className="text-[#C9974A]" />
+            0800-XXX-XXXX
+          </a>
+
+          <a
+            href="https://wa.me/549342XXXXXXX"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 text-xs font-semibold text-[#0F1E3D]"
+          >
+            <MessageCircle size={16} className="text-[#C9974A]" />
+            WhatsApp
+          </a>
+        </div>
+      </section>
+
+      <GestorNotificaciones />
+
+      <NotificationsModal
+        isOpen={notisOpen}
+        onClose={() => setNotisOpen(false)}
+        onReadStateChange={setUnreadCount}
+      />
+    </div>
+  );
+}

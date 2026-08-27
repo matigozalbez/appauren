@@ -11,7 +11,7 @@ interface MedicamentoAPI {
   precio: number;
 }
 
-const SEARCH_ENDPOINT = "https://backendauren.onrender.com/api/medicamentos";
+const API_URL = import.meta.env.VITE_API_URL_LINK;
 
 function formatPrecio(precio: number) {
   return precio.toLocaleString("es-AR", {
@@ -52,7 +52,7 @@ export default function BuscarMedicamentoView() {
     debounceRef.current = setTimeout(async () => {
       setBuscando(true);
       try {
-        const res = await fetch(SEARCH_ENDPOINT, {
+        const res = await fetch(`${API_URL}/api/medicamentos`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ searchdata: query }),

@@ -15,6 +15,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
+import { useEffect, useState } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -31,14 +32,28 @@ interface MenuItem {
 export default function SideMenu({ isOpen, onClose, onLogout }: Props) {
   const navigate = useNavigate();
   const [user] = useAuthState(auth);
+  const [socio, setNombreSocio] = useState("")
 
   // Obtenemos el nombre y apellido de Firebase (o un fallback por defecto)
-  const displayName = user?.displayName || "Usuario Auren";
+  const displayName = socio;
 
   const go = (path: string) => {
     onClose();
     navigate(path);
   };
+
+   useEffect(() => {
+    const nombreGuardado = localStorage.getItem("nombre_socio");
+    if (nombreGuardado) {
+      try {
+        // Intentamos parsear por si quedó como JSON, si falla lo usamos como texto plano
+        const parsed = JSON.parse(nombreGuardado);
+        setNombreSocio(typeof parsed === "string" ? parsed : nombreGuardado);
+      } catch {
+        setNombreSocio(nombreGuardado);
+      }
+    }
+  }, [isOpen]);
 
   const items: MenuItem[] = [
     { icon: <Home size={19} />, label: "Inicio", onClick: () => go("/home") },
