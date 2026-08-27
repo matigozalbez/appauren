@@ -5,10 +5,6 @@ import {
   Gift,
   Percent,
   User,
-  CreditCard,
-  Stethoscope,
-  FileCheck,
-  BadgePercent,
   MessageCircle,
   Phone,
 } from "lucide-react";
