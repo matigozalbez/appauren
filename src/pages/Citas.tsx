@@ -44,6 +44,8 @@ export default function Citas() {
   const [citas, setCitas] = useState<Cita[]>([]);
 
   const [cargando, setCargando] = useState(true);
+  const direction = sessionStorage.getItem("nav_direction") || "right";
+  const animationClass = direction === "right" ? "animate-slide-right" : "animate-slide-left";
 
   const [error, setError] = useState("");
 
@@ -144,7 +146,7 @@ export default function Citas() {
 
   return (
 
-    <div className="min-h-screen bg-[#F8F5EF] p-6 text-slate-800 ${animationClass}">
+    <div className={`min-h-screen bg-[#F8F5EF] p-6 text-slate-800 ${animationClass}`}>
 
       {/* Header */}
 
