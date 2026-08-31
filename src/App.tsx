@@ -61,7 +61,7 @@ if (isStandalone === null) {
 if (!isStandalone) {
   return <InstalarApp />;
 }
-  
+
 
 const handleLogout = async () => {
   // 1. Borramos las keys fijas que ya tenías

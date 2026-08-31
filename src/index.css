@@ -5,19 +5,11 @@ body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-
-
-  /* Permite swipe/scroll, pero evita el efecto de rebote */
   overscroll-behavior: none;
-
-  /* Ocultar scrollbar manteniendo el scroll */
+  touch-action: pan-y;      /* 👈 nuevo */
   scrollbar-width: none;
 }
 
-html::-webkit-scrollbar,
-body::-webkit-scrollbar {
-  display: none;
-}
 
 body {
   /*
@@ -35,6 +27,7 @@ body {
 #root {
   min-height: 100dvh;
   background-color: #f8f5eb;
+  touch-action: pan-y;      /* 👈 nuevo, por las dudas */
 }
 
 .min-h-screen-safe {
