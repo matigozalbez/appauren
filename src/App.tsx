@@ -53,6 +53,21 @@ if (!isStandalone) {
 }
 
 
+useEffect(() => {
+  window.history.pushState(null, "", window.location.href);
+
+  const bloquearBack = () => {
+    window.history.pushState(null, "", window.location.href);
+  };
+
+  window.addEventListener("popstate", bloquearBack);
+
+  return () => {
+    window.removeEventListener("popstate", bloquearBack);
+  };
+}, []);
+
+
 const handleLogout = async () => {
   // 1. Borramos las keys fijas que ya tenías
   localStorage.removeItem("auren_dni");
