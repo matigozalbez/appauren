@@ -89,9 +89,9 @@ export default function Home({ openMenu }: HomeProps) {
 
     return () => clearInterval(timer);
   }, [slides.length]);
-
-  const direction = sessionStorage.getItem("nav_direction") || "right";
 /*
+  const direction = sessionStorage.getItem("nav_direction") || "right"
+
   const animationClass =
     direction === "right"
       ? "animate-slide-right"
