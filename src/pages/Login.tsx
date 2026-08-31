@@ -30,6 +30,20 @@ const [showSplash] = useState(
   sessionStorage.getItem("auren_splash_shown") !== "true"
 );
 
+
+useEffect(() => {
+  // Duplicamos la entrada actual del historial
+  window.history.pushState(null, "", window.location.href);
+
+  const bloquearBack = () => {
+    // Si el sistema dispara un "volver", lo comemos y re-empujamos la misma entrada
+    window.history.pushState(null, "", window.location.href);
+  };
+
+  window.addEventListener("popstate", bloquearBack);
+  return () => window.removeEventListener("popstate", bloquearBack);
+}, []);
+
   useEffect(() => {
   const minDelay = showSplash
     ? new Promise((resolve) => setTimeout(resolve, 2000))
