@@ -32,16 +32,6 @@ function App() {
 
   const navigate = useNavigate();
 
-        useEffect(() => {
-  const bloquearEdgeSwipe = (e: TouchEvent) => {
-    const touchX = e.touches[0].clientX;
-    if (touchX < 20) { // margen del borde izquierdo, ajustable
-      e.preventDefault();
-    }
-  };
-  document.addEventListener("touchstart", bloquearEdgeSwipe, { passive: false });
-  return () => document.removeEventListener("touchstart", bloquearEdgeSwipe);
-}, []);
 
 
 
