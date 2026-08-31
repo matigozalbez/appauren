@@ -292,7 +292,7 @@ export default function Home({ openMenu }: HomeProps) {
   <div className="grid grid-cols-4 gap-2">
     {/* Credencial */}
     <button
-      onClick={() => navigate("/credencial")}
+      onClick={() => navigate("/credencial",   { replace: true })}
       style={{ 
         animation: "slideUpFade 0.4s ease-out 0.1s forwards", 
         opacity: 0,
@@ -316,7 +316,7 @@ export default function Home({ openMenu }: HomeProps) {
 
     {/* Cartilla */}
     <button
-      onClick={() => navigate("/cartilla")}
+      onClick={() => navigate("/cartilla",   { replace: true })}
       style={{ 
         animation: "slideUpFade 0.4s ease-out 0.2s forwards", 
         opacity: 0,
@@ -340,7 +340,7 @@ export default function Home({ openMenu }: HomeProps) {
 
     {/* Turnos */}
     <button
-      onClick={() => navigate("/turnos")}
+      onClick={() => navigate("/turnos",   { replace: true })}
       style={{ 
         animation: "slideUpFade 0.4s ease-out 0.3s forwards", 
         opacity: 0,
@@ -364,7 +364,7 @@ export default function Home({ openMenu }: HomeProps) {
 
     {/* Medicamentos */}
     <button
-      onClick={() => navigate("/medicamentos")}
+      onClick={() => navigate("/medicamentos",   { replace: true })}
       style={{ 
         animation: "slideUpFade 0.4s ease-out 0.4s forwards", 
         opacity: 0,
