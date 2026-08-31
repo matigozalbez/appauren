@@ -31,7 +31,7 @@ function App() {
   const [isStandalone, setIsStandalone] = useState<boolean | null>(null);
 
   const navigate = useNavigate();
-
+/*
         useEffect(() => {
   const bloquearEdgeSwipe = (e: TouchEvent) => {
     const touchX = e.touches[0].clientX;
@@ -42,7 +42,7 @@ function App() {
   document.addEventListener("touchstart", bloquearEdgeSwipe, { passive: false });
   return () => document.removeEventListener("touchstart", bloquearEdgeSwipe);
 }, []);
-
+*/
 
 
 useEffect(() => {

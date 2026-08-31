@@ -27,6 +27,7 @@ body {
 #root {
   min-height: 100dvh;
   background-color: #f8f5eb;
+  touch-action: pan-y;      /* 👈 nuevo, por las dudas */
 }
 
 .min-h-screen-safe {
