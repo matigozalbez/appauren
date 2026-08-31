@@ -1,7 +1,7 @@
 // components/PlanesCarousel.tsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { replace, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 
 interface PlanItem {
   nombre: string;
