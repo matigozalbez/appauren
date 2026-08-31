@@ -7,6 +7,10 @@ import {
   User,
   MessageCircle,
   Phone,
+  IdCard,
+  HeartPulse,
+  CalendarClock,
+  Pill,
 } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
@@ -297,101 +301,69 @@ export default function Home({ openMenu }: HomeProps) {
     }
   `}</style>
 
-  <div className="grid grid-cols-4 gap-2">
+  <div className="grid grid-cols-2 gap-3">
     {/* Credencial */}
     <button
       onClick={() => navigate("/credencial",   { replace: true })}
-      style={{ 
-        animation: "slideUpFade 0.4s ease-out 0.1s forwards", 
-        opacity: 0,
-        backgroundImage: `
-          radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.3) 0%, transparent 55%),
-          linear-gradient(180deg, rgba(15, 30, 61, 0.15) 0%, rgba(15, 30, 61, 0.88) 100%),
-          url("https://images.unsplash.com/photo-1563013544-824ae1b704d3?q=80&w=300&auto=format&fit=crop")
-        `,
-        backgroundSize: "cover",
-        backgroundPosition: "center"
-      }}
-      className="group relative h-20 overflow-hidden rounded-2xl p-2 text-left shadow-sm ring-1 ring-slate-900/[0.08] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 flex flex-col justify-end"
+      style={{ animation: "slideUpFade 0.4s ease-out 0.1s forwards", opacity: 0 }}
+      className="group relative flex h-28 flex-col justify-between overflow-hidden rounded-2xl border border-[#C9974A]/30 bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] p-4 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
     >
-      <span className="text-[8px] font-medium text-[#C9974A] uppercase tracking-wider leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-        Digital
-      </span>
-      <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mt-0.5 truncate">
-        Credencial
-      </span>
+      <div className="absolute inset-x-0 top-0 h-[4px] bg-gradient-to-r from-[#C9974A] via-[#DDB268] to-[#C9974A]" />
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0F1E3D] transition-transform group-hover:scale-110">
+        <IdCard size={18} className="text-[#C9974A]" />
+      </div>
+      <div className="leading-tight">
+        <p className="text-[9px] font-medium text-[#A87B32]">Digital</p>
+        <p className="mt-0.5 text-base font-bold text-[#2A2420]">Credencial</p>
+      </div>
     </button>
 
     {/* Cartilla */}
     <button
       onClick={() => navigate("/cartilla",   { replace: true })}
-      style={{ 
-        animation: "slideUpFade 0.4s ease-out 0.2s forwards", 
-        opacity: 0,
-        backgroundImage: `
-          radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.3) 0%, transparent 55%),
-          linear-gradient(180deg, rgba(15, 30, 61, 0.15) 0%, rgba(15, 30, 61, 0.88) 100%),
-          url("https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?q=80&w=300&auto=format&fit=crop")
-        `,
-        backgroundSize: "cover",
-        backgroundPosition: "center"
-      }}
-      className="group relative h-20 overflow-hidden rounded-2xl p-2 text-left shadow-sm ring-1 ring-slate-900/[0.08] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 flex flex-col justify-end"
+      style={{ animation: "slideUpFade 0.4s ease-out 0.2s forwards", opacity: 0 }}
+      className="group relative flex h-28 flex-col justify-between overflow-hidden rounded-2xl border border-[#C9974A]/30 bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] p-4 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
     >
-      <span className="text-[8px] font-medium text-[#C9974A] uppercase tracking-wider leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-        Médica
-      </span>
-      <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mt-0.5 truncate">
-        Cartilla
-      </span>
+      <div className="absolute inset-x-0 top-0 h-[4px] bg-gradient-to-r from-[#C9974A] via-[#DDB268] to-[#C9974A]" />
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0F1E3D] transition-transform group-hover:scale-110">
+        <HeartPulse size={18} className="text-[#C9974A]" />
+      </div>
+      <div className="leading-tight">
+        <p className="text-[9px] font-medium text-[#A87B32]">Médica</p>
+        <p className="mt-0.5 text-base font-bold text-[#2A2420]">Cartilla</p>
+      </div>
     </button>
 
     {/* Turnos */}
     <button
       onClick={() => navigate("/turnos",   { replace: true })}
-      style={{ 
-        animation: "slideUpFade 0.4s ease-out 0.3s forwards", 
-        opacity: 0,
-        backgroundImage: `
-          radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.3) 0%, transparent 55%),
-          linear-gradient(180deg, rgba(15, 30, 61, 0.15) 0%, rgba(15, 30, 61, 0.88) 100%),
-          url("https://images.unsplash.com/photo-1506784983877-45594efa4cbe?q=80&w=300&auto=format&fit=crop")
-        `,
-        backgroundSize: "cover",
-        backgroundPosition: "center"
-      }}
-      className="group relative h-20 overflow-hidden rounded-2xl p-2 text-left shadow-sm ring-1 ring-slate-900/[0.08] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 flex flex-col justify-end"
+      style={{ animation: "slideUpFade 0.4s ease-out 0.3s forwards", opacity: 0 }}
+      className="group relative flex h-28 flex-col justify-between overflow-hidden rounded-2xl border border-[#C9974A]/30 bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] p-4 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
     >
-      <span className="text-[8px] font-medium text-[#C9974A] uppercase tracking-wider leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-        Agenda
-      </span>
-      <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mt-0.5 truncate">
-        Turnos
-      </span>
+      <div className="absolute inset-x-0 top-0 h-[4px] bg-gradient-to-r from-[#C9974A] via-[#DDB268] to-[#C9974A]" />
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0F1E3D] transition-transform group-hover:scale-110">
+        <CalendarClock size={18} className="text-[#C9974A]" />
+      </div>
+      <div className="leading-tight">
+        <p className="text-[9px] font-medium text-[#A87B32]">Agenda</p>
+        <p className="mt-0.5 text-base font-bold text-[#2A2420]">Turnos</p>
+      </div>
     </button>
 
     {/* Medicamentos */}
     <button
       onClick={() => navigate("/medicamentos",   { replace: true })}
-      style={{ 
-        animation: "slideUpFade 0.4s ease-out 0.4s forwards", 
-        opacity: 0,
-        backgroundImage: `
-          radial-gradient(circle at 15% 15%, rgba(255, 255, 255, 0.3) 0%, transparent 55%),
-          linear-gradient(180deg, rgba(15, 30, 61, 0.15) 0%, rgba(15, 30, 61, 0.88) 100%),
-          url("https://images.unsplash.com/photo-1471864190281-a93a3070b6de?q=80&w=300&auto=format&fit=crop")
-        `,
-        backgroundSize: "cover",
-        backgroundPosition: "center"
-      }}
-      className="group relative h-20 overflow-hidden rounded-2xl p-2 text-left shadow-sm ring-1 ring-slate-900/[0.08] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95 flex flex-col justify-end"
+      style={{ animation: "slideUpFade 0.4s ease-out 0.4s forwards", opacity: 0 }}
+      className="group relative flex h-28 flex-col justify-between overflow-hidden rounded-2xl border border-[#C9974A]/30 bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] p-4 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md active:scale-95"
     >
-      <span className="text-[8px] font-medium text-[#C9974A] uppercase tracking-wider leading-none drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
-        Descuentos
-      </span>
-      <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mt-0.5 truncate">
-        Medicamentos
-      </span>
+      <div className="absolute inset-x-0 top-0 h-[4px] bg-gradient-to-r from-[#C9974A] via-[#DDB268] to-[#C9974A]" />
+      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#0F1E3D] transition-transform group-hover:scale-110">
+        <Pill size={18} className="text-[#C9974A]" />
+      </div>
+      <div className="leading-tight min-w-0">
+        <p className="text-[9px] font-medium text-[#A87B32]">Descuentos</p>
+        <p className="mt-0.5 text-base font-bold text-[#2A2420] leading-snug">Medicamentos</p>
+      </div>
     </button>
   </div>
 </section>
