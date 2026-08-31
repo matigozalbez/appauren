@@ -16,8 +16,9 @@ import { GestorNotificaciones } from "../components/GestorNotificaciones";
 import NotificationsModal, {
   contarNoLeidas,
 } from "../components/Modalnotis";
+/*
 import PlanesCarousel from "../components/PlanesCarousel";
-
+*/
 const API_URL = import.meta.env.VITE_API_URL_LINK;
 
 interface PlanSocio {
@@ -251,10 +252,8 @@ export default function Home({ openMenu }: HomeProps) {
 
         </div>
 
-        <PlanesCarousel
-          planes={planes}
-          titulo=""
-        />
+
+        
       </section>
 
       {/* ───────────────── ACCESOS ───────────────── */}
