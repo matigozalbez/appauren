@@ -13,9 +13,9 @@ import { auth} from './firebase'
 import { signOut } from 'firebase/auth'
 import BuscarMedicamentoView from './components/MedicamentoSearchModal'
 import PrimerIngreso from './pages/Primeringreso'
-
+/*
 import InstalarApp from './pages/AppGuard'
-
+*/
 import DetallePlan from './pages/DetallePlan'
 import RecuperarPassword from './pages/RecuperarPassword'
 import SolicitudTurno from './pages/SolicitudTurno'
