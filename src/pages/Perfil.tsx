@@ -79,8 +79,11 @@ const handleLogout = async () => {
 
   return (
     <div
-      className={`min-h-screen bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2]  text-slate-800 pb-32 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none'] ${animationClass}`}
+            className={`min-h-screen bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2]  text-slate-800 ${animationClass}`}
+            
     >
+
+           <div className="min-h-screen overflow-y-auto pb-32 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       {/* Header Minimalista con tus colores */}
       <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429]">
         <h1 className="text-xl font-bold tracking-tight text-white flex items-center justify-between">
@@ -172,6 +175,7 @@ const handleLogout = async () => {
           </button>
         </div>
 
+      </div>
       </div>
     </div>
   );
