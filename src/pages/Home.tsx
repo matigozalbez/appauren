@@ -89,14 +89,15 @@ export default function Home({ openMenu }: HomeProps) {
 
     return () => clearInterval(timer);
   }, [slides.length]);
-
+/*
   const direction = sessionStorage.getItem("nav_direction") || "right";
-
+  */
+/*
   const animationClass =
     direction === "right"
       ? "animate-slide-right"
       : "animate-slide-left";
-
+*/
   useEffect(() => {
     const fetchSocio = async () => {
       if (!user) return;
@@ -140,7 +141,7 @@ export default function Home({ openMenu }: HomeProps) {
 
   return (
     <div
-      className={`min-h-screen bg-[#F8F5EF] text-slate-800 pb-32 ${animationClass}`}
+      className={`min-h-screen bg-[#F8F5EF] text-slate-800 pb-32`}
     >
       <Header
         onOpenMenu={openMenu}
