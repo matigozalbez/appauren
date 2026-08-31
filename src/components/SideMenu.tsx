@@ -39,7 +39,7 @@ export default function SideMenu({ isOpen, onClose, onLogout }: Props) {
 
   const go = (path: string) => {
     onClose();
-    navigate(path);
+    navigate(path, {replace: true});
   };
 
    useEffect(() => {

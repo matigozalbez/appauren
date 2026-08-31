@@ -80,7 +80,7 @@ export default function BuscarMedicamentoView() {
       {/* Header Estilo Perfil */}
       <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] flex items-center gap-4">
         <button 
-          onClick={() => navigate(-1)} 
+          onClick={() => navigate("/home", { replace: true })}
           className="text-white/80 hover:text-white transition"
         >
           <ArrowLeft size={22} />

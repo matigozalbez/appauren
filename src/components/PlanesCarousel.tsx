@@ -1,7 +1,7 @@
 // components/PlanesCarousel.tsx
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ChevronRight } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { replace, useNavigate } from "react-router-dom";
 
 interface PlanItem {
   nombre: string;
@@ -30,7 +30,7 @@ export default function PlanesCarousel({
 
   const irADetalle = (nombre: string) => {
     if (onSelectPlan) return onSelectPlan(nombre);
-    navigate(`/planes/${encodeURIComponent(nombre)}`);
+   navigate(`/planes/${encodeURIComponent(nombre)}`, { replace: true });
   };
 
   // Detecta qué card está "activa" para los dots — por intersección,

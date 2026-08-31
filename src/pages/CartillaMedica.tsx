@@ -85,7 +85,7 @@ export default function CartillaMedica() {
       <header className="bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] px-6 pb-9 pt-5">
         <div className="flex items-center gap-3">
           <button
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/home", { replace: true })}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
           >
             <ArrowLeft size={18} />

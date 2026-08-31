@@ -169,7 +169,7 @@ export default function Home({ openMenu }: HomeProps) {
           </div>
 
           <button
-            onClick={() => navigate("/perfil")}
+            onClick={() => navigate("/perfil", {replace: true})}
             className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white shadow-md"
           >
             <User size={18} className="text-[#C9974A]" />
