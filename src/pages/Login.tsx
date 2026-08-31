@@ -85,7 +85,7 @@ if (checkingAuth && showSplash) {
 
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      navigate('/home');
+      navigate("/home", { replace: true });
     } catch (err: any) {
       console.error('Error de login:', err.code, err.message);
       setError('Correo o contraseña incorrectos.');
