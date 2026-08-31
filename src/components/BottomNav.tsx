@@ -29,6 +29,7 @@ export const BottomNav = () => {
     <div className="fixed bottom-0 left-0 right-0 flex items-center justify-around border-t border-slate-200 bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] py-2.5 z-50 shadow-lg">
       <Link 
         to="/home" 
+        replace
         onClick={() => handleNavClick("/home")}
         className={`flex flex-col items-center gap-1 ${isActive('/home') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
         style={{ touchAction: "manipulation" }}
@@ -39,6 +40,7 @@ export const BottomNav = () => {
 
 <Link 
   to="/citas"
+  replace
   onClick={() => handleNavClick("/coberturas")}
   className={`flex flex-col items-center gap-1 ${isActive('/coberturas') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
 >
@@ -51,6 +53,7 @@ export const BottomNav = () => {
 
       <Link 
         to="/credencial" 
+        replace
         onClick={() => handleNavClick("/credencial")}
         className={`flex flex-col items-center gap-1 ${isActive('/credencial') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
         style={{ touchAction: "manipulation" }}
@@ -61,6 +64,7 @@ export const BottomNav = () => {
       
       <Link 
         to="/perfil" 
+        replace
         onClick={() => handleNavClick("/perfil")}
         className={`flex flex-col items-center gap-1 ${isActive('/perfil') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
         style={{ touchAction: "manipulation" }}
