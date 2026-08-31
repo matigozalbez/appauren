@@ -105,7 +105,9 @@ if (checkingAuth && showSplash) {
       });
 
       const data = await res.json();
-      navigate(data.vinculado ? "/home" : "/vincular-dni");
+      navigate(data.vinculado ? "/home" : "/vincular-dni",
+         { replace: true }
+      );
 
     } catch (err: any) {
       console.error('Error:', err);
