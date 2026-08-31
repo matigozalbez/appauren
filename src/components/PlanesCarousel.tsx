@@ -14,12 +14,34 @@ interface PlanesCarouselProps {
   onSelectPlan?: (nombre: string) => void;
   /** Título de la sección. Default: "Tus planes" */
   titulo?: string;
+  /** Muestra skeletons mientras se cargan los planes del API */
+  loading?: boolean;
 }
+
+const SkeletonCard = () => (
+  <div className="relative h-40 w-[85%] shrink-0 overflow-hidden rounded-2xl border border-[#C9974A]/20 bg-[#FFF9EF] p-5 pt-6">
+    <div className="absolute inset-x-0 top-0 h-[5px] bg-[#C9974A]/20" />
+
+    <div className="flex items-start gap-3">
+      <div className="skeleton-shimmer h-9 w-9 shrink-0 rounded-full" />
+      <div className="min-w-0 flex-1">
+        <div className="skeleton-shimmer mb-2 h-2.5 w-20 rounded-full" />
+        <div className="skeleton-shimmer h-5 w-32 rounded-full" />
+      </div>
+    </div>
+
+    <div className="flex items-center justify-between">
+      <div className="skeleton-shimmer h-3 w-24 rounded-full" />
+      <div className="skeleton-shimmer h-7 w-28 rounded-full" />
+    </div>
+  </div>
+);
 
 export default function PlanesCarousel({
   planes,
   onSelectPlan,
   titulo = "Tus planes",
+  loading = false,
 }: PlanesCarouselProps) {
   const navigate = useNavigate();
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -115,6 +137,20 @@ console.log("Hola")
       )),
     [planes, esUnicoPlan]
   );
+
+  if (loading && planes.length === 0) {
+    return (
+      <div className="mt-6">
+        <h2 className="mb-3 px-6 text-xs font-bold uppercase tracking-wider text-slate-400">
+          {titulo}
+        </h2>
+        <div className="flex gap-3 overflow-x-auto px-6 pb-2" style={{ scrollbarWidth: "none" }}>
+          <SkeletonCard />
+          <SkeletonCard />
+        </div>
+      </div>
+    );
+  }
 
   if (planes.length === 0) return null;
 

@@ -42,6 +42,11 @@ export default function Home({ openMenu }: HomeProps) {
     return cached ? JSON.parse(cached) : [];
   });
 
+  const [planesLoading, setPlanesLoading] = useState(() => {
+    const cached = localStorage.getItem("auren_planes");
+    return !cached;
+  });
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const navigate = useNavigate();
@@ -126,6 +131,8 @@ export default function Home({ openMenu }: HomeProps) {
         }
       } catch {
         // silencioso
+      } finally {
+        setPlanesLoading(false);
       }
     };
 
@@ -254,6 +261,7 @@ export default function Home({ openMenu }: HomeProps) {
         <PlanesCarousel
           planes={planes}
           titulo=""
+          loading={planesLoading}
         />
       </section>
 
