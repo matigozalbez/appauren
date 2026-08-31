@@ -144,7 +144,7 @@ export default function Citas() {
 
   return (
 
-    <div className="min-h-screen bg-[#F8F5EF] p-6 text-slate-800">
+    <div className="min-h-screen bg-[#F8F5EF] p-6 text-slate-800 ${animationClass}">
 
       {/* Header */}
 
