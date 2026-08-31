@@ -32,7 +32,7 @@ export default function PlanesCarousel({
     if (onSelectPlan) return onSelectPlan(nombre);
    navigate(`/planes/${encodeURIComponent(nombre)}`, { replace: true });
   };
-
+console.log("Hola")
   // Detecta qué card está "activa" para los dots — por intersección,
   // no por cuentas de scrollLeft (más prolijo con snap y anchos variables).
   useEffect(() => {
