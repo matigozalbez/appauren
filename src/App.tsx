@@ -27,14 +27,24 @@ function App() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const showNav = location.pathname !== '/' && location.pathname !== '/primer-ingreso' && location.pathname !== '/vincular-dni' && location.pathname !== '/recuperar-password';
-
+/*
   const [isStandalone, setIsStandalone] = useState<boolean | null>(null);
-
+*/
   const navigate = useNavigate();
 
+        useEffect(() => {
+  const bloquearEdgeSwipe = (e: TouchEvent) => {
+    const touchX = e.touches[0].clientX;
+    if (touchX < 20) { // margen del borde izquierdo, ajustable
+      e.preventDefault();
+    }
+  };
+  document.addEventListener("touchstart", bloquearEdgeSwipe, { passive: false });
+  return () => document.removeEventListener("touchstart", bloquearEdgeSwipe);
+}, []);
 
 
-
+/*
 useEffect(() => {
   
   const check =
@@ -52,22 +62,7 @@ if (!isStandalone) {
   return <InstalarApp />;
 }
 
-
-useEffect(() => {
-  window.history.pushState(null, "", window.location.href);
-
-  const bloquearBack = () => {
-    window.history.pushState(null, "", window.location.href);
-  };
-
-  window.addEventListener("popstate", bloquearBack);
-
-  return () => {
-    window.removeEventListener("popstate", bloquearBack);
-  };
-}, []);
-
-
+*/
 const handleLogout = async () => {
   // 1. Borramos las keys fijas que ya tenías
   localStorage.removeItem("auren_dni");
