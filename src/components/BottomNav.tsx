@@ -31,6 +31,7 @@ export const BottomNav = () => {
         to="/home" 
         className={`flex flex-col items-center gap-1 ${isActive('/home') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
         style={{ touchAction: "manipulation" }}
+
       >
         <HomeIcon size={20} />
         <span className="text-[10px] font-bold">Inicio</span>
@@ -50,6 +51,7 @@ export const BottomNav = () => {
 
       <Link 
         to="/credencial" 
+        replace
         onClick={() => handleNavClick("/credencial")}
         className={`flex flex-col items-center gap-1 ${isActive('/credencial') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
         style={{ touchAction: "manipulation" }}
