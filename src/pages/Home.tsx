@@ -43,6 +43,8 @@ export default function Home({ openMenu }: HomeProps) {
     return cached ? JSON.parse(cached) : [];
   });
 
+  console.log(planes)
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const navigate = useNavigate();
