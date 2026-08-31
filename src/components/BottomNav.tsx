@@ -41,7 +41,7 @@ export const BottomNav = () => {
 <Link 
   to="/citas"
   replace
-  onClick={() => handleNavClick("/coberturas")}
+  onClick={() => handleNavClick("/citas")}
   className={`flex flex-col items-center gap-1 ${isActive('/coberturas') ? 'text-[#0F1E3D]' : 'text-slate-400'}`}
 >
   <Shield size={20} />
