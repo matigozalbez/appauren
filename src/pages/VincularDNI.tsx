@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { IdCard } from "lucide-react";
+import { IdCard, ShieldCheck, ArrowRight } from "lucide-react";
 import { auth } from "../firebase";
 
 import aurenIsotipo from "/horizontalazul.png";
@@ -42,68 +42,61 @@ export default function VincularDNI() {
   };
 
   return (
-    <div className="flex min-h-screen-safe flex-col justify-center bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] px-6">
-      <div className="mx-auto w-full max-w-sm">
+    <div className="relative flex min-h-screen-safe flex-col justify-center overflow-hidden bg-[#FBF6EC] px-6 font-sans antialiased">
+      {/* franja dorada superior */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
 
-        {/* Logo e Isotipo */}
-        <div className="mb-10 text-center flex flex-col items-center">
-          <img 
-            src={aurenIsotipo} 
-            alt="Auren Logo" 
-            className="mb-3 h-auto w-32 object-contain" 
+      <div className="relative z-10 mx-auto w-full max-w-[400px] py-10">
+
+        {/* Logo */}
+        <div className="mb-9 flex flex-col items-center text-center">
+          <img
+            src={aurenIsotipo}
+            alt="Auren Logo"
+            className="mb-2 h-auto w-36 object-contain"
           />
-          <span className="text-xs font-semibold tracking-widest text-[#C9974A] uppercase mt-1">Vinculación</span>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="text-left mb-6">
-            <h2 className="text-2xl font-bold text-[#0F1E3D]">Un último paso</h2>
-            <p className="mt-1.5 text-sm text-zinc-600">
+        <form onSubmit={handleSubmit}>
+          <div className="mb-8 text-left">
+            <h2 className="text-3xl font-bold tracking-tight text-[#0F1E3D]">Un último paso</h2>
+            <p className="mt-2 text-sm font-light text-slate-500">
               Ingresá tu DNI para vincular tu cuenta con tu afiliación.
             </p>
           </div>
 
-          <div className="relative">
-            <IdCard size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+          <div className="flex items-center gap-3 border-b border-[#0F1E3D]/12 py-4">
+            <IdCard size={20} className="text-[#C9974A]" />
             <input
               type="text"
               inputMode="numeric"
               value={dni}
               onChange={(e) => setDni(e.target.value)}
               placeholder="Tu DNI"
-              className="w-full rounded-xl border border-zinc-200 bg-zinc-50 py-3.5 pl-12 pr-4 text-[#0F1E3D] placeholder-zinc-400 outline-none focus:border-[#C9974A]"
+              className="w-full bg-transparent text-base text-[#0F1E3D] placeholder-slate-400 outline-none"
               required
             />
           </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+          {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-full bg-[#0F1E3D] py-4 text-sm font-semibold text-white tracking-wider shadow-md transition-opacity hover:opacity-90 disabled:bg-zinc-400"
+            className="mt-8 flex w-full items-center justify-center gap-2 rounded-full bg-[#0F1E3D] py-4 text-sm font-semibold tracking-widest text-white uppercase shadow-[0_10px_24px_rgba(15,30,61,0.25)] transition hover:bg-[#152953] active:scale-[0.99] disabled:opacity-50"
           >
-            {loading ? "VALIDANDO..." : "CONTINUAR"}
+            {loading ? "Validando..." : (
+              <>
+                Continuar
+                <ArrowRight size={16} />
+              </>
+            )}
           </button>
         </form>
 
         {/* Footer */}
-        <p className="mt-8 text-center text-xs text-zinc-400 flex items-center justify-center gap-1.5">
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            width="14" 
-            height="14" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            className="text-[#C9974A]"
-          >
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
+        <p className="mt-10 flex items-center justify-center gap-1.5 text-xs font-light text-slate-400">
+          <ShieldCheck size={14} className="text-[#C9974A]" />
           Tus datos están protegidos.
         </p>
 

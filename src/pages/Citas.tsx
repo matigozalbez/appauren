@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import {
+  ArrowLeft,
   CalendarDays,
   Clock3,
   MapPin,
   RefreshCw,
   Stethoscope,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import { auth } from "../firebase";
 
@@ -40,7 +42,7 @@ interface Cita {
 }
 
 export default function Citas() {
-
+  const navigate = useNavigate();
   const [citas, setCitas] = useState<Cita[]>([]);
 
   const [cargando, setCargando] = useState(true);
@@ -152,39 +154,48 @@ export default function Citas() {
 
       <div className="mb-6 flex items-center justify-between">
 
-        <div>
+        <div className="flex items-center gap-2">
 
-          <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9974A]">
-            Salud
-          </p>
+          <button
+            type="button"
+            onClick={() => navigate("/home", { replace: true })}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#0F1E3D] shadow-sm ring-1 ring-slate-900/[0.04]"
+            style={{ touchAction: "manipulation" }}
+          >
+            <ArrowLeft size={17} />
+          </button>
 
-          <h1 className="mt-1 text-2xl font-bold text-[#0F1E3D]">
-            Mis citas
-          </h1>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9974A]">
+              Salud
+            </p>
 
-          <p className="mt-1 text-xs text-slate-400">
-            Acá vas a encontrar tus turnos y solicitudes.
-          </p>
+            <h1 className="mt-1 text-2xl font-bold text-[#0F1E3D]">
+              Mis citas
+            </h1>
+
+            <p className="mt-1 text-xs text-slate-400">
+              Acá vas a encontrar tus turnos y solicitudes.
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={cargarCitas}
+            disabled={cargando}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0F1E3D] shadow-sm ring-1 ring-slate-900/[0.04] disabled:opacity-50"
+          >
+            <RefreshCw
+              size={17}
+              className={
+                cargando
+                  ? "animate-spin"
+                  : ""
+              }
+            />
+          </button>
 
         </div>
-
-        <button
-          type="button"
-          onClick={cargarCitas}
-          disabled={cargando}
-          className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0F1E3D] shadow-sm ring-1 ring-slate-900/[0.04] disabled:opacity-50"
-        >
-
-          <RefreshCw
-            size={17}
-            className={
-              cargando
-                ? "animate-spin"
-                : ""
-            }
-          />
-
-        </button>
 
       </div>
 

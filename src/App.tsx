@@ -5,7 +5,7 @@ import MiCredencial from './pages/MiCredencial'
 import TerminosCondiciones from './pages/TerminosCondiciones'
 import PrivateRoute from './components/PrivateRoute'
 import VincularDNI from './pages/VincularDNI'
-import { BottomNav } from './components/BottomNav'
+
 import Perfil from './pages/Perfil'
 import SideMenu from './components/SideMenu'
 import { useState, useEffect} from 'react'
@@ -21,12 +21,14 @@ import RecuperarPassword from './pages/RecuperarPassword'
 import SolicitudTurno from './pages/SolicitudTurno'
 import CartillaMedica from './pages/CartillaMedica'
 import Citas from './pages/Citas'
+import WhatsAppFloat from './components/WhatsAppFloat'
 
 
 function App() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const showNav = location.pathname !== '/' && location.pathname !== '/primer-ingreso' && location.pathname !== '/vincular-dni' && location.pathname !== '/recuperar-password';
+
+  const showFloat = location.pathname !== '/' && location.pathname !== '/primer-ingreso' && location.pathname !== '/vincular-dni' && location.pathname !== '/recuperar-password';
 
   const [isStandalone, setIsStandalone] = useState<boolean | null>(null);
 
@@ -116,7 +118,7 @@ const handleLogout = async () => {
 />
 
 
-      {showNav && <BottomNav />}
+      {showFloat && <WhatsAppFloat />}
     </>
   )
 }

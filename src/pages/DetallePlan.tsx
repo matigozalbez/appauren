@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 
@@ -52,6 +53,7 @@ function leerCache(plan?: string): CatalogoPlan | null {
 }
 
 export default function DetallePlan() {
+  const navigate = useNavigate();
   const [user] = useAuthState(auth);
   const { plan } = useParams<{ plan: string }>();
 
@@ -180,6 +182,14 @@ export default function DetallePlan() {
       <header className="sticky top-0 z-20 bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] shadow-lg shadow-[#0F1E3D]/10">
         <div className="mx-auto max-w-2xl px-4 pb-7 pt-6 sm:px-6">
           <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => navigate("/home", { replace: true })}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white"
+              style={{ touchAction: "manipulation" }}
+            >
+              <ArrowLeft size={17} />
+            </button>
             <span className="h-px w-6 bg-[#C9974A]" />
             <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#C9974A]">
               Tu cobertura

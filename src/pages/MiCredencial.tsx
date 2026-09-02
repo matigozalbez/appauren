@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
-import { Share2, Shield, Calendar, MessageCircle, Phone, Globe, ShieldCheck, IdCard, Users } from "lucide-react";
+import { ArrowLeft, Share2, Shield, Calendar, MessageCircle, Phone, Globe, ShieldCheck, IdCard, Users } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
 
 interface Adherente {
@@ -29,6 +30,7 @@ interface Socio {
 const API_URL = import.meta.env.VITE_API_URL_LINK;
 
 export default function MiCredencial() {
+  const navigate = useNavigate();
   const [user] = useAuthState(auth);
   
   // Inicializamos caché y estado de carga inicial
@@ -88,12 +90,22 @@ export default function MiCredencial() {
     <div className={`min-h-screen-safe bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] pb-10 ${animationClass}`}>
         {/* Header */}
         <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429]">
-          <h1 className="text-xl font-bold tracking-tight text-white flex items-center justify-between">
-            <span>Mi Credencial</span>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => navigate("/home", { replace: true })}
+              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white"
+              style={{ touchAction: "manipulation" }}
+            >
+              <ArrowLeft size={17} />
+            </button>
+            <h1 className="flex-1 text-xl font-bold tracking-tight text-white flex items-center justify-between">
+              <span>Mi Credencial</span>
             <button className="text-slate-700">
               <Share2 size={20} />
             </button>
-          </h1>
+            </h1>
+          </div>
         </div>
 
         <p className="mt-4 flex items-center justify-center gap-2 text-center text-xs text-slate-500">

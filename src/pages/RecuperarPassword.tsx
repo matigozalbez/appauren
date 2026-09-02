@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { IdCard, KeyRound, Lock, Eye, EyeOff } from "lucide-react";
+import { IdCard, KeyRound, Lock, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { signInWithCustomToken } from "firebase/auth";
 import { auth } from "../firebase";
@@ -101,83 +101,108 @@ export default function RecuperarPassword() {
     }
   };
 
-  return (
-    <div className="flex min-h-screen-safe flex-col justify-center bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] px-6">
-      <div className="mx-auto w-full max-w-sm">
+  const pasosLabels = ["Documento", "Nueva clave"];
 
-        {/* Logo e Isotipo */}
-        <div className="mb-10 text-center flex flex-col items-center">
-          <img 
-            src={aurenIsotipo} 
-            alt="Auren Logo" 
-            className="mb-3 h-auto w-32 object-contain" 
+  return (
+    <div className="relative flex min-h-screen-safe flex-col justify-center overflow-hidden bg-[#FBF6EC] px-6 font-sans antialiased">
+      {/* franja dorada superior */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
+
+      <div className="relative z-10 mx-auto w-full max-w-[400px] py-10">
+
+        {/* Logo */}
+        <div className="mb-9 flex flex-col items-center text-center">
+          <img
+            src={aurenIsotipo}
+            alt="Auren Logo"
+            className="mb-2 h-auto w-36 object-contain"
           />
-          <span className="text-xs font-semibold tracking-widest text-[#C9974A] uppercase mt-1">Recuperar contraseña</span>
         </div>
 
         {/* Indicador de 2 pasos */}
-        <div className="mb-8 flex items-center justify-center gap-3">
-          <div className={`flex h-9 w-9 items-center justify-center rounded-full text-base font-semibold ${
-            paso >= 1 ? "bg-[#C9974A] text-white" : "bg-zinc-100 text-zinc-400"
-          }`}>
-            1
-          </div>
-          <div className={`h-0.5 w-16 ${paso >= 2 ? "bg-[#C9974A]" : "bg-zinc-200"}`} />
-
-          <div className={`flex h-9 w-9 items-center justify-center rounded-full text-base font-semibold ${
-            paso >= 2 ? "bg-[#C9974A] text-white" : "bg-zinc-100 text-zinc-400"
-          }`}>
-            2
+        <div className="mb-10">
+          <div className="flex items-center">
+            {pasosLabels.map((label, i) => {
+              const step = i + 1;
+              const activo = paso >= step;
+              return (
+                <div key={label} className={`flex items-center ${i > 0 ? "flex-1" : ""}`}>
+                  {i > 0 && (
+                    <div className={`mx-2 h-[2px] flex-1 rounded-full ${paso > i ? "bg-[#C9974A]" : "bg-[#0F1E3D]/10"}`} />
+                  )}
+                  <div className="flex flex-col items-center gap-1">
+                    <div
+                      className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold transition-colors ${
+                        activo ? "bg-[#C9974A] text-white" : "bg-[#0F1E3D]/5 text-[#0F1E3D]/40"
+                      }`}
+                    >
+                      {activo && paso === step ? (
+                        step
+                      ) : activo ? (
+                        <svg className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M20 6 9 17l-5-5" />
+                        </svg>
+                      ) : (
+                        step
+                      )}
+                    </div>
+                    <span className={`text-[10px] font-medium tracking-wide ${activo ? "text-[#0F1E3D]" : "text-[#0F1E3D]/40"}`}>
+                      {label}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
         {/* PASO 1: Ingreso de DNI */}
         {paso === 1 && (
-          <form onSubmit={handleSolicitarCodigo} className="space-y-5">
-            <div className="text-left mb-6">
-              <h2 className="text-2xl font-bold text-[#0F1E3D]">Ingresá tu DNI</h2>
-              <p className="mt-1.5 text-sm text-zinc-600">
-                Ingresá tu número de documento para recuperar tu acceso.
+          <form onSubmit={handleSolicitarCodigo}>
+            <div className="mb-8 text-left">
+              <h2 className="text-3xl font-bold tracking-tight text-[#0F1E3D]">Ingresá tu DNI</h2>
+              <p className="mt-2 text-sm font-light text-slate-500">
+                Ingresá tu documento para recuperar tu acceso.
               </p>
             </div>
 
-            <div className="relative">
-              <IdCard size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+            <div className="flex items-center gap-3 border-b border-[#0F1E3D]/12 py-4">
+              <IdCard size={20} className="text-[#C9974A]" />
               <input
                 type="text"
                 inputMode="numeric"
                 value={dni}
                 onChange={(e) => setDni(e.target.value)}
                 placeholder="Tu DNI"
-                className="w-full rounded-xl border border-zinc-200 bg-zinc-50 py-3.5 pl-12 pr-4 text-[#0F1E3D] placeholder-zinc-400 outline-none focus:border-[#C9974A]"
+                className="w-full bg-transparent text-base text-[#0F1E3D] placeholder-slate-400 outline-none"
                 required
               />
             </div>
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-full bg-[#0F1E3D] py-4 text-sm font-semibold text-white tracking-wider shadow-md transition-opacity hover:opacity-90 disabled:bg-zinc-400"
+              className="mt-8 w-full rounded-full bg-[#0F1E3D] py-4 text-sm font-semibold tracking-widest text-white uppercase shadow-[0_10px_24px_rgba(15,30,61,0.25)] transition hover:bg-[#152953] active:scale-[0.99] disabled:opacity-50"
             >
-              {loading ? "ENVIANDO..." : "ENVIAR CÓDIGO"}
+              {loading ? "Enviando..." : "Enviar código"}
             </button>
           </form>
         )}
 
         {/* PASO 2: Código de Verificación + Nueva Contraseña */}
         {paso === 2 && (
-          <form onSubmit={handleFinalizar} className="space-y-5">
-            <div className="text-left mb-6">
-              <h2 className="text-2xl font-bold text-[#0F1E3D]">Nueva contraseña</h2>
-              <p className="mt-1.5 text-sm text-zinc-600">
-                Te enviamos un código a <span className="font-medium text-[#0F1E3D]">{mailEnmascarado || "tu correo"}</span>. Ingresalo junto con tu nueva clave.
+          <form onSubmit={handleFinalizar}>
+            <div className="mb-8 text-left">
+              <h2 className="text-3xl font-bold tracking-tight text-[#0F1E3D]">Nueva contraseña</h2>
+              <p className="mt-2 text-sm font-light text-slate-500">
+                Ingresá el código que enviamos a <span className="font-medium text-[#0F1E3D]">{mailEnmascarado || "tu correo"}</span> junto con tu nueva clave.
               </p>
             </div>
 
-            <div className="relative">
-              <KeyRound size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+            <div className="flex items-center gap-3 border-b border-[#0F1E3D]/12 py-4">
+              <KeyRound size={20} className="text-[#C9974A]" />
               <input
                 type="text"
                 inputMode="numeric"
@@ -185,58 +210,58 @@ export default function RecuperarPassword() {
                 value={codigo}
                 onChange={(e) => setCodigo(e.target.value)}
                 placeholder="Código de 6 dígitos"
-                className="w-full rounded-xl border border-zinc-200 bg-zinc-50 py-3.5 pl-12 pr-4 text-[#0F1E3D] placeholder-zinc-400 outline-none focus:border-[#C9974A] tracking-widest"
+                className="w-full bg-transparent text-lg tracking-[0.4em] text-[#0F1E3D] placeholder-slate-300 outline-none"
                 required
               />
             </div>
 
-            <div className="relative">
-              <Lock size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+            <div className="flex items-center gap-3 border-b border-[#0F1E3D]/12 py-4">
+              <Lock size={20} className="text-[#C9974A]" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Nueva contraseña"
-                className="w-full rounded-xl border border-zinc-200 bg-zinc-50 py-3.5 pl-12 pr-12 text-[#0F1E3D] placeholder-zinc-400 outline-none focus:border-[#C9974A]"
+                className="w-full bg-transparent text-base text-[#0F1E3D] placeholder-slate-400 outline-none"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-zinc-600"
+                className="text-slate-400 hover:text-zinc-600"
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
 
-            <div className="relative">
-              <Lock size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" />
+            <div className="flex items-center gap-3 border-b border-[#0F1E3D]/12 py-4">
+              <Lock size={20} className="text-[#C9974A]" />
               <input
                 type={showPassword ? "text" : "password"}
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 placeholder="Confirmar nueva contraseña"
-                className="w-full rounded-xl border border-zinc-200 bg-zinc-50 py-3.5 pl-12 pr-4 text-[#0F1E3D] placeholder-zinc-400 outline-none focus:border-[#C9974A]"
+                className="w-full bg-transparent text-base text-[#0F1E3D] placeholder-slate-400 outline-none"
                 required
               />
             </div>
 
-            {error && <p className="text-sm text-red-600">{error}</p>}
+            {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-full bg-[#0F1E3D] py-4 text-sm font-semibold text-white tracking-wider shadow-md transition-opacity hover:opacity-90 disabled:bg-zinc-400"
+              className="mt-8 w-full rounded-full bg-[#0F1E3D] py-4 text-sm font-semibold tracking-widest text-white uppercase shadow-[0_10px_24px_rgba(15,30,61,0.25)] transition hover:bg-[#152953] active:scale-[0.99] disabled:opacity-50"
             >
-              {loading ? "PROCESANDO..." : "CAMBIAR CONTRASEÑA"}
+              {loading ? "Procesando..." : "Cambiar contraseña"}
             </button>
 
-            <div className="text-center">
+            <div className="mt-5 text-center">
               <button
                 type="button"
                 onClick={() => handleSolicitarCodigo()}
                 disabled={loading}
-                className="text-xs font-medium text-[#C9974A] hover:underline"
+                className="text-sm font-medium text-[#C9974A] hover:underline"
               >
                 Reenviar código
               </button>
@@ -245,22 +270,8 @@ export default function RecuperarPassword() {
         )}
 
         {/* Footer */}
-        <p className="mt-8 text-center text-xs text-zinc-400 flex items-center justify-center gap-1.5">
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            width="14" 
-            height="14" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            className="text-[#C9974A]"
-          >
-            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-          </svg>
+        <p className="mt-10 flex items-center justify-center gap-1.5 text-xs font-light text-slate-400">
+          <ShieldCheck size={14} className="text-[#C9974A]" />
           Tus datos están protegidos.
         </p>
 

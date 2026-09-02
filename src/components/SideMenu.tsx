@@ -11,6 +11,7 @@ import {
   ChevronRight,
   FileText,
   User as UserIcon,
+  CalendarDays,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -58,6 +59,7 @@ export default function SideMenu({ isOpen, onClose, onLogout }: Props) {
   const items: MenuItem[] = [
     { icon: <Home size={19} />, label: "Inicio", onClick: () => go("/home") },
     { icon: <Shield size={19} />, label: "Coberturas", onClick: () => go("/coberturas") },
+    { icon: <CalendarDays size={19} />, label: "Citas", onClick: () => go("/citas") },
     { icon: <IdCard size={19} />, label: "Credencial", onClick: () => go("/credencial") },
     { icon: <Tag size={19} />, label: "Promociones", onClick: () => go("/promociones") },
     { icon: <Search size={19} />, label: "Buscar Medicamentos", onClick: () => go("/medicamentos") },

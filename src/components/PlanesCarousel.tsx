@@ -19,11 +19,11 @@ interface PlanesCarouselProps {
 }
 
 const SkeletonCard = () => (
-  <div className="relative h-40 w-[85%] shrink-0 overflow-hidden rounded-2xl border border-[#C9974A]/20 bg-[#FFF9EF] p-5 pt-6">
-    <div className="absolute inset-x-0 top-0 h-[5px] bg-[#C9974A]/20" />
+  <div className="relative h-44 w-[85%] shrink-0 overflow-hidden rounded-[26px] border border-[#C9974A]/20 bg-[#FFF9EF] p-5 pt-6">
+    <div className="absolute inset-x-0 top-0 h-[6px] bg-[#C9974A]/20" />
 
     <div className="flex items-start gap-3">
-      <div className="skeleton-shimmer h-9 w-9 shrink-0 rounded-full" />
+      <div className="skeleton-shimmer h-11 w-11 shrink-0 rounded-xl" />
       <div className="min-w-0 flex-1">
         <div className="skeleton-shimmer mb-2 h-2.5 w-20 rounded-full" />
         <div className="skeleton-shimmer h-5 w-32 rounded-full" />
@@ -93,29 +93,26 @@ console.log("Hola")
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") irADetalle(plan.nombre);
           }}
-          className={`group relative flex h-40 shrink-0 cursor-pointer flex-col justify-between overflow-hidden rounded-2xl border border-[#C9974A]/30 bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] p-5 pt-6 shadow-md shadow-[#C9974A]/10 transition active:scale-[0.98] ${
+          className={`group relative flex h-44 shrink-0 cursor-pointer flex-col justify-between overflow-hidden rounded-[26px] border border-[#C9974A]/30 bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] p-5 pt-6 shadow-md shadow-[#C9974A]/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#C9974A]/15 active:scale-[0.98] ${
             esUnicoPlan ? "w-full" : "w-[85%] snap-center"
           }`}
         >
           {/* franja dorada tipo carpeta/sello, arriba */}
-          <div className="absolute inset-x-0 top-0 h-[5px] bg-gradient-to-r from-[#C9974A] via-[#DDB268] to-[#C9974A]" />
+          <div className="absolute inset-x-0 top-0 h-[5px] bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
 
-          <div className="relative z-10 flex items-start gap-3">
-            {/* Espacio para el logo/ícono real de Auren — reemplazá el src */} 
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center ">
-              <img src="/logoazulsolo.png" alt="" className="h-5 w-5" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#A87B32]">
-                Tu cobertura
-              </p>
-              <h3
-                className="mt-1 text-lg leading-tight text-[#2A2420]"
-                style={{ fontFamily: "'Fraunces', serif", fontWeight: 600 }}
-              >
-                {plan.nombre}
-              </h3>
-            </div>
+          <div className="relative z-10 flex items-center gap-2">
+            <p className="text-[9px] font-semibold uppercase tracking-[0.22em] text-[#A87B32]">
+              Tu cobertura
+            </p>
+          </div>
+
+          <div className="relative z-10">
+            <h3
+              className="text-2xl leading-tight text-[#2A2420]"
+              style={{ fontFamily: "'Fraunces', serif", fontWeight: 600 }}
+            >
+              {plan.nombre}
+            </h3>
           </div>
 
           <div className="relative z-10 flex items-center justify-between">
@@ -128,7 +125,7 @@ console.log("Hola")
               <span />
             )}
 
-            <span className="inline-flex items-center gap-1 rounded-full bg-[#0F1E3D] px-3 py-1 text-xs font-bold text-white shadow-sm transition group-active:scale-95">
+            <span className="inline-flex items-center gap-1 rounded-full bg-[#0F1E3D] px-3.5 py-1.5 text-xs font-bold text-white shadow-sm transition-all duration-300 group-hover:bg-[#152953] group-active:scale-95">
               Ver cobertura
               <ChevronRight size={12} />
             </span>
@@ -176,8 +173,8 @@ console.log("Hola")
             {planes.map((_, i) => (
               <span
                 key={i}
-                className={`h-1.5 rounded-full transition-all ${
-                  i === activeIndex ? "w-4 bg-[#C9974A]" : "w-1.5 bg-[#C9974A]/25"
+                className={`h-1.5 rounded-full transition-all duration-300 ${
+                  i === activeIndex ? "w-5 bg-[#C9974A]" : "w-1.5 bg-[#C9974A]/25"
                 }`}
               />
             ))}

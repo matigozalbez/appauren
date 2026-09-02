@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import {
+  ArrowLeft,
   Mail,
   IdCard,
   Bell,
@@ -86,12 +87,22 @@ const handleLogout = async () => {
            <div className="min-h-screen overflow-y-auto pb-32 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
       {/* Header Minimalista con tus colores */}
       <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429]">
-        <h1 className="text-xl font-bold tracking-tight text-white flex items-center justify-between">
-          <span>Mi Perfil</span>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => navigate("/home", { replace: true })}
+            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white"
+            style={{ touchAction: "manipulation" }}
+          >
+            <ArrowLeft size={17} />
+          </button>
+          <h1 className="flex-1 text-xl font-bold tracking-tight text-white flex items-center justify-between">
+            <span>Mi Perfil</span>
           <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-[#C9974A]/20 text-[#C9974A] border border-[#C9974A]/30">
             Socio Activo
           </span>
-        </h1>
+          </h1>
+        </div>
       </div>
 
       <div className="px-6 pt-6 space-y-6">
