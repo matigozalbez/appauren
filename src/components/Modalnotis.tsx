@@ -1,8 +1,9 @@
     // components/NotificationsModal.tsx
 import { useEffect, useState } from "react";
 import { X, Bell } from "lucide-react";
-import { collection, query, orderBy, limit, getDocs, Timestamp } from "firebase/firestore";
- import { db} from "../firebase";
+import {  Timestamp } from "firebase/firestore";
+
+ import { auth } from "../firebase";
 const API_URL = import.meta.env.VITE_API_URL_LINK;
 
  interface Notificacion {
@@ -47,25 +48,32 @@ const [loading, setLoading] = useState(true);
 useEffect(() => {
     if (!isOpen) return;
 
-    const fetchNotificaciones = async () => {
-        setLoading(true);
-        try {
-            const res = await fetch(`${API_URL}/api/notificaciones`);
-            if (!res.ok) throw new Error("Error al obtener notificaciones");
+   
+const fetchNotificaciones = async () => {
+    setLoading(true);
+    try {
+        const user = auth.currentUser;
+        if (!user) return;
 
-            const items: Notificacion[] = await res.json();
-            setNotificaciones(items || []);
+        const idToken = await user.getIdToken();
+        console.log(idToken)
+        const res = await fetch(`${API_URL}/api/notificaciones`, {
+            headers: { Authorization: `Bearer ${idToken}` },
+        });
+        if (!res.ok) throw new Error("Error al obtener notificaciones");
 
-            // Marcamos todas como leídas al abrir el modal
-            const ids = items.map((n) => n.id);
-            marcarComoLeidas(ids);
-            onReadStateChange?.(0);
-        } catch (err) {
-            console.error("Error cargando notificaciones:", err);
-        } finally {
-            setLoading(false);
-        }
-    };
+        const items: Notificacion[] = await res.json();
+        setNotificaciones(items || []);
+
+        const ids = items.map((n) => n.id);
+        marcarComoLeidas(ids);
+        onReadStateChange?.(0);
+    } catch (err) {
+        console.error("Error cargando notificaciones:", err);
+    } finally {
+        setLoading(false);
+    }
+};
 
     fetchNotificaciones();
 }, [isOpen]);
@@ -148,13 +156,21 @@ const formatFecha = (fechaInput: any) => {
     }
 
     // Helper exportado para que Home pueda calcular el badge sin abrir el modal
-    export async function contarNoLeidas(): Promise<number> {
+export async function contarNoLeidas(): Promise<number> {
     try {
-        const q = query(collection(db, "notificaciones"), orderBy("fecha", "desc"), limit(30));
-        const snap = await getDocs(q);
+        const user = auth.currentUser;
+        if (!user) return 0;
+
+        const idToken = await user.getIdToken();
+        const res = await fetch(`${import.meta.env.VITE_API_URL_LINK}/api/notificaciones`, {
+            headers: { Authorization: `Bearer ${idToken}` },
+        });
+        if (!res.ok) return 0;
+
+        const items: { id: string }[] = await res.json();
         const leidas = getLeidas();
-        return snap.docs.filter((d) => !leidas.includes(d.id)).length;
+        return items.filter((n) => !leidas.includes(n.id)).length;
     } catch {
         return 0;
     }
-    }
+}
