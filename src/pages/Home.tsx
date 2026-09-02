@@ -113,6 +113,7 @@ export default function Home({ openMenu }: HomeProps) {
   });
 
   const [currentSlide, setCurrentSlide] = useState(0);
+  console.log(currentSlide)
   const [tabActivo, setTabActivo] = useState("inicio");
 
   const navigate = useNavigate();
