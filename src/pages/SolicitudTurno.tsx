@@ -100,37 +100,38 @@ export default function SolicitudTurno() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8F5EF] pb-10 text-slate-800">
+    <div className="min-h-screen bg-[#FBF6EC] text-slate-800">
 
-      {/* Header */}
-      <header className="bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] px-6 pb-6 pt-4">
+      {/* Header: banner elegante */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] px-5 pb-9 pt-7">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#C9974A]/10 blur-2xl" />
 
-        <div className="flex items-center gap-3">
-
+        <div className="relative z-10 flex items-center gap-3">
           <button
             onClick={() => navigate("/home", { replace: true })}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 backdrop-blur transition active:scale-95"
+            style={{ touchAction: "manipulation" }}
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={17} />
           </button>
 
           <div>
-
-            <h1 className="text-lg font-bold text-white">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#A87B32]">
+              Salud
+            </span>
+            <h1 className="mt-1 font-serif text-2xl font-semibold tracking-tight text-[#0F1E3D]">
               Solicitud de turno
             </h1>
-
-            <p className="text-[11px] text-slate-300">
-              Contanos qué atención necesitás
-            </p>
-
           </div>
-
         </div>
 
-      </header>
+        <p className="relative z-10 mt-3 text-xs font-light leading-relaxed text-slate-500">
+          Contanos qué atención necesitás.
+        </p>
+      </section>
 
-      <main className="px-6 pt-7">
+      <main className="px-5 -mt-4">
 
         {/* Especialidad */}
         <section>
@@ -153,7 +154,7 @@ export default function SolicitudTurno() {
             <select
               value={especialidad}
               onChange={(e) => setEspecialidad(e.target.value)}
-              className="w-full appearance-none rounded-2xl border border-slate-200 bg-white px-4 py-3.5 pr-10 text-sm text-slate-700 shadow-sm outline-none focus:border-[#C9974A]"
+              className="w-full appearance-none rounded-2xl border border-[#C9974A]/30 bg-white px-4 py-3.5 pr-10 text-sm text-slate-700 shadow-sm outline-none focus:border-[#C9974A]"
             >
 
               <option value="">
@@ -173,7 +174,7 @@ export default function SolicitudTurno() {
 
             <ChevronDown
               size={17}
-              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+              className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#A87B32]"
             />
 
           </div>
@@ -201,7 +202,7 @@ export default function SolicitudTurno() {
             value={ciudad}
             onChange={(e) => setCiudad(e.target.value)}
             placeholder="Ej. Santa Fe"
-            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#C9974A]"
+            className="w-full rounded-2xl border border-[#C9974A]/30 bg-white px-4 py-3.5 text-sm text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#C9974A]"
           />
 
         </section>
@@ -218,7 +219,7 @@ export default function SolicitudTurno() {
             value={direccion}
             onChange={(e) => setDireccion(e.target.value)}
             placeholder="Ej. San Martín 1234"
-            className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#C9974A]"
+            className="w-full rounded-2xl border border-[#C9974A]/30 bg-white px-4 py-3.5 text-sm text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#C9974A]"
           />
 
           <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
@@ -246,7 +247,7 @@ export default function SolicitudTurno() {
             onChange={(e) => setMotivo(e.target.value)}
             placeholder="Contanos brevemente qué necesitás..."
             rows={4}
-            className="w-full resize-none rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#C9974A]"
+            className="w-full resize-none rounded-2xl border border-[#C9974A]/30 bg-white px-4 py-3.5 text-sm text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#C9974A]"
           />
 
         </section>
@@ -256,7 +257,7 @@ export default function SolicitudTurno() {
           type="button"
           disabled={!puedeSolicitar}
           onClick={solicitarTurno}
-          className="mt-7 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#0F1E3D] py-4 text-sm font-bold text-white shadow-lg shadow-[#0F1E3D]/15 transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+          className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-[#0F1E3D] py-4 text-xs font-semibold uppercase tracking-widest text-white shadow-[0_10px_24px_rgba(15,30,61,0.25)] transition hover:bg-[#152953] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
         >
 
           {enviando

@@ -1,12 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  ArrowLeft,
-  CalendarDays,
-  Clock3,
-  MapPin,
-  RefreshCw,
-  Stethoscope,
-} from "lucide-react";
+import { ArrowLeft, CalendarDays, MapPin, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { auth } from "../firebase";
@@ -148,350 +141,173 @@ export default function Citas() {
 
   return (
 
-    <div className={`min-h-screen bg-[#F8F5EF] p-6 text-slate-800 ${animationClass}`}>
+    <div className={`min-h-screen bg-[#FBF6EC] text-slate-800 ${animationClass}`}>
 
-      {/* Header */}
+      {/* Header: banner elegante */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] px-5 pb-9 pt-7">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#C9974A]/10 blur-2xl" />
 
-      <div className="mb-6 flex items-center justify-between">
+        <div className="relative z-10 flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => navigate("/home", { replace: true })}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 backdrop-blur transition active:scale-95"
+              style={{ touchAction: "manipulation" }}
+            >
+              <ArrowLeft size={17} />
+            </button>
 
-        <div className="flex items-center gap-2">
-
-          <button
-            type="button"
-            onClick={() => navigate("/home", { replace: true })}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-[#0F1E3D] shadow-sm ring-1 ring-slate-900/[0.04]"
-            style={{ touchAction: "manipulation" }}
-          >
-            <ArrowLeft size={17} />
-          </button>
-
-          <div>
-            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#C9974A]">
-              Salud
-            </p>
-
-            <h1 className="mt-1 text-2xl font-bold text-[#0F1E3D]">
-              Mis citas
-            </h1>
-
-            <p className="mt-1 text-xs text-slate-400">
-              Acá vas a encontrar tus turnos y solicitudes.
-            </p>
+            <div>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#A87B32]">
+                Salud
+              </span>
+              <h1 className="mt-1 font-serif text-2xl font-semibold tracking-tight text-[#0F1E3D]">
+                Mis citas
+              </h1>
+            </div>
           </div>
 
           <button
             type="button"
             onClick={cargarCitas}
             disabled={cargando}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0F1E3D] shadow-sm ring-1 ring-slate-900/[0.04] disabled:opacity-50"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 backdrop-blur transition active:scale-95 disabled:opacity-50"
+            style={{ touchAction: "manipulation" }}
           >
-            <RefreshCw
-              size={17}
-              className={
-                cargando
-                  ? "animate-spin"
-                  : ""
-              }
-            />
+            <RefreshCw size={16} className={cargando ? "animate-spin" : ""} />
           </button>
-
         </div>
 
-      </div>
+        <p className="relative z-10 mt-3 max-w-[280px] text-xs font-light leading-relaxed text-slate-500">
+          Acá vas a encontrar tus turnos y solicitudes.
+        </p>
+      </section>
+
+      <main className="px-5 -mt-4">
 
 
       {/* Loading */}
-
       {cargando && (
-
-        <div className="rounded-3xl bg-white px-6 py-14 text-center shadow-sm">
-
-          <RefreshCw
-            size={22}
-            className="mx-auto animate-spin text-[#C9974A]"
-          />
-
-          <p className="mt-4 text-sm text-slate-400">
-            Cargando tus turnos...
-          </p>
-
-        </div>
-
+        <section>
+          <div className="space-y-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="h-20 animate-pulse rounded-xl bg-[#0F1E3D]/5" />
+            ))}
+          </div>
+        </section>
       )}
-
 
       {/* Error */}
-
       {!cargando && error && (
-
-        <div className="rounded-3xl bg-white px-6 py-10 text-center shadow-sm">
-
-          <p className="text-sm font-semibold text-red-500">
-            {error}
-          </p>
-
-          <button
-            type="button"
-            onClick={cargarCitas}
-            className="mt-4 rounded-2xl bg-[#0F1E3D] px-5 py-3 text-xs font-bold text-white"
-          >
-            Reintentar
-          </button>
-
-        </div>
-
+        <section>
+          <div className="py-12 text-center">
+            <p className="text-sm font-semibold text-red-600">{error}</p>
+            <button
+              type="button"
+              onClick={cargarCitas}
+              className="mt-4 rounded-full bg-[#0F1E3D] px-6 py-3 text-xs font-bold text-white shadow-md"
+            >
+              Reintentar
+            </button>
+          </div>
+        </section>
       )}
 
-
       {/* Sin citas */}
-
-      {!cargando &&
-        !error &&
-        citas.length === 0 && (
-
-          <div className="rounded-3xl bg-white px-6 py-14 text-center shadow-sm">
-
-            <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#0F1E3D]/5">
-
-              <CalendarDays
-                size={23}
-                className="text-[#C9974A]"
-              />
-
+      {!cargando && !error && citas.length === 0 && (
+        <section>
+          <div className="py-14 text-center">
+            <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#0F1E3D]">
+              <CalendarDays size={26} className="text-[#C9974A]" />
             </div>
-
-            <h2 className="mt-4 text-base font-bold text-[#0F1E3D]">
-              No tenés turnos
-            </h2>
-
-            <p className="mt-1 text-xs text-slate-400">
-              Cuando solicites un turno,
-              aparecerá acá.
-            </p>
-
+            <h2 className="mt-5 text-lg font-bold text-[#0F1E3D]">No tenés turnos</h2>
+            <p className="mt-1.5 text-xs text-slate-400">Cuando solicites un turno, aparecerá acá.</p>
           </div>
-
-        )}
-
+        </section>
+      )}
 
       {/* Citas */}
+      {!cargando && !error && citas.length > 0 && (
+        <section>
+          <div className="mb-3">
+            <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#A87B32]">
+              Tus citas
+            </p>
+            <h2 className="mt-1 text-lg font-bold text-[#0F1E3D]">
+              {citas.length} {citas.length === 1 ? "turno" : "turnos"}
+            </h2>
+          </div>
 
-      {!cargando &&
-        !error &&
-        citas.length > 0 && (
-
-          <div className="space-y-5">
-
+          <div className="divide-y divide-[#C9974A]/25">
             {citas.map((cita) => {
-
-              const asignada =
-                cita.estado === "asignado";
+              const asignada = cita.estado === "asignado";
 
               return (
+                <div key={cita.id} className="flex items-start gap-3 py-4">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
+                    <CalendarDays size={18} className="text-[#C9974A]" />
+                  </span>
 
-                <div
-                  key={cita.id}
-                  className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-slate-900/[0.03]"
-                >
-
-                  {/* Estado */}
-
-                  <div className="border-b border-slate-100 p-5">
-
-                    <div className="flex items-center justify-between gap-3">
-
-                      <div>
-
-                        <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#C9974A]">
-                          {asignada
-                            ? "Turno asignado"
-                            : "Solicitud"}
-                        </p>
-
-                        <h2 className="mt-1 text-lg font-bold text-[#0F1E3D]">
-                          {cita.especialidad}
-                        </h2>
-
-                      </div>
-
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-sm font-semibold text-[#0F1E3D]">
+                        {cita.especialidad}
+                      </p>
                       <span
                         className={
                           asignada
-                            ? "rounded-full bg-green-50 px-3 py-1.5 text-[10px] font-bold text-green-600"
-                            : "rounded-full bg-amber-50 px-3 py-1.5 text-[10px] font-bold text-amber-600"
+                            ? "shrink-0 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600"
+                            : "shrink-0 rounded-full bg-[#C9974A]/15 px-2.5 py-1 text-[10px] font-bold text-[#A87B32]"
                         }
                       >
-                        {asignada
-                          ? "Asignado"
-                          : "Pendiente"}
+                        {asignada ? "Asignado" : "Pendiente"}
                       </span>
-
                     </div>
 
-                  </div>
+                    {asignada && (
+                      <div className="mt-2.5 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <span className="h-1 w-1 rounded-full bg-[#C9974A]" />
+                          <p className="text-xs text-slate-600">
+                            Dr. {cita.medicoNombre} {cita.medicoApellido}
+                          </p>
+                        </div>
+                        {(cita.fecha || cita.hora) && (
+                          <div className="flex items-center gap-2">
+                            <CalendarDays size={12} className="shrink-0 text-[#C9974A]" />
+                            <p className="text-xs text-slate-500">
+                              {cita.fecha} {cita.hora && `- ${cita.hora}`}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
 
-
-                  {/* Datos del turno */}
-
-                  <div className="p-5">
-
-                    {/* Médico */}
+                    {!asignada && cita.motivo && (
+                      <p className="mt-2 text-xs text-slate-500">{cita.motivo}</p>
+                    )}
 
                     {asignada && (
-
-                      <div className="rounded-2xl bg-[#0F1E3D]/5 p-4">
-
-                        <div className="flex items-start gap-3">
-
-                          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white">
-
-                            <Stethoscope
-                              size={18}
-                              className="text-[#C9974A]"
-                            />
-
-                          </div>
-
-                          <div>
-
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                              Profesional
-                            </p>
-
-                            <p className="mt-1 text-sm font-bold text-[#0F1E3D]">
-
-                              {cita.medicoNombre}{" "}
-
-                              {cita.medicoApellido}
-
-                            </p>
-
-                          </div>
-
-                        </div>
-
-                      </div>
-
+                      <button
+                        type="button"
+                        onClick={() => abrirGoogleMaps(cita)}
+                        className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-[#C9974A]/50 px-3.5 py-1.5 text-[10px] font-semibold text-[#0F1E3D] transition active:scale-95"
+                      >
+                        <MapPin size={12} className="text-[#C9974A]" />
+                        Cómo llegar
+                      </button>
                     )}
-
-
-                    {/* Fecha y hora */}
-
-                    {asignada && (
-
-                      <div className="mt-4 grid grid-cols-2 gap-3">
-
-                        <div className="rounded-2xl bg-slate-50 p-4">
-
-                          <CalendarDays
-                            size={17}
-                            className="text-[#C9974A]"
-                          />
-
-                          <p className="mt-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                            Fecha
-                          </p>
-
-                          <p className="mt-1 text-sm font-bold text-[#0F1E3D]">
-                            {cita.fecha || "—"}
-                          </p>
-
-                        </div>
-
-
-                        <div className="rounded-2xl bg-slate-50 p-4">
-
-                          <Clock3
-                            size={17}
-                            className="text-[#C9974A]"
-                          />
-
-                          <p className="mt-2 text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                            Hora
-                          </p>
-
-                          <p className="mt-1 text-sm font-bold text-[#0F1E3D]">
-                            {cita.hora || "—"}
-                          </p>
-
-                        </div>
-
-                      </div>
-
-                    )}
-
-
-                    {/* Dirección */}
-{/* Dirección */}
-
-<div className="mt-4 flex items-start gap-3">
-
-  <MapPin
-    size={17}
-    className="mt-0.5 shrink-0 text-[#C9974A]"
-  />
-
-  <div className="min-w-0">
-
-    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-      Dirección
-    </p>
-
-    <p className="mt-1 text-sm font-semibold text-slate-700">
-      {asignada
-        ? cita.medicoDireccion
-        : cita.direccion}
-    </p>
-
-    <p className="text-xs text-slate-400">
-      {cita.ciudad}
-    </p>
-
-    {asignada && (
-      <button
-        type="button"
-        onClick={() => abrirGoogleMaps(cita)}
-        className="mt-3 inline-flex items-center rounded-xl bg-[#0F1E3D] px-4 py-2.5 text-xs font-bold text-white shadow-sm transition active:scale-[0.98]"
-      >
-        Cómo llegar
-      </button>
-    )}
-
-  </div>
-
-</div>
-
-
-                    {/* Motivo */}
-
-                    {cita.motivo && (
-
-                      <div className="mt-4 rounded-2xl bg-slate-50 p-3">
-
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                          Motivo
-                        </p>
-
-                        <p className="mt-1 text-xs leading-relaxed text-slate-600">
-                          {cita.motivo}
-                        </p>
-
-                      </div>
-
-                    )}
-
                   </div>
-
                 </div>
-
               );
-
             })}
-
           </div>
+        </section>
+      )}
 
-        )}
-
+      </main>
     </div>
 
   );

@@ -87,28 +87,33 @@ export default function MiCredencial() {
   };
 
   return (
-    <div className={`min-h-screen-safe bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] pb-10 ${animationClass}`}>
+    <div className={`min-h-screen-safe bg-[#FBF6EC] pb-10 ${animationClass}`}>
         {/* Header */}
-        <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429]">
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => navigate("/home", { replace: true })}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white"
-              style={{ touchAction: "manipulation" }}
-            >
-              <ArrowLeft size={17} />
-            </button>
-            <h1 className="flex-1 text-xl font-bold tracking-tight text-white flex items-center justify-between">
-              <span>Mi Credencial</span>
-            <button className="text-slate-700">
-              <Share2 size={20} />
-            </button>
-            </h1>
-          </div>
-        </div>
+        <section className="relative overflow-hidden bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] px-5 pb-9 pt-7">
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
+          <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#C9974A]/10 blur-2xl" />
 
-        <p className="mt-4 flex items-center justify-center gap-2 text-center text-xs text-slate-500">
+          <div className="relative z-10 flex items-center justify-between gap-2">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => navigate("/home", { replace: true })}
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 backdrop-blur transition active:scale-95"
+                style={{ touchAction: "manipulation" }}
+              >
+                <ArrowLeft size={17} />
+              </button>
+              <span className="font-serif text-2xl font-semibold tracking-tight text-[#0F1E3D]">
+                Mi Credencial
+              </span>
+            </div>
+            <button className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 backdrop-blur transition active:scale-95">
+              <Share2 size={17} />
+            </button>
+          </div>
+        </section>
+
+        <p className="mt-5 flex items-center justify-center gap-2 text-center text-xs text-slate-500">
           <ShieldCheck size={14} className="text-[#C9974A]" />
           Tu credencial es personal e intransferible.
         </p>
@@ -127,7 +132,7 @@ export default function MiCredencial() {
                   onClick={() => setCurrentIndex(idx)}
                   className={`flex-1 py-1.5 px-3 rounded-xl text-xs font-bold transition shadow-sm ${
                     currentIndex === idx
-                      ? "bg-[#061e3f] text-white shadow"
+                      ? "bg-[#0F1E3D] text-white shadow"
                       : "bg-white text-slate-700 hover:bg-slate-100"
                   }`}
                 >

@@ -79,39 +79,43 @@ export default function CartillaMedica() {
   }, [busqueda, profesionales]);
 
   return (
-    <div className="min-h-screen bg-[#F8F5EF] pb-10">
+    <div className="min-h-screen bg-[#FBF6EC] text-slate-800">
 
-      {/* Header */}
-      <header className="bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] px-6 pb-9 pt-5">
-        <div className="flex items-center gap-3">
+      {/* Header: banner elegante */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] px-5 pb-9 pt-7">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#C9974A]/10 blur-2xl" />
+
+        <div className="relative z-10 flex items-center gap-3">
           <button
             onClick={() => navigate("/home", { replace: true })}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 backdrop-blur transition active:scale-95"
+            style={{ touchAction: "manipulation" }}
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={17} />
           </button>
 
           <div>
-            <h1 className="text-lg font-bold text-white">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#A87B32]">
+              Cartilla
+            </span>
+            <h1 className="mt-1 font-serif text-2xl font-semibold tracking-tight text-[#0F1E3D]">
               Cartilla médica
             </h1>
-
-            <p className="text-[11px] text-slate-300">
-              Encontrá un profesional
-            </p>
           </div>
         </div>
-      </header>
 
-      <main className="px-6">
+        <p className="relative z-10 mt-3 text-xs font-light leading-relaxed text-slate-500">
+          Encontrá un profesional o especialista adherido.
+        </p>
+      </section>
 
-        {/* Buscador - Margen corregido para que no quede pegado */}
-        <div className="-mt-4 relative z-10">
-          <div className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white px-4 py-3.5 shadow-md ring-1 ring-slate-900/[0.04]">
-            <Search
-              size={19}
-              className="shrink-0 text-[#C9974A]"
-            />
+      <main className="px-5 -mt-4">
+
+        {/* Buscador */}
+        <div className="relative z-10">
+          <div className="flex items-center gap-3 rounded-full border border-[#C9974A]/30 bg-white px-4 py-3 shadow-sm">
+            <Search size={18} className="shrink-0 text-[#C9974A]" />
 
             <input
               type="text"
@@ -124,11 +128,11 @@ export default function CartillaMedica() {
         </div>
 
         {/* Resultados */}
-        <div className="mt-7">
+        <div className="mt-6">
 
-          <div className="mb-4 flex items-end justify-between">
+          <div className="mb-2 flex items-end justify-between">
             <div>
-              <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#C9974A]">
+              <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#A87B32]">
                 Profesionales
               </p>
 
@@ -141,123 +145,91 @@ export default function CartillaMedica() {
 
             {!cargando && (
               <span className="text-[11px] font-medium text-slate-400">
-                {resultados.length} resultados
+                {resultados.length}
               </span>
             )}
           </div>
 
           {/* Cargando */}
           {cargando ? (
-            <div className="rounded-3xl bg-white px-6 py-12 text-center shadow-sm">
-              <p className="text-sm text-slate-400">
-                Cargando profesionales...
-              </p>
+            <div className="mt-2 space-y-3">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="h-16 animate-pulse rounded-xl bg-[#0F1E3D]/5" />
+              ))}
             </div>
 
           ) : resultados.length === 0 ? (
 
             /* Sin resultados */
-            <div className="rounded-3xl bg-white px-6 py-12 text-center shadow-sm">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[#0F1E3D]/5">
-                <Search
-                  size={20}
-                  className="text-[#C9974A]"
-                />
+            <div className="py-14 text-center">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-[#0F1E3D]">
+                <Search size={24} className="text-[#C9974A]" />
               </div>
 
-              <h3 className="mt-4 text-sm font-bold text-[#0F1E3D]">
+              <h3 className="mt-5 text-lg font-bold text-[#0F1E3D]">
                 No encontramos profesionales
               </h3>
 
-              <p className="mt-1 text-xs text-slate-400">
+              <p className="mt-1.5 text-xs text-slate-400">
                 Probá buscando por nombre o especialidad.
               </p>
             </div>
 
           ) : (
 
-            /* Cards */
-            <div className="space-y-3">
+            /* Lista de profesionales */
+            <div className="divide-y divide-[#C9974A]/25">
               {resultados.map((profesional) => (
+                <div key={profesional.id} className="flex items-center gap-3 py-4">
+                  <div
+                    className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl shadow-inner"
+                    style={{
+                      backgroundImage: `
+                        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.35) 0%, transparent 60%),
+                        linear-gradient(180deg, rgba(15, 30, 61, 0.05) 0%, rgba(15, 30, 61, 0.3) 100%),
+                        url("${profesional.imagen}")
+                      `,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                    }}
+                  >
+                    <span className="absolute bottom-0.5 right-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-400" />
+                  </div>
 
-                <div
-                  key={profesional.id}
-                  className="group w-full overflow-hidden rounded-3xl bg-white text-left shadow-sm ring-1 ring-slate-900/[0.03] transition-all duration-300 hover:shadow-md"
-                >
-                  <div className="flex items-center gap-4 p-4">
-
-                    {/* Foto con efecto de luz sutil */}
-                    <div 
-                      className="relative shrink-0 h-[72px] w-[72px] rounded-2xl overflow-hidden shadow-inner"
-                      style={{ 
-                        backgroundImage: `
-                          radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.35) 0%, transparent 60%),
-                          linear-gradient(180deg, rgba(15, 30, 61, 0.05) 0%, rgba(15, 30, 61, 0.3) 100%),
-                          url("${profesional.imagen}")
-                        `,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center"
-                      }}
-                    >
-                      <span className="absolute bottom-1 right-1 h-3 w-3 rounded-full border-2 border-white bg-emerald-400 shadow-sm" />
-                    </div>
-
-                    {/* Información */}
-                    <div className="min-w-0 flex-1">
-
-                      <h3 className="truncate text-base font-bold text-[#0F1E3D]">
-                        {profesional.nombre}{" "}
-                        {profesional.apellido}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="truncate text-sm font-semibold text-[#0F1E3D]">
+                        {profesional.nombre} {profesional.apellido}
                       </h3>
+                    </div>
 
-                      <div className="mt-1 flex items-center gap-1.5">
-                        <Stethoscope
-                          size={13}
-                          className="text-[#C9974A]"
-                        />
+                    <div className="mt-0.5 flex items-center gap-1.5">
+                      <Stethoscope size={11} className="shrink-0 text-[#C9974A]" />
+                      <span className="truncate text-xs font-medium text-slate-600">
+                        {profesional.especialidad}
+                      </span>
+                    </div>
 
-                        <span className="text-xs font-semibold text-slate-600">
-                          {profesional.especialidad}
-                        </span>
-                      </div>
-
-                      <div className="mt-2 flex items-center gap-3 text-[10px] text-slate-400">
-                        <span>
-                          DNI {profesional.dni}
-                        </span>
-
-                        <span className="flex items-center gap-1">
-                          <MapPin size={11} />
-                          {profesional.ciudad}
-                        </span>
-                      </div>
-
+                    <div className="mt-1 flex items-center gap-3 text-[10px] text-slate-400">
+                      <span>DNI {profesional.dni}</span>
+                      <span className="flex items-center gap-1">
+                        <MapPin size={10} className="text-[#C9974A]" />
+                        {profesional.ciudad}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Barra inferior */}
-                  <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50/50 px-4 py-2.5">
-
-                    <span className="text-[10px] font-bold text-[#0F1E3D] transition group-hover:text-[#C9974A]">
-                      Ver profesional →
-                    </span>
-
-                    <a
-                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-                        `${profesional.direccion}, ${profesional.ciudad}, ${profesional.provincia}`
-                      )}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-1.5 text-[10px] font-bold text-[#0F1E3D] transition hover:text-[#C9974A]"
-                    >
-                      <MapPin size={12} />
-                      Cómo llegar
-                    </a>
-
-                  </div>
+                  <a
+                    href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                      `${profesional.direccion}, ${profesional.ciudad}, ${profesional.provincia}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="shrink-0 text-[10px] font-bold text-[#A87B32] transition hover:text-[#C9974A]"
+                  >
+                    Cómo llegar
+                  </a>
                 </div>
-
               ))}
             </div>
 

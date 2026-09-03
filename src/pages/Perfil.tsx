@@ -79,95 +79,111 @@ const handleLogout = async () => {
 
 
   return (
-    <div
-            className={`min-h-screen bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2]  text-slate-800 ${animationClass}`}
-            
-    >
+    <div className={`min-h-screen bg-[#FBF6EC] text-slate-800 ${animationClass}`}>
 
-           <div className="min-h-screen overflow-y-auto pb-32 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']">
-      {/* Header Minimalista con tus colores */}
-      <div className="pt-8 pb-6 px-6 border-b border-slate-200 bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429]">
-        <div className="flex items-center gap-2">
+      {/* Header: banner elegante */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] px-5 pb-9 pt-7">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
+        <div className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full bg-[#C9974A]/10 blur-2xl" />
+
+        <div className="relative z-10 flex items-center gap-3">
           <button
             type="button"
             onClick={() => navigate("/home", { replace: true })}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white"
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 backdrop-blur transition active:scale-95"
             style={{ touchAction: "manipulation" }}
           >
             <ArrowLeft size={17} />
           </button>
-          <h1 className="flex-1 text-xl font-bold tracking-tight text-white flex items-center justify-between">
-            <span>Mi Perfil</span>
-          <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-[#C9974A]/20 text-[#C9974A] border border-[#C9974A]/30">
-            Socio Activo
-          </span>
-          </h1>
+
+          <div className="flex flex-1 items-center justify-between">
+            <div>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#A87B32]">
+                Auren
+              </span>
+              <h1 className="mt-1 font-serif text-2xl font-semibold tracking-tight text-[#0F1E3D]">
+                Mi perfil
+              </h1>
+            </div>
+
+            <span className="rounded-full bg-[#C9974A]/15 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-[#A87B32]">
+              Socio activo
+            </span>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="px-6 pt-6 space-y-6">
+      <main className="px-5 -mt-4">
 
-        {/* Tarjeta de Identidad Estilo ID Card */}
-        <div className="relative overflow-hidden rounded-3xl bg-white p-6 border border-slate-100 shadow-xl">
-          <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 w-32 h-32 bg-[#C9974A]/10 rounded-full blur-2xl pointer-events-none" />
+        {/* Tarjeta de identidad */}
+        <div className="relative overflow-hidden rounded-3xl border border-[#C9974A]/20 bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] p-5">
+          <div className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-[#C9974A]/10 blur-2xl" />
 
           <div className="flex items-center gap-4 relative z-10">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#C9974A] text-[#0F1E3D] font-black text-xl shadow-md">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-[#0F1E3D] text-[#C9974A] text-xl font-black shadow-md">
               {user?.photoURL ? (
                 <img src={user.photoURL} className="h-full w-full object-cover" alt="Perfil" />
               ) : (
                 user?.displayName?.charAt(0).toUpperCase() || "U"
               )}
             </div>
-            <div className="overflow-hidden">
-              <h2 className="text-base font-bold text-slate-900 truncate">{socio.nombre || "Usuario"}</h2>
-              <p className="text-xs text-slate-500 truncate mt-0.5">{user?.email}</p>
-              <div className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#C9974A] bg-[#C9974A]/10 px-2 py-0.5 rounded">
-                <IdCard size={12} /> DNI: {socio.dni || "Cargando..."}
+            <div className="min-w-0 overflow-hidden">
+              <h2 className="truncate text-base font-bold text-[#0F1E3D]">{socio.nombre || "Usuario"}</h2>
+              <p className="mt-0.5 truncate text-xs text-slate-500">{user?.email}</p>
+              <div className="mt-2 inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#A87B32]">
+                <IdCard size={12} className="text-[#C9974A]" /> DNI: {socio.dni || "Cargando..."}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Sección Datos */}
-        <div className="space-y-2">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 px-1">
+        {/* Datos */}
+        <div className="mt-7">
+          <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#A87B32] px-1">
             Información personal
           </p>
-          <div className="rounded-2xl bg-white border border-slate-100 shadow-sm divide-y divide-slate-100 overflow-hidden">
-            <div className="flex items-center justify-between p-4">
+          <div className="mt-2 divide-y divide-[#C9974A]/25">
+            <div className="flex items-center justify-between py-3.5">
               <div className="flex items-center gap-3">
-                <Mail size={16} className="text-[#C9974A]" />
-                <span className="text-sm text-slate-700 font-medium">Correo</span>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
+                  <Mail size={15} className="text-[#C9974A]" />
+                </span>
+                <span className="text-sm text-slate-600 font-medium">Correo</span>
               </div>
-              <span className="text-xs text-slate-500 font-medium">{user?.email}</span>
+              <span className="max-w-[50%] truncate text-xs text-slate-500">{user?.email}</span>
             </div>
-            <div className="flex items-center justify-between p-4">
+            <div className="flex items-center justify-between py-3.5">
               <div className="flex items-center gap-3">
-                <IdCard size={16} className="text-[#C9974A]" />
-                <span className="text-sm text-slate-700 font-medium">Documento</span>
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
+                  <IdCard size={15} className="text-[#C9974A]" />
+                </span>
+                <span className="text-sm text-slate-600 font-medium">Documento</span>
               </div>
-              <span className="text-xs text-slate-500 font-medium">{socio.dni || "No disponible"}</span>
+              <span className="text-xs text-slate-500">{socio.dni || "No disponible"}</span>
             </div>
           </div>
         </div>
 
-        {/* Sección Ajustes */}
-        <div className="space-y-2">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 px-1">
+        {/* Preferencias */}
+        <div className="mt-7">
+          <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#A87B32] px-1">
             Preferencias de cuenta
           </p>
-          <div className="rounded-2xl bg-white border border-slate-100 shadow-sm divide-y divide-slate-100 overflow-hidden">
-            <button className="flex w-full items-center justify-between p-4 text-left hover:bg-slate-50 transition">
+          <div className="mt-2 divide-y divide-[#C9974A]/25">
+            <button className="flex w-full items-center justify-between py-3.5 text-left transition active:opacity-70">
               <div className="flex items-center gap-3">
-                <Bell size={16} className="text-[#C9974A]" />
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
+                  <Bell size={15} className="text-[#C9974A]" />
+                </span>
                 <span className="text-sm text-slate-700 font-medium">Notificaciones</span>
               </div>
               <ChevronRight size={16} className="text-slate-400" />
             </button>
-            <button className="flex w-full items-center justify-between p-4 text-left hover:bg-slate-50 transition">
+            <button className="flex w-full items-center justify-between py-3.5 text-left transition active:opacity-70">
               <div className="flex items-center gap-3">
-                <Lock size={16} className="text-[#C9974A]" />
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
+                  <Lock size={15} className="text-[#C9974A]" />
+                </span>
                 <span className="text-sm text-slate-700 font-medium">Cambiar contraseña</span>
               </div>
               <ChevronRight size={16} className="text-slate-400" />
@@ -175,19 +191,18 @@ const handleLogout = async () => {
           </div>
         </div>
 
-        {/* Botón Salir */}
-        <div className="pt-2">
+        {/* Salir */}
+        <div className="mt-8">
           <button
             onClick={handleLogout}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl bg-red-50 border border-red-200 py-4 text-sm font-bold text-red-600 hover:bg-red-100 transition shadow-sm"
+            className="flex w-full items-center justify-center gap-2 rounded-full border border-red-200 bg-red-50 py-3.5 text-sm font-bold text-red-600 transition active:scale-[0.98]"
           >
             <LogOut size={16} />
             Cerrar sesión en este dispositivo
           </button>
         </div>
 
-      </div>
-      </div>
+      </main>
     </div>
   );
 }

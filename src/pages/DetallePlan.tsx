@@ -179,25 +179,26 @@ export default function DetallePlan() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2]">
       {/* ── Header fijo, edge-to-edge — ya no "flota" en el contenido ── */}
-      <header className="sticky top-0 z-20 bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] shadow-lg shadow-[#0F1E3D]/10">
-        <div className="mx-auto max-w-2xl px-4 pb-7 pt-6 sm:px-6">
-          <div className="flex items-center gap-2">
+      <header className="sticky top-0 z-20 bg-gradient-to-br from-[#FFFBF3] via-[#FDF5E4] to-[#F8ECD3] shadow-lg shadow-[#C9974A]/5">
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
+        <div className="mx-auto max-w-2xl px-5 pb-7 pt-6 sm:px-6">
+          <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={() => navigate("/home", { replace: true })}
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white"
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 backdrop-blur transition active:scale-95"
               style={{ touchAction: "manipulation" }}
             >
               <ArrowLeft size={17} />
             </button>
             <span className="h-px w-6 bg-[#C9974A]" />
-            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#C9974A]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-[#A87B32]">
               Tu cobertura
             </p>
           </div>
 
           <h1
-            className="mt-3 text-[1.9rem] leading-[1.1] text-white sm:text-[2.3rem]"
+            className="mt-3 text-[1.9rem] leading-[1.1] text-[#0F1E3D] sm:text-[2.3rem]"
             style={{ fontFamily: "'Fraunces', serif", fontWeight: 500 }}
           >
             {plan}
@@ -206,18 +207,18 @@ export default function DetallePlan() {
           <div className="mt-4 flex min-h-[18px] flex-wrap items-center gap-x-5 gap-y-2">
             {catalogo && (
               <>
-                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/70">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium text-[#0F1E3D]/70">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                   Plan activo
                 </span>
-                <span className="text-xs font-medium text-white/50">
+                <span className="text-xs font-medium text-[#0F1E3D]/50">
                   {catalogo.beneficios.length}{" "}
                   {catalogo.beneficios.length === 1
                     ? "beneficio incluido"
                     : "beneficios incluidos"}
                 </span>
                 {revalidando && (
-                  <span className="text-[11px] font-medium text-white/35">
+                  <span className="text-[11px] font-medium text-[#0F1E3D]/35">
                     Actualizando…
                   </span>
                 )}
@@ -228,7 +229,7 @@ export default function DetallePlan() {
 
         {/* Borde dentado pegado al header — se mueve con él al hacer sticky */}
         <div
-          className="h-3 bg-[#0A1429]"
+          className="h-3 bg-[#F5EAD2]"
           style={{ clipPath: ZIGZAG_CLIP_PATH }}
           aria-hidden="true"
         />
