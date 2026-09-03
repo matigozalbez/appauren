@@ -267,7 +267,7 @@ export default function Home({ openMenu }: HomeProps) {
             { label: "Inicio", icon: HomeIcon, key: "inicio" },
             { label: "Citas", icon: CalendarDays, key: "citas" },
             { label: "Servicios", icon: Stethoscope, key: "servicios" },
-            { label: "Tren", icon: Layers, key: "planes" },
+            { label: "Planes", icon: Layers, key: "planes" },
           ].map((tab) => (
             <button
               key={tab.key}
