@@ -267,7 +267,7 @@ export default function Home({ openMenu }: HomeProps) {
             { label: "Inicio", icon: HomeIcon, key: "inicio" },
             { label: "Citas", icon: CalendarDays, key: "citas" },
             { label: "Servicios", icon: Stethoscope, key: "servicios" },
-            { label: "Planes", icon: Layers, key: "planes" },
+            { label: "Tren", icon: Layers, key: "planes" },
           ].map((tab) => (
             <button
               key={tab.key}
@@ -438,7 +438,7 @@ export default function Home({ openMenu }: HomeProps) {
         <section className="mt-6 px-5">
           <div className="mb-3">
             <p className="text-[9px] font-bold uppercase tracking-[0.18em] text-[#A87B32]">
-              Hola
+              Tus planes
             </p>
           </div>
           <ListaPlanes planes={planes} loading={planesLoading} />
