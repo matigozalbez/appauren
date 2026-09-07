@@ -46,7 +46,7 @@ function App() {
 }, []);
 
 
-
+/*
 useEffect(() => {
   
   const check =
@@ -63,7 +63,7 @@ if (isStandalone === null) {
 if (!isStandalone) {
   return <InstalarApp />;
 }
-
+*/
 
 
 
