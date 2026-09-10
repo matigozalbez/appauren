@@ -254,13 +254,6 @@ export default function Citas() {
           <div className="divide-y divide-[#C9974A]/25">
             {citas.map((cita) => {
               const asignada = cita.estado === "asignado";
-              const conLugar = Boolean(cita.medicoDireccion || cita.clinicaDireccion);
-
-              const badgeTexto = asignada
-                ? "Asignado"
-                : cita.estado && cita.estado !== "pendiente"
-                  ? cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)
-                  : "Pendiente";
 
               return (
                 <div key={cita.id} className="flex items-start gap-3 py-4">
