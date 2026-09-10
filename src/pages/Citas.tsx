@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { ArrowLeft, CalendarDays, MapPin, RefreshCw } from "lucide-react";
+import { ArrowLeft, CalendarDays, FlaskConical, MapPin, RefreshCw } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 import { auth } from "../firebase";
@@ -18,6 +18,8 @@ interface Cita {
   beneficiarioDni: string;
   beneficiarioNombre: string;
 
+  tipo?: string;
+
   especialidad: string;
   ciudad: string;
   direccion: string;
@@ -29,6 +31,10 @@ interface Cita {
   medicoNombre?: string;
   medicoApellido?: string;
   medicoDireccion?: string;
+
+  clinicaId?: string;
+  clinicaNombre?: string;
+  clinicaDireccion?: string;
 
   fecha?: string;
   hora?: string;
@@ -123,14 +129,19 @@ export default function Citas() {
 
   const abrirGoogleMaps = (cita: Cita) => {
 
-  const direccion = cita.medicoDireccion || cita.direccion;
+  const direccion = cita.medicoDireccion || cita.clinicaDireccion || cita.direccion;
 
   if (!direccion) {
     return;
   }
 
+  // Si la dirección del médico o la clínica ya incluye ciudad/provincia (viene
+  // completa del backend), no le vuelvo a sumar la ciudad del turno, que
+  // correspondía al socio y hacía que Google Maps buscara en la ciudad
+  // equivocada.
+  const yaTieneCiudad = direccion.includes(",");
   const destino = encodeURIComponent(
-    `${direccion}, ${cita.ciudad}`
+    yaTieneCiudad ? direccion : `${direccion}, ${cita.ciudad}`
   );
 
   window.open(
@@ -243,6 +254,13 @@ export default function Citas() {
           <div className="divide-y divide-[#C9974A]/25">
             {citas.map((cita) => {
               const asignada = cita.estado === "asignado";
+              const conLugar = Boolean(cita.medicoDireccion || cita.clinicaDireccion);
+
+              const badgeTexto = asignada
+                ? "Asignado"
+                : cita.estado && cita.estado !== "pendiente"
+                  ? cita.estado.charAt(0).toUpperCase() + cita.estado.slice(1)
+                  : "Pendiente";
 
               return (
                 <div key={cita.id} className="flex items-start gap-3 py-4">
@@ -252,9 +270,17 @@ export default function Citas() {
 
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between gap-2">
-                      <p className="text-sm font-semibold text-[#0F1E3D]">
-                        {cita.especialidad}
-                      </p>
+                      <div className="flex items-center gap-1.5">
+                        <p className="text-sm font-semibold text-[#0F1E3D]">
+                          {cita.especialidad}
+                        </p>
+                        {cita.tipo === "estudio" && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-[#0F1E3D] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#C9974A]">
+                            <FlaskConical size={10} className="text-[#C9974A]" />
+                            Estudio
+                          </span>
+                        )}
+                      </div>
                       <span
                         className={
                           asignada
@@ -270,9 +296,15 @@ export default function Citas() {
                       <div className="mt-2.5 space-y-2">
                         <div className="flex items-center gap-2">
                           <span className="h-1 w-1 rounded-full bg-[#C9974A]" />
-                          <p className="text-xs text-slate-600">
-                            Dr. {cita.medicoNombre} {cita.medicoApellido}
-                          </p>
+                          {cita.clinicaNombre ? (
+                            <p className="text-xs text-slate-600">
+                              Clínica {cita.clinicaNombre}
+                            </p>
+                          ) : (
+                            <p className="text-xs text-slate-600">
+                              Dr. {cita.medicoNombre} {cita.medicoApellido}
+                            </p>
+                          )}
                         </div>
                         {(cita.fecha || cita.hora) && (
                           <div className="flex items-center gap-2">
