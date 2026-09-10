@@ -46,7 +46,7 @@ function App() {
 }, []);
 
 
-/*
+
 useEffect(() => {
   
   const check =
@@ -64,7 +64,7 @@ if (!isStandalone) {
   return <InstalarApp />;
 }
 
-*/
+
 
 
 const handleLogout = async () => {
