@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { IdCard, ShieldCheck, ArrowRight } from "lucide-react";
+import { IdCard, ShieldCheck, ArrowRight, ArrowLeft } from "lucide-react";
 import { auth } from "../firebase";
 
 import aurenIsotipo from "/horizontalazul.png";
@@ -45,6 +45,19 @@ export default function VincularDNI() {
     <div className="relative flex min-h-screen-safe flex-col justify-center overflow-hidden bg-[#FBF6EC] px-6 font-sans antialiased">
       {/* franja dorada superior */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
+
+      {/* Volver */}
+      <button
+        type="button"
+        onClick={() => {
+          sessionStorage.setItem("auren_volver_login", "1");
+          navigate("/");
+        }}
+        className="absolute left-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 transition active:scale-95"
+        aria-label="Volver"
+      >
+        <ArrowLeft size={17} />
+      </button>
 
       <div className="relative z-10 mx-auto w-full max-w-[400px] py-10">
 

@@ -78,9 +78,7 @@ const fetchNotificaciones = async () => {
     fetchNotificaciones();
 }, [isOpen]);
 
-    if (!isOpen) return null;
-
-const formatFecha = (fechaInput: any) => {
+    const formatFecha = (fechaInput: any) => {
     if (!fechaInput) return "";
 
     // Si viene como string de Go (ej: "2026-04-06T...") o ya es un objeto Date
@@ -98,16 +96,18 @@ const formatFecha = (fechaInput: any) => {
 };
 
     return (
-        <div className="fixed inset-0 z-50 bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] flex flex-col animate-slide-up">
+        <div className={`fixed inset-0 z-50 bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] flex flex-col overflow-hidden transition-transform duration-[520ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${isOpen ? "translate-x-0" : "translate-x-full"}`}>
+        {/* franja dorada superior */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
         {/* Header */}
-        <div className="flex items-center justify-between px-6 pt-8 pb-4 flex-shrink-0">
+        <div className="flex items-center justify-between px-6 pt-10 pb-4 flex-shrink-0">
             <h2 className="text-[#0F1E3D] text-lg font-bold flex items-center gap-2">
             <Bell size={20} className="text-[#C9974A]" />
             Notificaciones
             </h2>
             <button
             onClick={onClose}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm active:scale-95 transition"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 active:scale-95 transition"
             aria-label="Cerrar"
             >
             <X size={18} className="text-[#0F1E3D]" />

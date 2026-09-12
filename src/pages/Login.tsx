@@ -44,18 +44,25 @@ const [showSplash] = useState(
 
       if (currentUser) {
         try {
-          const idToken = await currentUser.getIdToken();
+          // Si el usuario volvió a propósito desde /vincular-dni o /recuperar-password
+          // (o primer ingreso) con el botón "Volver", lo dejamos en el login en vez
+          // de auto-redirigirlo de nuevo.
+          if (sessionStorage.getItem("auren_volver_login") === "1") {
+            sessionStorage.removeItem("auren_volver_login");
+          } else {
+            const idToken = await currentUser.getIdToken();
 
-          const res = await fetch(`${API_URL}/api/verificar-vinculacion`, {
-            headers: { Authorization: `Bearer ${idToken}` },
-          });
+            const res = await fetch(`${API_URL}/api/verificar-vinculacion`, {
+              headers: { Authorization: `Bearer ${idToken}` },
+            });
 
-          const data = await res.json();
+            const data = await res.json();
 
-          navigate(
-            data.vinculado ? "/home" : "/vincular-dni",
-            { replace: true }
-          );
+            navigate(
+              data.vinculado ? "/home" : "/vincular-dni",
+              { replace: true }
+            );
+          }
         } catch (err) {
           console.error("Error verificando sesión existente:", err);
         }

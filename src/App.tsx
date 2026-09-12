@@ -19,6 +19,7 @@ import InstalarApp from './pages/AppGuard'
 import DetallePlan from './pages/DetallePlan'
 import RecuperarPassword from './pages/RecuperarPassword'
 import SolicitudTurno from './pages/SolicitudTurno'
+import SolicitudEstudio from './pages/SolicitudEstudio'
 import CartillaMedica from './pages/CartillaMedica'
 import Citas from './pages/Citas'
 import WhatsAppFloat from './components/WhatsAppFloat'
@@ -66,7 +67,6 @@ if (!isStandalone) {
 
 
 
-
 const handleLogout = async () => {
   // 1. Borramos las keys fijas que ya tenías
   localStorage.removeItem("auren_dni");
@@ -106,6 +106,7 @@ const handleLogout = async () => {
         <Route path="/citas" element={<PrivateRoute><Citas/></PrivateRoute>} />
         <Route path="/cartilla" element={<PrivateRoute><CartillaMedica/></PrivateRoute>} />
         <Route path="/turnos" element={<PrivateRoute><SolicitudTurno/></PrivateRoute>} />
+        <Route path="/estudios" element={<PrivateRoute><SolicitudEstudio/></PrivateRoute>} />
         <Route path="/planes/:plan" element={<PrivateRoute><DetallePlan/></PrivateRoute>} />
         <Route path="/terminos" element={<TerminosCondiciones />} />
         <Route path="/vincular-dni" element={<VincularDNI />} />

@@ -35,7 +35,9 @@ function leerCacheCiudades(q: string): CiudadResult[] | null {
     const entrada = data[claveCache(q)];
     if (!entrada || !Array.isArray(entrada.items)) return null;
     if (Date.now() - entrada.ts > CACHE_TTL_MS) return null;
+
     return entrada.items;
+
   } catch {
     return null;
   }
@@ -56,6 +58,8 @@ function guardarCacheCiudades(q: string, items: CiudadResult[]) {
   }
 }
 
+
+
 export default function CiudadAutocomplete({ value, onChange, placeholder }: Props) {
   const [sugerencias, setSugerencias] = useState<CiudadResult[]>([]);
   const [mostrar, setMostrar] = useState(false);
@@ -63,6 +67,8 @@ export default function CiudadAutocomplete({ value, onChange, placeholder }: Pro
   const [sinResultados, setSinResultados] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const contenedorRef = useRef<HTMLDivElement>(null);
+
+
 
   const buscar = async (q: string) => {
     const cacheadas = leerCacheCiudades(q);
@@ -149,6 +155,9 @@ export default function CiudadAutocomplete({ value, onChange, placeholder }: Pro
 
   const mostrarDropdown =
     mostrar && (sugerencias.length > 0 || buscando || sinResultados);
+
+
+
 
   return (
     <div ref={contenedorRef} className="relative">

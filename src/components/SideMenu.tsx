@@ -1,10 +1,7 @@
 import {
   X,
   Home,
-  Shield,
   IdCard,
-  Tag,
-  Search,
   Bell,
   HelpCircle,
   LogOut,
@@ -35,15 +32,16 @@ export default function SideMenu({ isOpen, onClose, onLogout }: Props) {
   const [user] = useAuthState(auth);
   const [socio, setNombreSocio] = useState("")
 
-  // Obtenemos el nombre y apellido de Firebase (o un fallback por defecto)
+  // Obtenemos el nombre de Firebase (o un fallback por defecto)
   const displayName = socio;
 
   const go = (path: string) => {
     onClose();
-    navigate(path, {replace: true});
+    navigate(path, { replace: true });
   };
 
    useEffect(() => {
+    if (!isOpen) return;
     const nombreGuardado = localStorage.getItem("nombre_socio");
     if (nombreGuardado) {
       try {
@@ -58,120 +56,113 @@ export default function SideMenu({ isOpen, onClose, onLogout }: Props) {
 
   const items: MenuItem[] = [
     { icon: <Home size={19} />, label: "Inicio", onClick: () => go("/home") },
-    { icon: <Shield size={19} />, label: "Coberturas", onClick: () => go("/coberturas") },
+    { icon: <UserIcon size={19} />, label: "Perfil", onClick: () => go("/perfil") },
     { icon: <CalendarDays size={19} />, label: "Citas", onClick: () => go("/citas") },
     { icon: <IdCard size={19} />, label: "Credencial", onClick: () => go("/credencial") },
-    { icon: <Tag size={19} />, label: "Promociones", onClick: () => go("/promociones") },
-    { icon: <Search size={19} />, label: "Buscar Medicamentos", onClick: () => go("/medicamentos") },
-    { icon: <Bell size={19} />, label: "Notificaciones", onClick: () => {} },
+    {
+      icon: <Bell size={19} />,
+      label: "Notificaciones",
+      onClick: () => {
+        onClose();
+        localStorage.setItem("auren_abrir_notis", "1");
+        navigate("/home", { replace: true });
+      },
+    },
     { icon: <FileText size={19} />, label: "Legales", onClick: () => go("/legales") },
   ];
 
   return (
     <div
-      className={`fixed  inset-0 z-[70] transition-opacity duration-300  ${
-        isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+      className={`fixed inset-0 z-[70] flex flex-col overflow-hidden bg-gradient-to-b from-[#FDFBF7] via-[#FBF6EC] to-[#F5EAD2] transition-transform duration-[520ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
+        isOpen ? "translate-x-0" : "-translate-x-full"
       }`}
     >
-      <div className="absolute inset-0 bg-black/40" onClick={onClose} />
+      {/* franja dorada superior */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
 
-      <div
-        className={`absolute top-0 left-0 h-full w-[85%] max-w-sm
-          bg-[#FDFBF7] shadow-2xl transition-transform duration-300 ease-out
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          flex flex-col overflow-y-auto [&::-webkit-scrollbar]:hidden`}
-      >
-        {/* Header Superior con Perfil (Estilo la referencia pero con colores Auren) */}
-        <div className="relative bg-gradient-to-br from-[#0F1E3D] via-[#152953] to-[#0A1429] px-6 pt-10 pb-6 text-white">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-white/70 hover:text-white transition"
-            aria-label="Cerrar menú"
-          >
-            <X size={22} />
-          </button>
-
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-full bg-white /20 border-2 border-[#C9974A] flex items-center justify-center text-[#C9974A] shadow-inner overflow-hidden">
-              {user?.photoURL ? (
-                <img src={user.photoURL} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <UserIcon size={28} />
-              )}
-            </div>
-            <div className="flex-1 min-w-0">
-              <span className="text-[#C9974A] text-[10px] font-bold uppercase tracking-widest block">
-                Mi Cuenta
-              </span>
-              <h2 className="text-base font-bold truncate tracking-wide text-white">
-                {displayName}
-              </h2>
-            </div>
+      {/* Header */}
+      <div className="flex items-center justify-between px-6 pt-10 pb-5">
+        <div className="flex items-center gap-3.5">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[#C9974A] bg-white text-[#C9974A] shadow-inner">
+            {user?.photoURL ? (
+              <img src={user.photoURL} alt="Avatar" className="h-full w-full object-cover" />
+            ) : (
+              <UserIcon size={22} />
+            )}
+          </div>
+          <div className="min-w-0">
+            <span className="block text-[10px] font-bold uppercase tracking-widest text-[#A87B32]">
+              Mi Cuenta
+            </span>
+            <h2 className="truncate text-base font-bold tracking-wide text-[#0F1E3D]">
+              {displayName}
+            </h2>
           </div>
         </div>
 
-        {/* Línea dorada fina */}
-        <div className="h-px bg-gradient-to-r from-transparent via-[#C9974A]/50 to-transparent mx-6 my-4" />
+        <button
+          onClick={onClose}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 transition active:scale-95"
+          aria-label="Cerrar menú"
+        >
+          <X size={20} />
+        </button>
+      </div>
 
-        {/* Items del Menú */}
-        <div className="flex-1 px-4 space-y-1.5">
-          {items.map((item) => (
-            <button
-              key={item.label}
-              onClick={item.onClick}
-              className="w-full flex items-center justify-between px-4 py-3.5 rounded-2xl
-                text-[#0F1E3D] bg-slate-50 hover:bg-[#C9974A]/10 active:scale-[0.98] transition group"
-            >
-              <div className="flex items-center gap-3.5">
-                <span className="text-[#C9974A]">{item.icon}</span>
-                <span className="text-sm font-semibold">{item.label}</span>
-              </div>
-              <ChevronRight
-                size={15}
-                className="text-[#0F1E3D]/20 group-hover:text-[#C9974A] transition"
-              />
-            </button>
-          ))}
-        </div>
-
-        {/* Sección Inferior: Ayuda y Cerrar Sesión */}
-        <div className="px-4 pb-8 pt-4 space-y-2">
-          <div className="h-px bg-slate-100 mb-2" />
-
-          {/* Ayuda reubicada abajo */}
+      {/* Items del menú */}
+      <div className="flex-1 overflow-y-auto px-6 [&::-webkit-scrollbar]:hidden">
+        {items.map((item) => (
           <button
-            onClick={() => {
-              onClose();
-              // poné tu lógica de ayuda acá si la hay
-            }}
-            className="w-full flex items-center justify-between px-4 py-3 rounded-2xl
-              text-[#0F1E3D] bg-slate-50 hover:bg-[#C9974A]/10 transition group"
+            key={item.label}
+            onClick={item.onClick}
+            className="flex w-full items-center justify-between border-b border-[#0F1E3D]/8 py-4 text-left transition active:opacity-70"
           >
             <div className="flex items-center gap-3.5">
-              <span className="text-[#C9974A]">
-                <HelpCircle size={19} />
-              </span>
-              <span className="text-sm font-semibold">Ayuda</span>
+              <span className="text-[#C9974A]">{item.icon}</span>
+              <span className="text-sm font-semibold text-[#0F1E3D]">{item.label}</span>
             </div>
             <ChevronRight
               size={15}
-              className="text-[#0F1E3D]/20 group-hover:text-[#C9974A] transition"
+              className="text-[#0F1E3D]/20"
             />
           </button>
+        ))}
+      </div>
 
-          {/* Cerrar sesión */}
-          <button
-            onClick={() => {
-              onClose();
-              onLogout();
-            }}
-            className="w-full flex items-center gap-3.5 px-4 py-3.5 rounded-2xl
-              text-red-500 bg-red-50 hover:bg-red-100 transition"
-          >
+      {/* Sección inferior */}
+      <div className="px-6 pb-8 pt-3">
+        <div className="mb-2 h-px bg-[#0F1E3D]/8" />
+
+        {/* Ayuda */}
+        <button
+          onClick={() => {
+            onClose();
+            window.open("https://wa.me/549342XXXXXXX", "_blank", "noopener,noreferrer");
+          }}
+          className="flex w-full items-center justify-between border-b border-[#0F1E3D]/8 py-4 text-left transition active:opacity-70"
+        >
+          <div className="flex items-center gap-3.5">
+            <span className="text-[#C9974A]">
+              <HelpCircle size={19} />
+            </span>
+            <span className="text-sm font-semibold text-[#0F1E3D]">Ayuda</span>
+          </div>
+          <ChevronRight size={15} className="text-[#0F1E3D]/20" />
+        </button>
+
+        {/* Cerrar sesión */}
+        <button
+          onClick={() => {
+            onClose();
+            onLogout();
+          }}
+          className="flex w-full items-center gap-3.5 py-4 text-left transition active:opacity-70"
+        >
+          <span className="text-red-500">
             <LogOut size={19} />
-            <span className="text-sm font-semibold">Cerrar sesión</span>
-          </button>
-        </div>
+          </span>
+          <span className="text-sm font-semibold text-red-500">Cerrar sesión</span>
+        </button>
       </div>
     </div>
   );

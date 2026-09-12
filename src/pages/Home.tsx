@@ -13,6 +13,7 @@ import {
   Home as HomeIcon,
   Layers,
   CalendarDays,
+  FlaskConical,
 } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
@@ -212,6 +213,13 @@ export default function Home({ openMenu }: HomeProps) {
     });
   }, []);
 
+  useEffect(() => {
+    if (localStorage.getItem("auren_abrir_notis") === "1") {
+      localStorage.removeItem("auren_abrir_notis");
+      setNotisOpen(true);
+    }
+  }, []);
+
   return (
     <div
       className={`min-h-screen bg-[#FBF6EC] text-slate-800 pb-16 ${animationClass}`}
@@ -294,7 +302,7 @@ export default function Home({ openMenu }: HomeProps) {
         <section className="mt-5 px-5">
           <div className="mb-4">
             <p className="text-sm font-light leading-relaxed text-slate-600">
-              Gestioná tu cobertura, pedí turnos, consultá tu cartilla y accedé a
+              Gestioná tu cobertura, pedí turnos y estudios, y accedé a
               descuentos y beneficios de <span className="font-medium text-[#0F1E3D]">Auren</span> desde un solo lugar.
             </p>
           </div>
@@ -311,20 +319,6 @@ export default function Home({ openMenu }: HomeProps) {
               <span className="flex-1">
                 <span className="block text-[10px] font-medium uppercase tracking-wide text-slate-400">Código de socio</span>
                 <span className="block text-sm font-semibold text-[#0F1E3D]">Credencial digital</span>
-              </span>
-              <ChevronRight size={16} className="text-slate-400" />
-            </button>
-
-            <button
-              onClick={() => navigate("/cartilla", { replace: true })}
-              className="flex w-full items-center gap-3 py-3.5 text-left transition active:opacity-70"
-            >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
-                <Stethoscope size={17} className="text-[#C9974A]" />
-              </span>
-              <span className="flex-1">
-                <span className="block text-[10px] font-medium uppercase tracking-wide text-slate-400">Cartilla</span>
-                <span className="block text-sm font-semibold text-[#0F1E3D]">Especialistas adheridos</span>
               </span>
               <ChevronRight size={16} className="text-slate-400" />
             </button>
@@ -404,20 +398,6 @@ export default function Home({ openMenu }: HomeProps) {
 
           <div className="divide-y divide-[#0F1E3D]/8 px-5">
             <button
-              onClick={() => navigate("/cartilla", { replace: true })}
-              className="flex w-full items-center gap-3 py-3.5 text-left transition active:opacity-70"
-            >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
-                <Stethoscope size={18} className="text-[#C9974A]" />
-              </span>
-              <span className="flex-1">
-                <span className="block text-[10px] font-medium uppercase tracking-wide text-slate-400">Médica</span>
-                <span className="block text-sm font-semibold text-[#0F1E3D]">Cartilla</span>
-              </span>
-              <ChevronRight size={16} className="text-slate-400" />
-            </button>
-
-            <button
               onClick={() => navigate("/turnos", { replace: true })}
               className="flex w-full items-center gap-3 py-3.5 text-left transition active:opacity-70"
             >
@@ -425,8 +405,22 @@ export default function Home({ openMenu }: HomeProps) {
                 <CalendarArrowDown size={18} className="text-[#C9974A]" />
               </span>
               <span className="flex-1">
-                <span className="block text-[10px] font-medium uppercase tracking-wide text-slate-400">Agenda</span>
-                <span className="block text-sm font-semibold text-[#0F1E3D]">Turnos</span>
+                <span className="block text-[10px] font-medium uppercase tracking-wide text-slate-400">Médico</span>
+                <span className="block text-sm font-semibold text-[#0F1E3D]">Turnos médicos</span>
+              </span>
+              <ChevronRight size={16} className="text-slate-400" />
+            </button>
+
+            <button
+              onClick={() => navigate("/estudios", { replace: true })}
+              className="flex w-full items-center gap-3 py-3.5 text-left transition active:opacity-70"
+            >
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
+                <FlaskConical size={18} className="text-[#C9974A]" />
+              </span>
+              <span className="flex-1">
+                <span className="block text-[10px] font-medium uppercase tracking-wide text-slate-400">Laboratorios</span>
+                <span className="block text-sm font-semibold text-[#0F1E3D]">Estudios médicos</span>
               </span>
               <ChevronRight size={16} className="text-slate-400" />
             </button>

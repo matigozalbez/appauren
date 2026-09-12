@@ -2,11 +2,10 @@ import { useEffect, useState } from "react";
 import {
   AlertCircle,
   ArrowLeft,
+  Camera,
   ChevronDown,
+  FlaskConical,
   MapPin,
-  Stethoscope,
-  UserSearch,
-  Navigation,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
@@ -15,30 +14,27 @@ import CiudadAutocomplete from "../components/CiudadAutocomplete";
 import SolicitudEnviadaModal from "../components/SolicitudEnviadaModal";
 const API_URL = import.meta.env.VITE_API_URL_LINK;
 
-const especialidades = [
-  "Clínica Médica",
-  "Cardiología",
-  "Dermatología",
-  "Ginecología",
-  "Pediatría",
-  "Traumatología",
-  "Oftalmología",
-  "Urología",
-  "Neurología",
-  "Nutrición",
-  "Odontología",
-  "Otorrinolaringología",
+const tiposEstudio = [
+  "Laboratorio",
+  "Radiografía",
+  "Ecografía",
+  "Tomografía",
+  "Densitometría",
+  "Otro",
 ];
 
-export default function SolicitudTurno() {
+export default function SolicitudEstudio() {
   const navigate = useNavigate();
 
-  const [especialidad, setEspecialidad] = useState("");
+  const [tipoEstudio, setTipoEstudio] = useState("");
+  const [otroEstudio, setOtroEstudio] = useState("");
   const [ciudad, setCiudad] = useState("");
   const [direccion, setDireccion] = useState("");
   const [motivo, setMotivo] = useState("");
-  const [modo, setModo] = useState<"geolocalizado" | "profesional">("geolocalizado");
-  const [nombreProfesionalSugerido, setNombreProfesionalSugerido] = useState("");
+  const [archivoImagen, setArchivoImagen] = useState<File | null>(null);
+  const [imagenPreview, setImagenPreview] = useState("");
+  const [imagenUrl, setImagenUrl] = useState("");
+  const [subiendoImagen, setSubiendoImagen] = useState(false);
   const [enviando, setEnviando] = useState(false);
   const [modalExito, setModalExito] = useState(false);
   const [cupo, setCupo] = useState<{
@@ -55,7 +51,7 @@ export default function SolicitudTurno() {
         if (!user) return;
         const idToken = await user.getIdToken();
         const res = await fetch(
-          `${API_URL}/api/mis-turnos/cupo?tipo=consulta`,
+          `${API_URL}/api/mis-turnos/cupo?tipo=estudio`,
           {
             headers: { Authorization: `Bearer ${idToken}` },
           }
@@ -67,7 +63,7 @@ export default function SolicitudTurno() {
           setCupo({ usado: 0, mensual: 1, habilitado: true });
         }
       } catch (error) {
-        console.error("Error consultando cupo de turnos:", error);
+        console.error("Error consultando cupo de estudios:", error);
         setCupo({ usado: 0, mensual: 1, habilitado: true });
       }
     };
@@ -76,14 +72,67 @@ export default function SolicitudTurno() {
 
   const sinCupo = cupo !== null && !cupo.habilitado;
 
+  const especialidadFinal =
+    tipoEstudio === "Otro" ? otroEstudio.trim() : tipoEstudio;
+
   const puedeSolicitar =
     !enviando &&
     !sinCupo &&
+    !subiendoImagen &&
     ciudad &&
-    especialidad &&
-    (modo === "geolocalizado" ? direccion : nombreProfesionalSugerido);
+    especialidadFinal &&
+    direccion &&
+    imagenUrl;
 
-  const solicitarTurno = async () => {
+  const manejarArchivo = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setArchivoImagen(file);
+    setImagenUrl("");
+    setImagenPreview(URL.createObjectURL(file));
+    e.target.value = "";
+  };
+
+  const subirImagen = async () => {
+    if (!archivoImagen) return;
+    const user = auth.currentUser;
+    if (!user) {
+      alert("Tenés que iniciar sesión");
+      return;
+    }
+    setSubiendoImagen(true);
+    try {
+      const idToken = await user.getIdToken();
+      const formData = new FormData();
+      formData.append("file", archivoImagen);
+      const res = await fetch(`${API_URL}/api/estudios/subir-imagen`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${idToken}` },
+        body: formData,
+      });
+      if (!res.ok) {
+        const text = await res.text();
+        let mensaje = "No se pudo subir la imagen";
+        try {
+          const parsed = JSON.parse(text);
+          if (parsed.mensaje) mensaje = parsed.mensaje;
+        } catch {
+          if (text) mensaje = text;
+        }
+        alert(mensaje);
+        return;
+      }
+      const data = await res.json();
+      setImagenUrl(data.url);
+    } catch (error) {
+      console.error("Error subiendo imagen:", error);
+      alert("Error de conexión al subir la imagen");
+    } finally {
+      setSubiendoImagen(false);
+    }
+  };
+
+  const solicitarEstudio = async () => {
     if (!puedeSolicitar) return;
 
     try {
@@ -99,7 +148,7 @@ export default function SolicitudTurno() {
       const idToken = await user.getIdToken();
 
       // GUARDAMOS LA DIRECCION SOLO AL ENVIAR (1 write intencional, no al buscar).
-      if (modo === "geolocalizado" && direccion.trim()) {
+      if (direccion.trim()) {
         try {
           await fetch(`${API_URL}/api/direcciones/guardar`, {
             method: "POST",
@@ -114,26 +163,23 @@ export default function SolicitudTurno() {
         }
       }
 
-      const response = await fetch(
-        `${API_URL}/api/crear-turno`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${idToken}`,
-          },
-          body: JSON.stringify({
-            especialidad,
-            ciudad,
-            direccion,
-            motivo,
-            modo,
-            nombreProfesionalSugerido,
-            tipo: "consulta",
-            imagenUrl: "",
-          }),
-        }
-      );
+      const response = await fetch(`${API_URL}/api/crear-turno`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({
+          especialidad: especialidadFinal,
+          ciudad,
+          direccion,
+          motivo,
+          modo: "geolocalizado",
+          nombreProfesionalSugerido: "",
+          tipo: "estudio",
+          imagenUrl,
+        }),
+      });
 
       if (!response.ok) {
         const text = await response.text();
@@ -148,16 +194,16 @@ export default function SolicitudTurno() {
           // no es JSON, usamos el texto tal cual
           if (text) mensaje = text;
         }
-        console.error("Error creando turno:", response.status, text);
+        console.error("Error creando estudio:", response.status, text);
         alert(mensaje);
         return;
       }
 
       const data = await response.json();
-      console.log("Turno creado:", data);
+      console.log("Estudio creado:", data);
       setModalExito(true);
     } catch (error) {
-      console.error("Error solicitando turno:", error);
+      console.error("Error solicitando estudio:", error);
       alert("Error de conexión");
     } finally {
       setEnviando(false);
@@ -186,13 +232,13 @@ export default function SolicitudTurno() {
               Salud
             </span>
             <h1 className="mt-1 font-serif text-2xl font-semibold tracking-tight text-[#0F1E3D]">
-              Solicitud de turno
+              Solicitud de estudio
             </h1>
           </div>
         </div>
 
         <p className="relative z-10 mt-3 text-xs font-light leading-relaxed text-slate-500">
-          Contanos qué atención necesitás.
+          Contanos qué estudio necesitás.
         </p>
       </section>
 
@@ -209,11 +255,11 @@ export default function SolicitudTurno() {
             <div className="flex items-center gap-2">
               <AlertCircle size={16} className="text-red-600" />
               <p className="text-sm font-bold text-red-700">
-                Ya usaste tu turno de este mes
+                Ya usaste tu estudio de este mes
               </p>
             </div>
             <p className="mt-1.5 text-xs leading-relaxed text-red-600">
-              Tu plan incluye 1 turno por mes. Volvé a tener disponibilidad el{" "}
+              Tu plan incluye 1 estudio por mes. Volvé a tener disponibilidad el{" "}
               {cupo?.proximoMes ? `día ${cupo.proximoMes}` : "primer día del próximo mes"}.
             </p>
             <button
@@ -229,23 +275,23 @@ export default function SolicitudTurno() {
         {cupo !== null && !sinCupo && (
           <>
 
-        {/* Especialidad */}
+        {/* Tipo de estudio */}
         <section>
           <div className="mb-2 flex items-center gap-2">
-            <Stethoscope size={15} className="text-[#C9974A]" />
+            <FlaskConical size={15} className="text-[#C9974A]" />
             <label className="text-xs font-bold text-[#0F1E3D]">
-              Especialidad
+              Tipo de estudio
             </label>
           </div>
 
           <div className="relative">
             <select
-              value={especialidad}
-              onChange={(e) => setEspecialidad(e.target.value)}
+              value={tipoEstudio}
+              onChange={(e) => setTipoEstudio(e.target.value)}
               className="w-full appearance-none rounded-2xl border border-[#C9974A]/30 bg-white px-4 py-3.5 pr-10 text-sm text-slate-700 shadow-sm outline-none focus:border-[#C9974A]"
             >
-              <option value="">Seleccioná una especialidad</option>
-              {especialidades.map((item) => (
+              <option value="">Seleccioná el estudio</option>
+              {tiposEstudio.map((item) => (
                 <option key={item} value={item}>
                   {item}
                 </option>
@@ -256,6 +302,16 @@ export default function SolicitudTurno() {
               className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-[#A87B32]"
             />
           </div>
+
+          {tipoEstudio === "Otro" && (
+            <input
+              type="text"
+              value={otroEstudio}
+              onChange={(e) => setOtroEstudio(e.target.value)}
+              placeholder="Escribí qué estudio necesitás"
+              className="mt-3 w-full rounded-2xl border border-[#C9974A]/30 bg-white px-4 py-3.5 text-sm text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#C9974A]"
+            />
+          )}
         </section>
 
         {/* Ciudad */}
@@ -274,103 +330,82 @@ export default function SolicitudTurno() {
           />
         </section>
 
+        {/* Dirección */}
         <section className="mt-6">
           <label className="mb-2 block text-xs font-bold text-[#0F1E3D]">
-            ¿Cómo querés que busquemos tu turno?
+            Dirección donde te encontrás
           </label>
 
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => setModo("geolocalizado")}
-              className={`flex flex-col items-center gap-1.5 rounded-2xl border-2 px-3 py-3.5 text-center transition ${
-                modo === "geolocalizado"
-                  ? "border-[#0F1E3D] bg-[#0F1E3D]/5"
-                  : "border-[#C9974A]/20 bg-white"
-              }`}
-            >
-              <Navigation
-                size={18}
-                className={modo === "geolocalizado" ? "text-[#0F1E3D]" : "text-slate-400"}
-              />
-              <span className="text-xs font-bold text-[#0F1E3D]">
-                Cerca mío
-              </span>
-              <span className="text-[10px] leading-tight text-slate-400">
-                Te asignamos el más cercano
-              </span>
-            </button>
+          <DireccionAutocomplete
+            value={direccion}
+            onChange={setDireccion}
+            placeholder="Ej. San Martín 1234"
+            ciudad={ciudad}
+          />
 
-            <button
-              type="button"
-              onClick={() => setModo("profesional")}
-              className={`flex flex-col items-center gap-1.5 rounded-2xl border-2 px-3 py-3.5 text-center transition ${
-                modo === "profesional"
-                  ? "border-[#0F1E3D] bg-[#0F1E3D]/5"
-                  : "border-[#C9974A]/20 bg-white"
-              }`}
-            >
-              <UserSearch
-                size={18}
-                className={modo === "profesional" ? "text-[#0F1E3D]" : "text-slate-400"}
-              />
-              <span className="text-xs font-bold text-[#0F1E3D]">
-                Profesional puntual
-              </span>
-              <span className="text-[10px] leading-tight text-slate-400">
-                Ya sé con quién quiero ir
-              </span>
-            </button>
-          </div>
+          <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
+            Usaremos esta dirección para derivarte a una clínica cercana.
+          </p>
         </section>
 
-        {modo === "profesional" ? (
-          <section className="mt-6">
-            <label className="mb-2 block text-xs font-bold text-[#0F1E3D]">
-              Nombre del profesional
-            </label>
-
-            <input
-              type="text"
-              value={nombreProfesionalSugerido}
-              onChange={(e) => setNombreProfesionalSugerido(e.target.value)}
-              placeholder="Ej. Dr. Gómez"
-              className="w-full rounded-2xl border border-[#C9974A]/30 bg-white px-4 py-3.5 text-sm text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#C9974A]"
-            />
-
-            <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
-              Vamos a confirmar disponibilidad con este profesional.
-            </p>
-          </section>
-        ) : (
-          <section className="mt-6">
-            <label className="mb-2 block text-xs font-bold text-[#0F1E3D]">
-              Dirección donde te encontrás
-            </label>
-
-            <DireccionAutocomplete
-              value={direccion}
-              onChange={setDireccion}
-              placeholder="Ej. San Martín 1234"
-              ciudad={ciudad}
-            />
-
-            <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
-              Usaremos esta dirección para buscar un profesional cercano y asignarte el turno.
-            </p>
-          </section>
-        )}
-
-        {/* Motivo */}
+        {/* Foto del estudio */}
         <section className="mt-6">
           <label className="mb-2 block text-xs font-bold text-[#0F1E3D]">
-            Motivo de la consulta <span className="font-normal text-slate-400">(opcional)</span>
+            Foto del estudio
+          </label>
+
+          <label className="flex cursor-pointer flex-col items-center gap-2 rounded-2xl border-2 border-dashed border-[#C9974A]/40 bg-white px-4 py-6 text-center transition active:scale-[0.98]">
+            <Camera size={22} className="text-[#A87B32]" />
+            <span className="text-xs font-bold text-[#0F1E3D]">
+              Sacá una foto con tu cámara
+            </span>
+            <span className="text-[10px] leading-tight text-slate-400">
+              Orden del estudio, receta o indicación médica (PNG, JPG o WebP · máx. 5 MB)
+            </span>
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              onChange={manejarArchivo}
+              className="hidden"
+            />
+          </label>
+
+          {imagenPreview && (
+            <img
+              src={imagenPreview}
+              alt="Foto del estudio"
+              className="mt-3 max-h-56 w-full rounded-2xl border border-[#C9974A]/25 object-cover"
+            />
+          )}
+
+          {imagenUrl && (
+            <p className="mt-2 text-[11px] font-bold text-emerald-600">
+              Foto subida correctamente ✓
+            </p>
+          )}
+
+          <button
+            type="button"
+            disabled={!archivoImagen || subiendoImagen || !!imagenUrl}
+            onClick={subirImagen}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-[#0F1E3D] bg-white py-3 text-xs font-semibold uppercase tracking-widest text-[#0F1E3D] transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <Camera size={15} />
+            {subiendoImagen ? "Subiendo..." : imagenUrl ? "Foto subida" : "Subir foto"}
+          </button>
+        </section>
+
+        {/* Observaciones */}
+        <section className="mt-6">
+          <label className="mb-2 block text-xs font-bold text-[#0F1E3D]">
+            Observaciones <span className="font-normal text-slate-400">(opcional)</span>
           </label>
 
           <textarea
             value={motivo}
             onChange={(e) => setMotivo(e.target.value)}
-            placeholder="Contanos brevemente qué necesitás..."
+            placeholder="Contanos cualquier dato del estudio que quieras compartir..."
             rows={4}
             className="w-full resize-none rounded-2xl border border-[#C9974A]/30 bg-white px-4 py-3.5 text-sm text-slate-700 shadow-sm outline-none placeholder:text-slate-400 focus:border-[#C9974A]"
           />
@@ -380,20 +415,20 @@ export default function SolicitudTurno() {
         <button
           type="button"
           disabled={!puedeSolicitar}
-          onClick={solicitarTurno}
+          onClick={solicitarEstudio}
           className="mt-7 flex w-full items-center justify-center gap-2 rounded-full bg-[#0F1E3D] py-4 text-xs font-semibold uppercase tracking-widest text-white shadow-[0_10px_24px_rgba(15,30,61,0.25)] transition hover:bg-[#152953] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-40"
         >
           {sinCupo
             ? "Cupo del mes agotado"
             : enviando
               ? "Enviando solicitud..."
-              : "Solicitar turno"}
+              : "Solicitar estudio"}
         </button>
 
         <p className="mt-3 text-center text-[10px] leading-relaxed text-slate-400">
           Tu solicitud será revisada por nuestro equipo.
           <br />
-          Nosotros nos encargaremos de asignarte el profesional, día y horario.
+          Nosotros nos encargaremos de asignarte la clínica.
         </p>
 
           </>
@@ -403,7 +438,7 @@ export default function SolicitudTurno() {
 
       <SolicitudEnviadaModal
         isOpen={modalExito}
-        tipo="turno"
+        tipo="estudio"
         onClose={() => setModalExito(false)}
       />
 
