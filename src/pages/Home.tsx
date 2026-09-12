@@ -108,6 +108,8 @@ export default function Home({ openMenu }: HomeProps) {
     return cached ? JSON.parse(cached) : [];
   });
 
+  const [estadoSocio, setEstadoSocio] = useState("");
+
   const [planesLoading, setPlanesLoading] = useState(() => {
     const cached = localStorage.getItem("auren_planes");
     return !cached;
@@ -188,6 +190,7 @@ export default function Home({ openMenu }: HomeProps) {
 
           setPlanes(data.planes || []);
           SetnombreSocio(data.nombre)
+          setEstadoSocio(data.estado || "");
 
           localStorage.setItem(
             "auren_planes",
@@ -219,6 +222,35 @@ export default function Home({ openMenu }: HomeProps) {
       setNotisOpen(true);
     }
   }, []);
+
+  const planSalud = planes.find(
+    (p) => (p.nombre || "").trim().toLowerCase() === "auren salud"
+  );
+  const socioInactivo = estadoSocio !== "" && estadoSocio !== "activo";
+
+  const serviciosHabilitados: {
+    categoria: string;
+    descripcion: string;
+    ruta: string;
+    Icono: typeof CalendarArrowDown;
+  }[] = [];
+
+  if (planSalud && planSalud.estado === "activo") {
+    serviciosHabilitados.push(
+      {
+        categoria: "Médico",
+        descripcion: "Turnos médicos",
+        ruta: "/turnos",
+        Icono: CalendarArrowDown,
+      },
+      {
+        categoria: "Laboratorios",
+        descripcion: "Estudios médicos",
+        ruta: "/estudios",
+        Icono: FlaskConical,
+      }
+    );
+  }
 
   return (
     <div
@@ -396,35 +428,39 @@ export default function Home({ openMenu }: HomeProps) {
             </h2>
           </div>
 
-          <div className="divide-y divide-[#0F1E3D]/8 px-5">
-            <button
-              onClick={() => navigate("/turnos", { replace: true })}
-              className="flex w-full items-center gap-3 py-3.5 text-left transition active:opacity-70"
-            >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
-                <CalendarArrowDown size={18} className="text-[#C9974A]" />
-              </span>
-              <span className="flex-1">
-                <span className="block text-[10px] font-medium uppercase tracking-wide text-slate-400">Médico</span>
-                <span className="block text-sm font-semibold text-[#0F1E3D]">Turnos médicos</span>
-              </span>
-              <ChevronRight size={16} className="text-slate-400" />
-            </button>
-
-            <button
-              onClick={() => navigate("/estudios", { replace: true })}
-              className="flex w-full items-center gap-3 py-3.5 text-left transition active:opacity-70"
-            >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
-                <FlaskConical size={18} className="text-[#C9974A]" />
-              </span>
-              <span className="flex-1">
-                <span className="block text-[10px] font-medium uppercase tracking-wide text-slate-400">Laboratorios</span>
-                <span className="block text-sm font-semibold text-[#0F1E3D]">Estudios médicos</span>
-              </span>
-              <ChevronRight size={16} className="text-slate-400" />
-            </button>
-          </div>
+          {socioInactivo ? (
+            <div className="mx-5 rounded-2xl border border-red-200 bg-red-50 px-4 py-5">
+              <p className="text-sm font-semibold text-red-800">
+                Usted no se encuentra activo para usar los servicios de Mi
+                Auren
+              </p>
+            </div>
+          ) : serviciosHabilitados.length === 0 ? (
+            <div className="mx-5 rounded-2xl border border-[#C9974A]/30 bg-[#FDF5E4] px-4 py-5">
+              <p className="text-sm font-semibold text-[#0F1E3D]">
+                No hay servicios disponibles
+              </p>
+            </div>
+          ) : (
+            <div className="divide-y divide-[#0F1E3D]/8 px-5">
+              {serviciosHabilitados.map((servicio) => (
+                <button
+                  key={servicio.ruta}
+                  onClick={() => navigate(servicio.ruta, { replace: true })}
+                  className="flex w-full items-center gap-3 py-3.5 text-left transition active:opacity-70"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
+                    <servicio.Icono size={18} className="text-[#C9974A]" />
+                  </span>
+                  <span className="flex-1">
+                    <span className="block text-[10px] font-medium uppercase tracking-wide text-slate-400">{servicio.categoria}</span>
+                    <span className="block text-sm font-semibold text-[#0F1E3D]">{servicio.descripcion}</span>
+                  </span>
+                  <ChevronRight size={16} className="text-slate-400" />
+                </button>
+              ))}
+            </div>
+          )}
         </section>
       )}
 
