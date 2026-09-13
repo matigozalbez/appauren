@@ -4,6 +4,7 @@ import {
   ArrowLeft,
   Camera,
   ChevronDown,
+  Clock3,
   FlaskConical,
   MapPin,
 } from "lucide-react";
@@ -23,6 +24,14 @@ const tiposEstudio = [
   "Otro",
 ];
 
+type FranjaPreferida = "" | "mañana" | "tarde" | "noche";
+
+const franjasHorarias: { value: FranjaPreferida; label: string; hora: string }[] = [
+  { value: "mañana", label: "Mañana", hora: "8 a 12 hs" },
+  { value: "tarde", label: "Tarde", hora: "12 a 19 hs" },
+  { value: "noche", label: "Noche", hora: "19 a 22 hs" },
+];
+
 export default function SolicitudEstudio() {
   const navigate = useNavigate();
 
@@ -31,6 +40,7 @@ export default function SolicitudEstudio() {
   const [ciudad, setCiudad] = useState("");
   const [direccion, setDireccion] = useState("");
   const [motivo, setMotivo] = useState("");
+  const [franjaPreferida, setFranjaPreferida] = useState<FranjaPreferida>("");
   const [archivoImagen, setArchivoImagen] = useState<File | null>(null);
   const [imagenPreview, setImagenPreview] = useState("");
   const [imagenUrl, setImagenUrl] = useState("");
@@ -175,6 +185,7 @@ export default function SolicitudEstudio() {
           direccion,
           motivo,
           modo: "geolocalizado",
+          franjaPreferida,
           nombreProfesionalSugerido: "",
           tipo: "estudio",
           imagenUrl,
@@ -345,6 +356,44 @@ export default function SolicitudEstudio() {
 
           <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
             Usaremos esta dirección para derivarte a una clínica cercana.
+          </p>
+        </section>
+
+        {/* Franja horaria preferida */}
+        <section className="mt-6">
+          <div className="mb-2 flex items-center gap-2">
+            <Clock3 size={15} className="text-[#C9974A]" />
+            <label className="text-xs font-bold text-[#0F1E3D]">
+              Franja horaria <span className="font-normal text-slate-400">(opcional)</span>
+            </label>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3">
+            {franjasHorarias.map((item) => (
+              <button
+                key={item.value}
+                type="button"
+                onClick={() =>
+                  setFranjaPreferida(franjaPreferida === item.value ? "" : item.value)
+                }
+                className={`flex flex-col items-center gap-1 rounded-2xl border-2 px-2 py-3 text-center transition active:scale-[0.98] ${
+                  franjaPreferida === item.value
+                    ? "border-[#0F1E3D] bg-[#0F1E3D]/5"
+                    : "border-[#C9974A]/20 bg-white"
+                }`}
+              >
+                <span className="text-xs font-bold text-[#0F1E3D]">
+                  {item.label}
+                </span>
+                <span className="text-[10px] leading-tight text-slate-400">
+                  {item.hora}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
+            Nos ayuda a organizar el estudio con la clínica. Tocá de nuevo para quitarla.
           </p>
         </section>
 
