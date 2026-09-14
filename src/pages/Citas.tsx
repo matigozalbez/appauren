@@ -260,6 +260,7 @@ export default function Citas() {
             {citas.map((cita) => {
               const asignada = cita.estado === "asignado";
               const cancelada = cita.estado === "cancelado";
+              const completada = cita.estado === "completado";
 
               return (
                 <div key={cita.id} className="flex items-start gap-3 py-4">
@@ -282,18 +283,26 @@ export default function Citas() {
                       </div>
                       <span
                         className={
-                          cancelada
-                            ? "shrink-0 rounded-full bg-slate-200 px-2.5 py-1 text-[10px] font-bold text-slate-500"
-                            : asignada
-                              ? "shrink-0 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600"
-                              : "shrink-0 rounded-full bg-[#C9974A]/15 px-2.5 py-1 text-[10px] font-bold text-[#A87B32]"
+                          completada
+                            ? "shrink-0 rounded-full bg-sky-100 px-2.5 py-1 text-[10px] font-bold text-sky-600"
+                            : cancelada
+                              ? "shrink-0 rounded-full bg-slate-200 px-2.5 py-1 text-[10px] font-bold text-slate-500"
+                              : asignada
+                                ? "shrink-0 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600"
+                                : "shrink-0 rounded-full bg-[#C9974A]/15 px-2.5 py-1 text-[10px] font-bold text-[#A87B32]"
                         }
                       >
-                        {cancelada ? "Cancelado" : asignada ? "Asignado" : "Pendiente"}
+                        {completada
+                          ? "Completado"
+                          : cancelada
+                            ? "Cancelado"
+                            : asignada
+                              ? "Asignado"
+                              : "Pendiente"}
                       </span>
                     </div>
 
-                    {asignada && (
+                    {(asignada || completada) && (
                       <div className="mt-2.5 space-y-2">
                         <div className="flex items-center gap-2">
                           <span className="h-1 w-1 rounded-full bg-[#C9974A]" />
@@ -328,7 +337,7 @@ export default function Citas() {
                       </p>
                     )}
 
-                    {asignada && (
+                    {(asignada || completada) && (
                       <button
                         type="button"
                         onClick={() => abrirGoogleMaps(cita)}
@@ -339,7 +348,7 @@ export default function Citas() {
                       </button>
                     )}
 
-                    {!cancelada && (
+                    {!cancelada && !completada && (
                       <button
                         type="button"
                         onClick={() => setCitaACancelar(cita)}
