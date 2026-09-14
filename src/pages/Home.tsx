@@ -14,6 +14,7 @@ import {
   Layers,
   CalendarDays,
   FlaskConical,
+  Settings,
 } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
@@ -261,7 +262,6 @@ export default function Home({ openMenu }: HomeProps) {
       <Header
         onOpenMenu={openMenu}
         onOpenNotifications={() => setNotisOpen(true)}
-        onOpenConfig={() => setConfigOpen(true)}
         unreadCount={unreadCount}
       />
 
@@ -271,14 +271,24 @@ export default function Home({ openMenu }: HomeProps) {
         {/* franja dorada superior */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#B38033] via-[#DDB268] to-[#B38033]" />
 
-        <div className="relative z-10">
-          <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#A87B32]">
-            Mi Auren
-          </span>
+        <div className="relative z-10 flex items-start justify-between gap-3">
+          <div>
+            <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#A87B32]">
+              Mi Auren
+            </span>
 
-          <h1 className="mt-1.5 font-serif text-2xl font-semibold tracking-tight text-[#0F1E3D]">
-            Buen día, {nombresocio || "Hernán"}
-          </h1>
+            <h1 className="mt-1.5 font-serif text-2xl font-semibold tracking-tight text-[#0F1E3D]">
+              Buen día, {nombresocio || "Hernán"}
+            </h1>
+          </div>
+
+          <button
+            onClick={() => setConfigOpen(true)}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/70 text-[#0F1E3D] shadow-sm ring-1 ring-[#0F1E3D]/5 backdrop-blur transition active:scale-95"
+            aria-label="Configuración"
+          >
+            <Settings size={18} />
+          </button>
         </div>
       </section>
 
