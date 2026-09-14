@@ -1,13 +1,14 @@
-    import { Menu, Bell } from "lucide-react";
+    import { Menu, Bell, Settings } from "lucide-react";
     import { useEffect, useState } from "react";
 
     interface HeaderProps {
       onOpenMenu: () => void;
       onOpenNotifications?: () => void;
+      onOpenConfig?: () => void;
       unreadCount?: number;
     }
 
-    export default function Header({ onOpenMenu, onOpenNotifications, unreadCount = 0 }: HeaderProps) {
+    export default function Header({ onOpenMenu, onOpenNotifications, onOpenConfig, unreadCount = 0 }: HeaderProps) {
       const [scrolled, setScrolled] = useState(false);
 
       useEffect(() => {
@@ -41,6 +42,15 @@
                 <img src="auren-isotipo.png" alt="Auren Logo" className="h-full w-auto object-contain" />
               </div>
             </div>
+
+            {/* Botón de configuración con el engranaje */}
+            <button
+              onClick={onOpenConfig}
+              className="mr-1 p-2 rounded-xl text-[#0F1E3D] hover:bg-[#0F1E3D]/5 transition active:scale-95"
+              aria-label="Configuración"
+            >
+              <Settings size={22} />
+            </button>
 
             {/* Botón de notificaciones con la campana */}
             <button

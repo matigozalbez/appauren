@@ -20,6 +20,7 @@ import { auth } from "../firebase";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { GestorNotificaciones } from "../components/GestorNotificaciones";
+import PanelConfig from "../components/PanelConfig";
 import NotificationsModal, {
   contarNoLeidas,
 } from "../components/Modalnotis";
@@ -101,6 +102,7 @@ export default function Home({ openMenu }: HomeProps) {
  const [nombresocio,SetnombreSocio] = useState("")
 
   const [notisOpen, setNotisOpen] = useState(false);
+  const [configOpen, setConfigOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState<number>(0);
 
   const [planes, setPlanes] = useState<PlanSocio[]>(() => {
@@ -259,6 +261,7 @@ export default function Home({ openMenu }: HomeProps) {
       <Header
         onOpenMenu={openMenu}
         onOpenNotifications={() => setNotisOpen(true)}
+        onOpenConfig={() => setConfigOpen(true)}
         unreadCount={unreadCount}
       />
 
@@ -491,6 +494,8 @@ export default function Home({ openMenu }: HomeProps) {
       </footer>
 
       <GestorNotificaciones />
+
+      {configOpen && <PanelConfig onClose={() => setConfigOpen(false)} />}
 
       <NotificationsModal
         isOpen={notisOpen}

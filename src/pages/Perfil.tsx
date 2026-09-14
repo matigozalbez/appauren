@@ -6,11 +6,13 @@ import {
   Lock,
   LogOut,
   ChevronRight,
+  Bell,
 } from "lucide-react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
+import PanelConfig from "../components/PanelConfig";
 
 interface SocioData {
   nombre?: string;
@@ -25,6 +27,7 @@ const API_URL = import.meta.env.VITE_API_URL_LINK;
 export default function Perfil() {
   const [user] = useAuthState(auth);
   const navigate = useNavigate();
+  const [configOpen, setConfigOpen] = useState(false);
   const [socio, setSocio] = useState<SocioData>(() => {
     const cached = localStorage.getItem("auren_socio");
     return cached ? JSON.parse(cached) : {};
@@ -165,6 +168,19 @@ const handleLogout = async () => {
           </p>
           <div className="mt-2 divide-y divide-[#C9974A]/25">
             <button
+              onClick={() => setConfigOpen(true)}
+              className="flex w-full items-center justify-between py-3.5 text-left transition active:opacity-70"
+            >
+              <div className="flex items-center gap-3">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#0F1E3D]">
+                  <Bell size={15} className="text-[#C9974A]" />
+                </span>
+                <span className="text-sm text-slate-700 font-medium">Notificaciones push</span>
+              </div>
+              <ChevronRight size={16} className="text-slate-400" />
+            </button>
+
+            <button
               onClick={() => navigate("/recuperar-password", { replace: true })}
               className="flex w-full items-center justify-between py-3.5 text-left transition active:opacity-70"
             >
@@ -178,6 +194,8 @@ const handleLogout = async () => {
             </button>
           </div>
         </div>
+
+        {configOpen && <PanelConfig onClose={() => setConfigOpen(false)} />}
 
         {/* Salir */}
         <div className="mt-8">
