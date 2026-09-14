@@ -3,6 +3,7 @@ import { ArrowLeft, CalendarDays, FlaskConical, MapPin, RefreshCw } from "lucide
 import { useNavigate } from "react-router-dom";
 
 import { auth } from "../firebase";
+import CancelarTurnoModal from "../components/CancelarTurnoModal";
 
 const API_URL = import.meta.env.VITE_API_URL_LINK;
 
@@ -38,11 +39,15 @@ interface Cita {
 
   fecha?: string;
   hora?: string;
+
+  motivoCancelacion?: string;
+  canceladoEn?: string;
 }
 
 export default function Citas() {
   const navigate = useNavigate();
   const [citas, setCitas] = useState<Cita[]>([]);
+  const [citaACancelar, setCitaACancelar] = useState<Cita | null>(null);
 
   const [cargando, setCargando] = useState(true);
   const direction = sessionStorage.getItem("nav_direction") || "right";
@@ -254,6 +259,7 @@ export default function Citas() {
           <div className="divide-y divide-[#C9974A]/25">
             {citas.map((cita) => {
               const asignada = cita.estado === "asignado";
+              const cancelada = cita.estado === "cancelado";
 
               return (
                 <div key={cita.id} className="flex items-start gap-3 py-4">
@@ -276,12 +282,14 @@ export default function Citas() {
                       </div>
                       <span
                         className={
-                          asignada
-                            ? "shrink-0 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600"
-                            : "shrink-0 rounded-full bg-[#C9974A]/15 px-2.5 py-1 text-[10px] font-bold text-[#A87B32]"
+                          cancelada
+                            ? "shrink-0 rounded-full bg-slate-200 px-2.5 py-1 text-[10px] font-bold text-slate-500"
+                            : asignada
+                              ? "shrink-0 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[10px] font-bold text-emerald-600"
+                              : "shrink-0 rounded-full bg-[#C9974A]/15 px-2.5 py-1 text-[10px] font-bold text-[#A87B32]"
                         }
                       >
-                        {asignada ? "Asignado" : "Pendiente"}
+                        {cancelada ? "Cancelado" : asignada ? "Asignado" : "Pendiente"}
                       </span>
                     </div>
 
@@ -310,8 +318,14 @@ export default function Citas() {
                       </div>
                     )}
 
-                    {!asignada && cita.motivo && (
+                    {!asignada && !cancelada && cita.motivo && (
                       <p className="mt-2 text-xs text-slate-500">{cita.motivo}</p>
+                    )}
+
+                    {cancelada && cita.motivoCancelacion && (
+                      <p className="mt-2 rounded-xl bg-slate-50 px-3 py-2 text-xs italic text-slate-500">
+                        Motivo: {cita.motivoCancelacion}
+                      </p>
                     )}
 
                     {asignada && (
@@ -324,6 +338,16 @@ export default function Citas() {
                         Cómo llegar
                       </button>
                     )}
+
+                    {!cancelada && (
+                      <button
+                        type="button"
+                        onClick={() => setCitaACancelar(cita)}
+                        className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-red-300 px-3.5 py-1.5 text-[10px] font-semibold text-red-600 transition active:scale-95"
+                      >
+                        Cancelar {cita.tipo === "estudio" ? "estudio" : "turno"}
+                      </button>
+                    )}
                   </div>
                 </div>
               );
@@ -333,6 +357,18 @@ export default function Citas() {
       )}
 
       </main>
+
+      {citaACancelar && (
+        <CancelarTurnoModal
+          cita={citaACancelar}
+          esEstudio={citaACancelar.tipo === "estudio"}
+          onClose={() => setCitaACancelar(null)}
+          onCancelada={() => {
+            setCitaACancelar(null);
+            cargarCitas();
+          }}
+        />
+      )}
     </div>
 
   );
