@@ -65,7 +65,7 @@ export default function PanelConfig({ onClose }: PanelConfigProps) {
                 className="fixed inset-0 z-[9000] bg-[#0F1E3D]/50 backdrop-blur-sm"
                 onClick={onClose}
             />
-            <div className="badge-pop fixed inset-x-0 bottom-0 z-[9001] mx-auto max-w-[560px] rounded-t-3xl bg-[#FBF6EC] p-6 pb-[max(24px,env(safe-area-inset-bottom))] shadow-2xl">
+            <div className="badge-pop fixed inset-x-0 bottom-20 z-[9001] mx-auto max-w-[560px] rounded-t-3xl bg-[#FBF6EC] p-6 pb-[max(24px,env(safe-area-inset-bottom))] shadow-2xl">
                 <div className="flex items-center justify-between">
                     <h2 className="font-serif text-lg font-semibold text-[#0F1E3D]">Configuración</h2>
                     <button
