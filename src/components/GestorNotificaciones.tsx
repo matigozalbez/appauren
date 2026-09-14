@@ -17,7 +17,7 @@ export function GestorNotificaciones() {
             // Ya activadas: solo aseguramos que el token esté guardado
             marcarAvisoPush("granted");
             setMostrarModal(false);
-            obtenerYGuardarToken(user.uid).catch((error) =>
+            obtenerTokenYGuardar(user.uid).catch((error) =>
                 console.error("Error re-guardando token:", error)
             );
         } else if (Notification.permission === "denied") {
