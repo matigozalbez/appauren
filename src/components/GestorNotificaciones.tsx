@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import { auth } from "../firebase";
@@ -65,7 +66,7 @@ export function GestorNotificaciones() {
         navigate("/perfil");
     };
 
-    return (
+    return createPortal(
         <>
             {mostrarModal && (
                 <div className="fixed inset-0 z-[9999] bg-[#0F1E3D]/60 backdrop-blur-sm flex items-center justify-center px-6">
@@ -96,6 +97,7 @@ export function GestorNotificaciones() {
                     </div>
                 </div>
             )}
-        </>
+        </>,
+        document.body
     );
 }
